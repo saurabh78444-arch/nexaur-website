@@ -9678,97 +9678,111 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
       transform: translateY(-4px);
     }
     
-    /* VICKY PORTRAIT (+3% SLIGHT SIZE INCREASE) */
+    /* VICKY PORTRAIT (RESPONSIVELY CONSTRAINED & VERTICALLY BALANCED) */
     .director-standard-portrait {
       position: relative;
       width: 100%;
-      max-width: 360px;
-      height: 400px;
+      max-width: 320px;
+      height: clamp(270px, 40vw, 340px);
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      overflow: visible;
+      overflow: hidden;
+      border-radius: 18px;
+      margin: 0 auto;
       transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.45s ease;
       will-change: transform;
     }
     @media (min-width: 640px) {
       .director-standard-portrait {
-        max-width: 400px;
-        height: 490px;
+        max-width: 360px;
+        height: 380px;
       }
     }
     @media (min-width: 1024px) {
       .director-standard-portrait {
-        max-width: 430px;
-        height: 530px;
+        max-width: 390px;
+        height: 440px;
       }
     }
     .director-standard-portrait:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-4px) scale(1.01);
     }
     .director-standard-portrait img {
-      width: 100%;
+      max-width: 100%;
       height: 100%;
       object-fit: contain;
-      object-position: bottom;
-      transform: scale(1.08); /* 3% increase */
+      object-position: bottom center;
+      transform: scale(1.0);
       transform-origin: bottom center;
-      filter: drop-shadow(0 22px 38px rgba(15, 30, 74, 0.18));
-      transition: filter 0.45s ease;
+      filter: drop-shadow(0 14px 26px rgba(15, 30, 74, 0.16));
+      transition: filter 0.45s ease, transform 0.45s ease;
+    }
+    @media (min-width: 1024px) {
+      .director-standard-portrait img {
+        transform: scale(1.03);
+      }
     }
     .director-standard-portrait:hover img {
-      filter: drop-shadow(0 30px 48px rgba(15, 30, 74, 0.26));
+      filter: drop-shadow(0 20px 34px rgba(15, 30, 74, 0.22));
     }
 
-    /* SAURABH HERO PORTRAIT (SHIFTED +2% FURTHER RIGHT, EXACT SIZE MAINTAINED) */
+    /* SAURABH HERO PORTRAIT (RESPONSIVELY CONSTRAINED & VERTICALLY BALANCED) */
     .saurabh-hero-frame {
       position: relative;
       width: 100%;
-      height: 440px;
+      max-width: 330px;
+      height: clamp(280px, 42vw, 350px);
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      overflow: visible;
+      overflow: hidden;
+      border-radius: 18px;
+      margin: 0 auto;
       transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
     }
     @media (min-width: 640px) {
       .saurabh-hero-frame {
-        height: 520px;
+        max-width: 370px;
+        height: 390px;
       }
     }
     @media (min-width: 1024px) {
       .saurabh-hero-frame {
-        height: 580px;
+        max-width: 420px;
+        height: 450px;
         justify-content: flex-end;
-        transform: translateX(38px); /* Shifted extra rightward */
+        margin: 0 0 0 auto;
+        transform: translateX(4px);
       }
     }
     .saurabh-hero-frame:hover {
-      transform: translateY(-6px) scale(1.02) translateX(38px);
+      transform: translateY(-4px) scale(1.01);
     }
     .saurabh-big-img {
-      width: 100%;
+      max-width: 100%;
       height: 100%;
       object-fit: contain;
-      object-position: bottom;
-      transform: scale(1.25);
+      object-position: bottom center;
+      transform: scale(1.0);
       transform-origin: bottom center;
-      filter: drop-shadow(0 25px 45px rgba(15, 30, 74, 0.22));
+      filter: drop-shadow(0 16px 28px rgba(15, 30, 74, 0.18));
       transition: filter 0.45s ease, transform 0.45s ease;
     }
     @media (min-width: 640px) {
       .saurabh-big-img {
-        transform: scale(1.35);
+        transform: scale(1.03);
       }
     }
     @media (min-width: 1024px) {
       .saurabh-big-img {
-        transform: scale(1.50) translateX(18px); /* Shifted comfortably to the right */
+        transform: scale(1.06) translateX(4px);
         transform-origin: bottom right;
+        object-position: bottom right;
       }
     }
     .saurabh-hero-frame:hover .saurabh-big-img {
-      filter: drop-shadow(0 35px 60px rgba(15, 30, 74, 0.32));
+      filter: drop-shadow(0 22px 38px rgba(15, 30, 74, 0.24));
     }
   </style>
 
@@ -16719,40 +16733,81 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
   const soundIcon = document.getElementById("typewriterSoundIcon");
 
   // =========================================================================
-  // 1. MECHANICAL TYPEWRITER AUDIO ENGINE (/static/audio/typewriter.mp3)
+  // 1. DIRECT RELIABLE TYPEWRITER AUDIO ENGINE (ROOT & GITHUB PAGES SYNC)
   // =========================================================================
   let isAudioEnabled = true;
   const AUDIO_POOL_SIZE = 8;
   const audioPool = [];
-  
-  // Preload circular audio channel pool
+
+  // Determine correct URL for live GitHub Pages & root deployment
+  const soundSources = [
+    "./typewriter.mp3",
+    "typewriter.mp3",
+    "https://saurabh78444-arch.github.io/nexaur-website/typewriter.mp3",
+    "/typewriter.mp3"
+  ];
+
   for (let i = 0; i < AUDIO_POOL_SIZE; i++) {
-    const aud = new Audio('https://raw.githubusercontent.com/saurabh78444-arch/nexaur-website/main/typewriter.mp3'); aud.onerror = function() { this.src = 'https://saurabh78444-arch.github.io/nexaur-website/typewriter.mp3'; };
-    aud.onerror = function() {
-      if (!this.dataset.fallbackTried) {
-        this.dataset.fallbackTried = 'true';
-        this.src = './typewriter.mp3';
-      }
-    };
-    aud.onerror = function() {
-      if (!this.dataset.fallbackTried) {
-        this.dataset.fallbackTried = 'true';
-        this.src = './typewriter.mp3';
-      }
-    };
-    aud.preload = 'auto';
+    const aud = new Audio();
+    aud.preload = "auto";
     aud.volume = 0.55;
+    let srcIdx = 0;
+    aud.src = soundSources[0];
+
+    aud.onerror = function() {
+      srcIdx++;
+      if (srcIdx < soundSources.length) {
+        aud.src = soundSources[srcIdx];
+        aud.load();
+      }
+    };
     audioPool.push(aud);
+  }
+
+  // Web Audio API Zero-Latency Mechanical Click Synthesizer
+  let webAudioCtx = null;
+  function synthesizeMechanicalKeyClick() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!webAudioCtx) webAudioCtx = new AudioCtx();
+      if (webAudioCtx.state === "suspended") webAudioCtx.resume();
+
+      const now = webAudioCtx.currentTime;
+      const osc = webAudioCtx.createOscillator();
+      const gain = webAudioCtx.createGain();
+      const filter = webAudioCtx.createBiquadFilter();
+
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(1400 + Math.random() * 350, now);
+      osc.frequency.exponentialRampToValueAtTime(140, now + 0.024);
+
+      filter.type = "bandpass";
+      filter.frequency.setValueAtTime(2400, now);
+      filter.Q.setValueAtTime(1.4, now);
+
+      gain.gain.setValueAtTime(0.25 + Math.random() * 0.08, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.028);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(webAudioCtx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.03);
+    } catch(e) {}
   }
 
   let poolIndex = 0;
   let lastAudioTime = 0;
   let audioUnlocked = false;
 
-  // Browser Autoplay Policy Unlock on first interaction
   function unlockAudio() {
     if (audioUnlocked) return;
     audioUnlocked = true;
+    if (webAudioCtx && webAudioCtx.state === "suspended") {
+      webAudioCtx.resume();
+    }
     audioPool.forEach(sound => {
       const p = sound.play();
       if (p !== undefined) {
@@ -16764,17 +16819,22 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
     });
   }
 
+  // Unlock instantly on first page touch/click
+  document.addEventListener("pointerdown", unlockAudio, { once: true, passive: true });
+
   function playSmartTypewriter(e) {
     if (!isAudioEnabled) return;
 
-    // Ignore non-character keys
-    if (e && ['Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'Escape', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) {
+    if (e && ["Shift", "Control", "Alt", "Meta", "CapsLock", "Escape", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Tab"].includes(e.key)) {
       return;
     }
 
     const now = performance.now();
-    if (now - lastAudioTime < 35) return; // Prevent stutter on rapid repeat
+    if (now - lastAudioTime < 28) return;
     lastAudioTime = now;
+
+    // Instant zero-lag mechanical tick
+    synthesizeMechanicalKeyClick();
 
     try {
       const sound = audioPool[poolIndex];
@@ -16782,22 +16842,18 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
 
       sound.pause();
       sound.currentTime = 0;
-      // Realistic acoustic variation for mechanical clicks
-      sound.playbackRate = 0.94 + Math.random() * 0.10;
-      sound.volume = 0.50 + Math.random() * 0.14;
+      sound.playbackRate = 0.94 + Math.random() * 0.12;
+      sound.volume = 0.50 + Math.random() * 0.12;
 
       const playPromise = sound.play();
       if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          try {
-            const fallback = new Audio('./static/audio/typewriter.mp3');
-            fallback.volume = 0.55;
-            fallback.play().catch(() => {});
-          } catch (_) {}
-        });
+        playPromise.catch(() => {});
       }
     } catch (_) {}
   }
+
+  // Global access for suggestion buttons and interactive prompt
+  window.playTypewriterSound = playSmartTypewriter;
 
   // Audio Toggle Button
   window.toggleTypewriterAudio = function() {
@@ -16873,12 +16929,14 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
   // =========================================================================
   window.handleAbhimanyuSubmit = function(e) {
     if (e) e.preventDefault();
+    if (window.playTypewriterSound) window.playTypewriterSound();
     if (!inputEl) return;
     const query = inputEl.value.trim();
     triggerLaunchingSoonModal(query || "General Sovereign AI Query");
   };
 
   window.fillPromptAndSubmit = function(text) {
+    if (window.playTypewriterSound) window.playTypewriterSound();
     if (inputEl) {
       inputEl.value = text;
     }
