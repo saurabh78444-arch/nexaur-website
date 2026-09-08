@@ -8700,47 +8700,7 @@
                 </div>
               </div>
             </div>
-              </div>
-
-              <!-- Right: Scrollable Course Document Card -->
-              <div class="lg:col-span-8 bg-white/95 backdrop-blur-md rounded-2xl p-5 sm:p-6 shadow-lg border border-white order-1 lg:order-2 max-h-[380px] overflow-y-auto claude-card-scroll text-left space-y-3">
-                <div class="border-b border-slate-100 pb-2">
-                  <span class="px-2 py-0.5 rounded bg-orange-100 text-[#FF6B00] font-mono text-[9px] font-bold uppercase">Sovereign AGI Lab Curriculum</span>
-                  <h3 class="font-serif font-bold text-xl sm:text-2xl text-slate-950 leading-tight mt-1">
-                    Recursive Student-Parent Model Distillation (101)
-                  </h3>
-                </div>
-
-                <div class="space-y-1">
-                  <h4 class="font-serif font-bold text-sm text-slate-900">Table of Contents</h4>
-                  <ul class="text-[11px] text-slate-600 space-y-1 font-sans pl-2">
-                    <li>&bull; <strong>Module 1:</strong> Foundation Teacher Ingestion (DeepSeek R1, GPT-6, Astra)</li>
-                    <li>&bull; <strong>Module 2:</strong> KL-Divergence and Soft Cross-Entropy Formulation</li>
-                    <li>&bull; <strong>Module 3:</strong> INT4/INT8 Quantization on Low-Cost Server Nodes</li>
-                    <li>&bull; <strong>Module 4:</strong> Verification on MATH-500 and SWE-bench Suites</li>
-                  </ul>
-                </div>
-
-                <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 font-mono text-[10px] space-y-1">
-                  <div class="text-slate-500 font-bold uppercase">Distillation Loss Formulation:</div>
-                  <div class="text-[#0F172A] font-bold">L_KD = alpha * D_KL(p_tau || q_tau) + (1 - alpha) * L_CE</div>
-                  <div class="text-emerald-600 text-[9px]">Slashes GPU cluster leasing expenses by 88% while preserving 98.6% parity.</div>
-                </div>
-
-                <div class="pt-2 border-t border-slate-100 space-y-1">
-                  <h4 class="font-serif font-bold text-sm text-slate-900">Interactive Knowledge Check</h4>
-                  <div class="p-2.5 bg-orange-50/70 rounded-xl border border-orange-200/80 text-[11px] space-y-1.5">
-                    <p class="font-medium text-slate-800">Q: Why does student distillation outperform direct local fine-tuning?</p>
-                    <button type="button" onclick="this.nextElementSibling.classList.toggle('hidden')" class="px-2 py-1 rounded bg-[#FF6B00] text-white font-mono text-[9px] font-bold cursor-pointer">
-                      Click to Reveal Answer
-                    </button>
-                    <p class="hidden text-slate-600 text-[10.5px] pt-1">
-                      A: Logit distillation transfers the soft probability distribution of reasoning steps rather than just hard classification labels, retaining multi-step reasoning fidelity.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+              
 
             <!-- =============================================================== -->
             <!-- VIEW 3: CODE (INTERACTIVE IDE WITH SYNTAX TABS & RUNNER)        -->
@@ -8979,11 +8939,13 @@ async function verifySovereignToken(req) {
       #claudeStageWrapper {
         position: relative;
         overflow: hidden;
+        contain: paint;
       }
       
       @media (min-width: 1024px) {
         #claudeStageWrapper {
-          height: 530px;
+          min-height: 540px;
+          height: auto;
           display: flex;
           align-items: center;
           padding: 1.5rem 2rem;
@@ -9217,7 +9179,7 @@ async function verifySovereignToken(req) {
         if (container) {
           container.innerHTML = data.bars.map(item => `
             <div class="flex items-center gap-2 group cursor-pointer" title="${item.label}: ${item.pct}% (${item.weeks})">
-              <span class="w-32 text-slate-600 font-medium text-right shrink-0 truncate">${item.label}</span>
+              <span class="w-24 sm:w-32 text-slate-600 font-medium text-right shrink-0 truncate">${item.label}</span>
               <div class="flex-1 bg-slate-100 rounded-md overflow-hidden p-0.5 flex" style="height: 20px;">
                 <div class="rounded-sm flex items-center justify-end pr-1 text-[8.5px] font-mono font-bold text-white transition-all duration-500 ease-out shadow-xs group-hover:brightness-110" style="width: ${item.pct}%; background: ${item.col}; min-width: 24px;">
                   ${item.pct}%
@@ -9242,6 +9204,7 @@ async function verifySovereignToken(req) {
         if (!c) return;
         const ctx = c.getContext('2d');
         const rect = c.getBoundingClientRect();
+        if (!rect.width || rect.width <= 0) return;
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
         c.width = rect.width * dpr;
@@ -9516,6 +9479,7 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
         if (!c) return;
         const ctx = c.getContext('2d');
         const rect = c.getBoundingClientRect();
+        if (!rect.width || rect.width <= 0) return;
         const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
         c.width = rect.width * dpr;
@@ -9559,6 +9523,7 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
         switchClaudeTab("tasks");
         filterGanttDepartment('all');
         setupChartMouseScrubbing();
+        window.addEventListener("resize", () => { const tv = document.getElementById("view-tasks"); if (tv && !tv.classList.contains("hidden")) renderTasksLiveChart(); }, { passive: true });
       });
       setTimeout(() => { 
         switchClaudeTab("tasks"); 
