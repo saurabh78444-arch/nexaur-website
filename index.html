@@ -12049,7 +12049,7 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
             <!-- ENLARGED HERO PORTRAIT ON RIGHT (SHIFTED +2% MORE RIGHTWARD) -->
             <div class="lg:col-span-5 flex justify-center lg:justify-end order-1 lg:order-2 overflow-visible">
               <div class="saurabh-hero-frame">
-                <img src="./static/directors/saurabh.png" onerror="this.onerror=null; this.src='./static/directors/saurabh.jpg?v=10';" alt="Saurabh Anil Pardeshi" class="saurabh-big-img" />
+                <img src="./static/directors/saurabh.png" onerror="if(!this.dataset.triedRoot){this.dataset.triedRoot=1;this.src='./saurabh.png';}else if(!this.dataset.triedJpg){this.dataset.triedJpg=1;this.src='./saurabh.jpg';}" alt="Saurabh Anil Pardeshi" class="saurabh-big-img" />
               </div>
             </div>
 
@@ -12072,7 +12072,7 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
             <!-- Standard Cutout Portrait on Left (+3% size increase) -->
             <div class="lg:col-span-5 flex justify-center order-1 overflow-visible">
               <div class="director-standard-portrait">
-                <img src="./static/directors/vicky.png" onerror="this.onerror=null; this.src='./static/directors/vicky.jpg?v=10';" alt="Vicky Brijkishor Kushwaha" />
+                <img src="./static/directors/vicky.png" onerror="if(!this.dataset.triedRoot){this.dataset.triedRoot=1;this.src='./vicky.png';}else if(!this.dataset.triedJpg){this.dataset.triedJpg=1;this.src='./vicky.jpg';}" alt="Vicky Brijkishor Kushwaha" />
               </div>
             </div>
 
@@ -18670,6 +18670,18 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
   // Preload circular audio channel pool
   for (let i = 0; i < AUDIO_POOL_SIZE; i++) {
     const aud = new Audio('./static/audio/typewriter.mp3');
+    aud.onerror = function() {
+      if (!this.dataset.fallbackTried) {
+        this.dataset.fallbackTried = 'true';
+        this.src = './typewriter.mp3';
+      }
+    };
+    aud.onerror = function() {
+      if (!this.dataset.fallbackTried) {
+        this.dataset.fallbackTried = 'true';
+        this.src = './typewriter.mp3';
+      }
+    };
     aud.preload = 'auto';
     aud.volume = 0.55;
     audioPool.push(aud);
@@ -18720,7 +18732,7 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
       if (playPromise !== undefined) {
         playPromise.catch(() => {
           try {
-            const fallback = new Audio('./static/audio/typewriter.mp3');
+            const fallback = new Audio('/static/audio/typewriter.mp3');
             fallback.volume = 0.55;
             fallback.play().catch(() => {});
           } catch (_) {}
