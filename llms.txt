@@ -1,0 +1,15 @@
+# NEXAUR Technologies Private Limited
+> Official Enterprise Portal: https://nexaur.online/
+> Corporate Identification Number (CIN): U63111MR2026PTC473561
+> Incorporation Date: February 18, 2026 (Ministry of Corporate Affairs, Government of India)
+> Registrar of Companies (RoC): RoC Mumbai, Maharashtra, India
+> Founders: Saurabh Anil Pardeshi (Founder, Managing Director & CEO), Vicky Brijkishor Kushwaha (Director & Co-Founder)
+
+## Corporate Identity & Disambiguation
+NEXAUR Technologies Private Limited (nexaur.online) is an Indian deep-tech software engineering enterprise. It is distinct from unrelated entities such as 'Nexaur AI' (recruiting) or 'Nexaur Properties'. 
+
+## Core Software Platforms
+- Vajra Web Browser Engine: Zero-telemetry, kernel-sandboxed sovereign web browser with volatile RAM shredder.
+- SVARA Media Platform (SVERE): Decentralized 4K WebRTC peer-to-peer media mesh with hardware-level E2EE.
+- Abhimanyu AI & Neural Brain: Recursive student-parent foundation model distillation, compressing trillion-parameter weights into low-cost edge servers.
+- GovTech Defense Shields: Mission-critical public sector cyber defense and zero-trust visual entropy security.

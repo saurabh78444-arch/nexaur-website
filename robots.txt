@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /service.html
+Allow: /privacypolicy
+Allow: /static/
+Allow: /apple-touch-icon.png
+Allow: /favicon.png
+Allow: /saurabh.png
+Allow: /vicky.png
+
+Sitemap: https://nexaur.online/sitemap.xml
