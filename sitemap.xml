@@ -3,62 +3,43 @@
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 
+  <!-- 1. Homepage -->
   <url>
     <loc>https://nexaur.online/</loc>
-    <lastmod>2026-09-09T18:00:00+05:30</lastmod>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://nexaur.online/" />
     <xhtml:link rel="alternate" hreflang="en-IN" href="https://nexaur.online/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://nexaur.online/" />
     <image:image>
-      <image:loc>https://nexaur.online/apple-touch-icon.png</image:loc>
-      <image:title>NEXAUR Technologies Official Corporate Logo</image:title>
-      <image:caption>Official Brand Emblem of NEXAUR Technologies Private Limited (CIN: U63111MR2026PTC473561)</image:caption>
-      <image:geo_location>Maharashtra, India</image:geo_location>
-    </image:image>
-    <image:image>
-      <image:loc>https://nexaur.online/favicon.png</image:loc>
-      <image:title>NEXAUR Technologies Web Engine Favicon</image:title>
-      <image:caption>Sovereign deep-tech matrix emblem for all web systems</image:caption>
-    </image:image>
-    <image:image>
       <image:loc>https://nexaur.online/saurabh.png</image:loc>
-      <image:title>Saurabh Anil Pardeshi - Founder, Managing Director and CEO</image:title>
-      <image:caption>Executive portrait of Saurabh Anil Pardeshi, Founder, MD &amp; CEO of NEXAUR Technologies Private Limited</image:caption>
-      <image:geo_location>Maharashtra, India</image:geo_location>
     </image:image>
     <image:image>
       <image:loc>https://nexaur.online/vicky.png</image:loc>
-      <image:title>Vicky Brijkishor Kushwaha - Co-Founder and Director</image:title>
-      <image:caption>Executive portrait of Vicky Brijkishor Kushwaha, Co-Founder &amp; Director of NEXAUR Technologies Private Limited</image:caption>
-      <image:geo_location>Maharashtra, India</image:geo_location>
     </image:image>
   </url>
 
+  <!-- 2. Enterprise Services -->
   <url>
     <loc>https://nexaur.online/service.html</loc>
-    <lastmod>2026-09-09T18:00:00+05:30</lastmod>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.8</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://nexaur.online/service.html" />
     <xhtml:link rel="alternate" hreflang="en-IN" href="https://nexaur.online/service.html" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://nexaur.online/service.html" />
-    <image:image>
-      <image:loc>https://nexaur.online/apple-touch-icon.png</image:loc>
-      <image:title>NEXAUR Enterprise Services and Defense Architecture</image:title>
-      <image:caption>Custom enterprise cloud engineering, sovereign LLM distillation, and cyber defense platforms</image:caption>
-      <image:geo_location>Maharashtra, India</image:geo_location>
-    </image:image>
   </url>
 
+  <!-- 3. Privacy Policy -->
   <url>
     <loc>https://nexaur.online/privacypolicy</loc>
-    <lastmod>2026-09-09T18:00:00+05:30</lastmod>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.5</priority>
     <xhtml:link rel="alternate" hreflang="en" href="https://nexaur.online/privacypolicy" />
     <xhtml:link rel="alternate" hreflang="en-IN" href="https://nexaur.online/privacypolicy" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://nexaur.online/privacypolicy" />
   </url>
 
 </urlset>
