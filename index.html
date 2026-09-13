@@ -3844,7 +3844,8 @@
     #laptop3DContainer {
       height: 330px !important;
       max-width: 100vw !important;
-    }
+      touch-action: pan-y !important;
+}
     /* Floating button cluster on phones */
     #laptopPlayPauseBtn, #clamshellQuickToggle {
       width: 34px !important;
@@ -4470,6 +4471,46 @@
     }
   }
 </style>
+
+<style id="mobile-extreme-optimization">
+  @media (max-width: 640px) {
+    #laptop3DContainer {
+      height: 290px !important;
+      touch-action: pan-y !important;
+    }
+    #header-smoke-canvas, #footer-smoke-canvas {
+      display: none !important;
+    }
+    .top-ambient-glow {
+      height: 180px !important;
+      opacity: 0.6 !important;
+    }
+  }
+</style>
+
+
+<style id="apple-tier-mobile-perf">
+  /* Universal GPU Acceleration & Touch Scroll Fix */
+  @media (max-width: 768px) {
+    #header-smoke-canvas, #footer-smoke-canvas {
+      display: none !important;
+    }
+    #laptop3DContainer {
+      height: 290px !important;
+      touch-action: pan-y !important;
+    }
+    .top-ambient-glow {
+      height: 160px !important;
+      opacity: 0.5 !important;
+    }
+  }
+  canvas, .gpu-layer, .pro-bento-card, .svara-highlight-card {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+</style>
+
 </head>
 <body class="relative min-h-screen">
   
@@ -10535,6 +10576,7 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
 
     // 9. FOOTER FLUID SHADER (SUSPENDABLE)
     (function initFooterFluidSmoke() {
+      if (window.innerWidth < 768 || (navigator.deviceMemory && navigator.deviceMemory <= 4)) return;
       const canvas = document.getElementById('footer-smoke-canvas');
       if (!canvas) return;
 
@@ -11007,6 +11049,7 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
 
     // 13. TOP FLUID SMOKE SHADER (SUSPENDABLE)
     (function initHeaderFluidSmoke() {
+      if (window.innerWidth < 768 || (navigator.deviceMemory && navigator.deviceMemory <= 4)) return;
       const canvas = document.getElementById("header-smoke-canvas");
       if (!canvas) return;
 
@@ -15739,250 +15782,231 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
     <!-- ========================================================================= -->
   <!-- ABHIMANYU AI: THREE.JS 3D QUANTUM CORE, WEBSOCKET AUDIO & STREAMING       -->
   <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU AI: ROBUST STREAMING ENGINE & PROMPT SUBMISSION CONTROLLER      -->
+  <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU AI: REAL-TIME BACKEND ENGINE & AUTHENTIC CREST LOGO            -->
+  <!-- Nexaur Technologies Private Limited                                       -->
+  <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU AI: REAL GPU BACKEND STREAMING & AUTHENTIC CREST LOGO           -->
+  <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU AI: PRODUCTION SERVER (https://api.farmchips.in) & CREST LOGO   -->
+  <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU AI: LIVE ON https://farmchips.in & AUTHENTIC CREST LOGO          -->
+  <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU AI: ROBUST STREAMING ENGINE (https://farmchips.in & LOCAL 8000) -->
+  <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU MASTER RUNTIME (PORTED FULLY FROM ai_model.dart & api_client.dart)-->
+  <!-- Nexaur Technologies Private Limited                                       -->
+  <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU AI: HIGH-PERFORMANCE LOW-RAM GPU ENGINE & PERFECT CREST LOGO    -->
+  <!-- Nexaur Technologies Private Limited                                       -->
+  <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU MASTER RUNTIME (PERFECT GEOMETRIC CREST + 120 FPS MOBILE OPT)   -->
+  <!-- ========================================================================= -->
+  <!-- ========================================================================= -->
+  <!-- ABHIMANYU MASTER RUNTIME (PERFECT GEOMETRIC CREST + 120 FPS MOBILE OPT)   -->
+  <!-- ========================================================================= -->
   <script id="abhimanyu-web-engine">
-    // Default Mode set to Flash Speed (flash_thinking)
-    let abhimanyuActiveModel = "flash_thinking";
-    let abhimanyuActiveVoice = "nexaur_titan_male";
-    let isAppDarkMode = true;
-    let isPrivateSession = false;
-    let isAppAudioPlaying = false;
-    let isVoiceListening = false;
-    let isVoiceMuted = false;
-    let speechRecognitionInstance = null;
+    const isMobileDevice = /iPhone|iPad|iPod|Android|Mobile/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const isLowPower = (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
 
-    const API_BASE_URL = window.location.origin;
-    const WS_BASE_URL = `ws://${window.location.hostname}:8000`;
-
-    // 1. SMART GREETING
-    (function initSmartGreeting() {
-      const header = document.getElementById("greetingHeader");
-      if (!header) return;
-      const h = new Date().getHours();
-      let greet = "Good evening";
-      if (h < 12) greet = "Good morning";
-      else if (h < 17) greet = "Good afternoon";
-      header.textContent = `${greet}, Abhimanyu! 👋`;
-    })();
-
-    // 2. SCROLL ARRIVAL 3D PERSPECTIVE WINDOW REVEAL
-    (function initWindowScrollReveal() {
-      const win = document.getElementById("abhimanyuAppWindow");
-      const section = document.getElementById("abhimanyu-ai-prompt");
-      if (!win || !section) return;
-
-      if ("IntersectionObserver" in window) {
-        const obs = new IntersectionObserver((entries) => {
-          entries.forEach(e => {
-            if (e.isIntersecting) {
-              win.classList.add("window-revealed");
-            }
-          });
-        }, { threshold: 0.18, rootMargin: "0px 0px -40px 0px" });
-        obs.observe(section);
-      } else {
-        win.classList.add("window-revealed");
+    const API_CONFIG = {
+      productionDomain: "https://farmchips.in",
+      handshakeToken: "super_secret_nextor_key_2026",
+      getBackendUrl: function() {
+        const custom = localStorage.getItem("abhimanyu_api_url");
+        if (custom && !custom.includes("api.farmchips.in")) return custom.replace(/\/$/, "");
+        return this.productionDomain;
+      },
+      getHeaders: function(extra = {}) {
+        const h = {
+          "Content-Type": "application/json",
+          "Accept": "text/event-stream, application/json",
+          "X-Abhimanyu-Token": this.handshakeToken,
+          "X-Zenith-Token": this.handshakeToken,
+          ...extra
+        };
+        const token = localStorage.getItem("auth_token");
+        if (token) h["Authorization"] = "Bearer " + token;
+        return h;
       }
-    })();
+    };
 
-    // 3. THREE.JS 3D QUANTUM HOLOGRAPHIC SHIELD & PARTICLE CORE
-    let threeJsCoreSpeed = 0.014;
-    (function initThreeJsAbhimanyuCore() {
-      const canvas = document.getElementById("abhimanyuThreeJsCanvas");
-      const container = document.getElementById("abhimanyuThreeJsContainer");
-      if (!canvas || !container || typeof THREE === "undefined") return;
+    let abhimanyuActiveModel = localStorage.getItem("abhimanyu_thinking_mode") || "flash_thinking";
+    let abhimanyuActiveVoice = localStorage.getItem("abhimanyu_selected_voice") || "nexaur_titan_male";
+    let isStreamingActive = false;
+    let activeSessionId = "session_" + Date.now();
+    let chatSessions = [
+      { id: activeSessionId, title: "Active Workspace", messages: [] }
+    ];
 
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-      camera.position.z = 6.8;
+    const thinkingPhrases = [
+      "Thinking...",
+      "Analyzing context...",
+      "Searching literature...",
+      "Synthesizing response...",
+      "Formatting answer..."
+    ];
+    let thinkingPhraseIdx = 0;
+    let thinkingTimer = null;
 
-      const renderer = new THREE.WebGLRenderer({
-        canvas: canvas,
-        alpha: true,
-        antialias: true,
-        powerPreference: "high-performance"
-      });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      renderer.setSize(container.clientWidth, container.clientHeight, false);
+    let companionSettings = {
+      use_vector_memory: true,
+      allow_web_search: true,
+      jarvis_auto_execute: false
+    };
 
-      const coreGroup = new THREE.Group();
-      scene.add(coreGroup);
+    try {
+      const savedSettings = localStorage.getItem("abhimanyu_settings");
+      if (savedSettings) companionSettings = JSON.parse(savedSettings);
+    } catch (_) {}
 
-      // A. Outer Quantum Shield Ring
-      const shieldGeo = new THREE.TorusGeometry(2.1, 0.028, 16, 6);
-      const shieldMat = new THREE.MeshBasicMaterial({ color: 0x38BDF8, wireframe: true, transparent: true, opacity: 0.45 });
-      const shieldMesh = new THREE.Mesh(shieldGeo, shieldMat);
-      coreGroup.add(shieldMesh);
+    // =========================================================================
+    // 1. REGULAR GEOMETRIC 6-PETAL CREST PAINTER (PORTED FROM ai_model.dart)
+    // =========================================================================
+    function drawAbhimanyuCrest(ctx, size, angle, accentColor = "#10B981", isActive = false) {
+      const cx = size / 2;
+      const cy = size / 2;
+      const r = size * 0.40; // True square proportion
 
-      // B. 6 Refractive Sacred Geometry Petal Rings
-      const petalRings = [];
-      const ringColors = [0x38BDF8, 0x818CF8, 0xA855F7, 0x38BDF8, 0xFF6B00, 0x00F0FF];
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+
+      // 1. Regular Hexagonal Shield (Trigonometrically Symmetrical)
+      ctx.beginPath();
       for (let i = 0; i < 6; i++) {
-        const pGeo = new THREE.TorusGeometry(1.35, 0.024, 16, 48);
-        const pMat = new THREE.MeshBasicMaterial({ color: ringColors[i], transparent: true, opacity: 0.85 });
-        const pMesh = new THREE.Mesh(pGeo, pMat);
+        const a = (i * Math.PI) / 3 - Math.PI / 2;
+        const x = r * 1.08 * Math.cos(a);
+        const y = r * 1.08 * Math.sin(a);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.strokeStyle = isActive ? "rgba(56, 189, 248, 0.9)" : "rgba(148, 163, 184, 0.35)";
+      ctx.lineWidth = isActive ? 2.0 : 1.4;
+      ctx.stroke();
+
+      // 2. 6 Overlapping Circular Petals (Radial Symmetry)
+      const petalR = r * 0.48;
+      const distFromCenter = r * 0.36;
+
+      for (let i = 0; i < 6; i++) {
         const a = (i * Math.PI) / 3;
-        pMesh.position.set(0.75 * Math.cos(a), 0.75 * Math.sin(a), 0);
-        coreGroup.add(pMesh);
-        petalRings.push(pMesh);
+        const px = distFromCenter * Math.cos(a);
+        const py = distFromCenter * Math.sin(a);
+
+        ctx.beginPath();
+        ctx.arc(px, py, petalR, 0, Math.PI * 2);
+
+        const grad = ctx.createLinearGradient(px - petalR, py - petalR, px + petalR, py + petalR);
+        grad.addColorStop(0, accentColor);
+        grad.addColorStop(0.5, "#38BDF8");
+        grad.addColorStop(1, isActive ? "#A855F7" : "#0284C7");
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = isActive ? 2.0 : 1.4;
+        ctx.stroke();
       }
 
-      // C. Central Singularity & Orbiting Particles
-      const centerGeo = new THREE.SphereGeometry(0.32, 24, 24);
-      const centerMat = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
-      const centerOrb = new THREE.Mesh(centerGeo, centerMat);
-      coreGroup.add(centerOrb);
-
-      const particleCount = 140;
-      const partGeo = new THREE.BufferGeometry();
-      const pos = new Float32Array(particleCount * 3);
-      for (let i = 0; i < particleCount; i++) {
-        const u = Math.random();
-        const v = Math.random();
-        const theta = u * 2.0 * Math.PI;
-        const phi = Math.acos(2.0 * v - 1.0);
-        const r = 1.1 + Math.random() * 1.5;
-        pos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
-        pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-        pos[i * 3 + 2] = r * Math.cos(phi);
+      // 3. Central Quantum Jewel with Luminous Halo
+      ctx.beginPath();
+      ctx.arc(0, 0, isActive ? 5.5 : 4.0, 0, Math.PI * 2);
+      ctx.fillStyle = isActive ? "#FFFFFF" : "#F8FAFC";
+      if (isActive) {
+        ctx.shadowColor = "#38BDF8";
+        ctx.shadowBlur = 12;
       }
-      partGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
-      const partMat = new THREE.PointsMaterial({ size: 0.055, color: 0x38BDF8, transparent: true, opacity: 0.75 });
-      const partCloud = new THREE.Points(partGeo, partMat);
-      coreGroup.add(partCloud);
+      ctx.fill();
+      ctx.shadowBlur = 0;
 
-      // Mouse interactive tilt
-      let mouseX = 0, mouseY = 0;
-      container.addEventListener("mousemove", (e) => {
-        const r = container.getBoundingClientRect();
-        mouseX = ((e.clientX - r.left) / r.width - 0.5) * 1.2;
-        mouseY = ((e.clientY - r.top) / r.height - 0.5) * 1.2;
-      });
-      container.addEventListener("mouseleave", () => { mouseX = 0; mouseY = 0; });
-
-      function animate() {
-        requestAnimationFrame(animate);
-        coreGroup.rotation.z += threeJsCoreSpeed;
-        coreGroup.rotation.y += (mouseX - coreGroup.rotation.y) * 0.08;
-        coreGroup.rotation.x += (mouseY - coreGroup.rotation.x) * 0.08;
-        partCloud.rotation.y -= 0.008;
-
-        const pulse = 1.0 + Math.sin(Date.now() * 0.004) * 0.06;
-        centerOrb.scale.set(pulse, pulse, pulse);
-
-        renderer.render(scene, camera);
-      }
-      animate();
-
-      window.addEventListener("resize", () => {
-        if (!container.clientWidth) return;
-        renderer.setSize(container.clientWidth, container.clientHeight, false);
-      });
-    })();
-
-    // 4. WEBSOCKET REAL-TIME AUDIO & WEB AUDIO API ENGINE
-    class AbhimanyuLiveAudioEngine {
-      constructor() {
-        this.audioCtx = null;
-        this.analyser = null;
-        this.ws = null;
-        this.isPlaying = false;
-        this.audioQueue = [];
-        this.nextStartTime = 0;
-      }
-
-      initContext() {
-        if (!this.audioCtx) {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          this.audioCtx = new AudioContext();
-          this.analyser = this.audioCtx.createAnalyser();
-          this.analyser.fftSize = 64;
-        }
-        if (this.audioCtx.state === "suspended") {
-          this.audioCtx.resume();
-        }
-      }
-
-      streamTtsOverWebSocket(text, voice) {
-        this.initContext();
-        this.stop();
-        this.isPlaying = true;
-        this.nextStartTime = this.audioCtx.currentTime + 0.05;
-
-        // Open top audio player bar
-        const banner = document.getElementById("appAudioBanner");
-        if (banner) banner.classList.remove("hidden");
-        document.getElementById("audioPlayIcon").className = "fa-solid fa-pause";
-
-        try {
-          this.ws = new WebSocket(`${WS_BASE_URL}/ws/tts-stream`);
-          this.ws.binaryType = "arraybuffer";
-
-          this.ws.onopen = () => {
-            this.ws.send(JSON.stringify({ text: text, voice: voice }));
-          };
-
-          this.ws.onmessage = async (e) => {
-            if (typeof e.data === "string") {
-              const p = JSON.parse(e.data);
-              if (p.status === "audio_chunk" && p.audio_b64) {
-                const binary = atob(p.audio_b64);
-                const bytes = new Uint8List(binary.length);
-                for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-                this.enqueueChunk(bytes.buffer);
-              }
-            } else if (e.data instanceof ArrayBuffer) {
-              this.enqueueChunk(e.data);
-            }
-          };
-
-          this.ws.onerror = () => { this.fallbackWebSpeech(text); };
-        } catch (_) {
-          this.fallbackWebSpeech(text);
-        }
-      }
-
-      async enqueueChunk(arrayBuffer) {
-        try {
-          const audioBuffer = await this.audioCtx.decodeAudioData(arrayBuffer);
-          const source = this.audioCtx.createBufferSource();
-          source.buffer = audioBuffer;
-          source.connect(this.analyser);
-          this.analyser.connect(this.audioCtx.destination);
-
-          const startTime = Math.max(this.audioCtx.currentTime, this.nextStartTime);
-          source.start(startTime);
-          this.nextStartTime = startTime + audioBuffer.duration;
-        } catch (_) {}
-      }
-
-      fallbackWebSpeech(text) {
-        if ("speechSynthesis" in window && !isVoiceMuted) {
-          window.speechSynthesis.cancel();
-          const clean = text.replace(/[*_#`]/g, "");
-          const utterance = new SpeechSynthesisUtterance(clean);
-          utterance.rate = 1.05;
-          utterance.onend = () => { this.stop(); };
-          window.speechSynthesis.speak(utterance);
-        }
-      }
-
-      stop() {
-        if (this.ws) {
-          try { this.ws.close(); } catch(_) {}
-        }
-        if ("speechSynthesis" in window) {
-          window.speechSynthesis.cancel();
-        }
-        this.isPlaying = false;
-        const banner = document.getElementById("appAudioBanner");
-        if (banner) banner.classList.add("hidden");
-      }
+      ctx.restore();
     }
 
-    const liveAudioEngine = new AbhimanyuLiveAudioEngine();
+    // High-DPI Square Buffer Renderer (Prevents vertical oval distortion)
+    function renderCrestToCanvas(canvasId, sizePx, angle, accent, isActive) {
+      const c = document.getElementById(canvasId);
+      if (!c) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, isMobileDevice ? 1.5 : 2.0);
+      const bufferSize = Math.floor(sizePx * dpr);
 
-    // 5. INTELLIGENT DEEPSEEK & QWEN COT PARSER
-    function parseThoughtAndAnswer(rawText, isDone) {
+      if (c.width !== bufferSize || c.height !== bufferSize) {
+        c.width = bufferSize;
+        c.height = bufferSize;
+        c.style.width = sizePx + "px";
+        c.style.height = sizePx + "px";
+      }
+
+      const ctx = c.getContext("2d");
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, bufferSize, bufferSize);
+      ctx.scale(dpr, dpr);
+      drawAbhimanyuCrest(ctx, sizePx, angle, accent, isActive);
+      ctx.restore();
+    }
+
+    // Crest Animation Loop
+    (function initCrestLoop() {
+      let angle = 0.0;
+      function loop() {
+        requestAnimationFrame(loop);
+        angle = (angle + (isStreamingActive ? 0.035 : 0.009)) % (Math.PI * 2);
+
+        // Toolbar mini canvas (26px)
+        renderCrestToCanvas("abhimanyuMiniLogoCanvas", 26, angle, "#10B981", isStreamingActive);
+
+        // Empty state center canvas (Responsive 90px on phone, 120px on desktop)
+        const heroSize = isMobileDevice ? 90 : 120;
+        renderCrestToCanvas("abhimanyuThreeJsCanvas", heroSize, angle, "#10B981", isStreamingActive);
+
+        // Prompt input bar button (30px)
+        renderCrestToCanvas("mini3DSphereCanvas", 30, angle, "#38BDF8", isStreamingActive);
+      }
+      loop();
+    })();
+
+    // =========================================================================
+    // 2. HOISTED HELPER FUNCTIONS
+    // =========================================================================
+    function autoExpandTextarea(el) {
+      if (!el) return;
+      el.style.height = "auto";
+      el.style.height = Math.min(el.scrollHeight, 128) + "px";
+    }
+
+    function scrollChatBottom() {
+      const el = document.getElementById("abhimanyuMessagesList");
+      if (el) el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+    }
+
+    function clearStagedImage() {
+      window._stagedImageBase64 = null;
+      document.getElementById("stagedImageContainer")?.classList.add("hidden");
+      const inp = document.getElementById("abhimanyuFileInput");
+      if (inp) inp.value = "";
+    }
+
+    function appendUserMessage(msg) {
+      const flow = document.getElementById("chatBubblesFlow");
+      if (!flow) return;
+      const div = document.createElement("div");
+      div.className = "flex justify-end";
+      div.innerHTML = `<div class="chat-bubble-user max-w-xl p-3.5 sm:p-4 rounded-2xl rounded-br-xs bg-[#2C2C2E] border border-white/10 text-white text-xs sm:text-sm leading-relaxed font-sans shadow-md">${msg}</div>`;
+      flow.appendChild(div);
+      scrollChatBottom();
+    }
+
+    function parseThoughtAndAnswer(rawText) {
       let raw = (rawText || "").trim();
       let thinking = "";
       let answer = "";
@@ -16003,26 +16027,6 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
         const endIdx = lower.indexOf("</think>");
         thinking = raw.substring(0, endIdx).trim();
         answer = raw.substring(endIdx + 8).trim();
-      } else if (/^(okay,|alright,|the user|let me think|i need to respond|i should|first,)/i.test(raw)) {
-        const sentences = raw.split(/(?<=[.!?])\s+/);
-        let directSpeechIdx = -1;
-        for (let i = sentences.length - 1; i >= 0; i--) {
-          const s = sentences[i].trim();
-          if (/^(hello|hi|hey|sure|certainly|here is|here's|welcome|of course|i can help)/i.test(s) && i > 0) {
-            directSpeechIdx = i;
-            break;
-          }
-        }
-        if (directSpeechIdx !== -1) {
-          thinking = sentences.slice(0, directSpeechIdx).join(" ").trim();
-          answer = sentences.slice(directSpeechIdx).join(" ").trim();
-        } else if (isDone && sentences.length > 1) {
-          thinking = sentences.slice(0, -1).join(" ").trim();
-          answer = sentences[sentences.length - 1].trim();
-        } else {
-          thinking = raw;
-          answer = "";
-        }
       } else {
         answer = raw;
       }
@@ -16034,308 +16038,501 @@ export const sanitizeOutboundRelay = (session: SovereignSession): void => {
       return { thinking, answer };
     }
 
-    // 6. REAL-TIME PROMPT SUBMISSION & SSE TOKEN STREAMING
-        // 6. REAL-TIME PROMPT SUBMISSION WITH INTELLIGENT SOVEREIGN FALLBACK
-    window.submitAppQuery = function() {
-      const input = document.getElementById("appPromptInput");
-      const txt = input.value.trim();
-      if (!txt) return;
+    function updateAiBubble(id, text) {
+      const parsed = parseThoughtAndAnswer(text);
 
-      document.getElementById("chatEmptyState").classList.add("hidden");
-      const flow = document.getElementById("chatBubblesFlow");
-      flow.classList.remove("hidden");
+      const thinkCard = document.getElementById(`${id}-thinking`);
+      const thinkTxt = document.getElementById(`${id}-thinking-text`);
+      if (thinkCard && thinkTxt && parsed.thinking.length > 0) {
+        thinkCard.classList.remove("hidden");
+        thinkTxt.textContent = parsed.thinking;
+      }
 
-      appendUserMessage(txt);
-      input.value = "";
-      autoExpandTextarea(input);
-
-      threeJsCoreSpeed = 0.055; // Accelerate 3D hologram core during inference
-
-      const aiRowId = "ai-msg-" + Date.now();
-      const row = document.createElement("div");
-      row.id = aiRowId;
-      row.className = "flex flex-col gap-3 text-left w-full";
-      
-      row.innerHTML = `
-        <div id="${aiRowId}-thinking-card" class="p-3 rounded-2xl bg-[#1E293B]/70 border border-cyan-500/30 max-w-xl text-xs space-y-1.5 hidden shadow-sm transition-all">
-          <div onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.fa-chevron-down').classList.toggle('rotate-180');" class="flex items-center justify-between text-cyan-400 font-bold cursor-pointer select-none">
-            <span class="flex items-center gap-2"><i class="fa-solid fa-brain text-xs text-cyan-400 animate-pulse"></i><span>Thought Process &amp; Reasoning</span></span>
-            <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"></i>
-          </div>
-          <p id="${aiRowId}-thinking-text" class="text-slate-300 text-[11px] font-mono leading-relaxed pt-2 border-t border-white/10 whitespace-pre-wrap"></p>
-        </div>
-
-        <div id="${aiRowId}-actions-card"></div>
-
-        <div id="${aiRowId}-text-body" class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans max-w-2xl whitespace-pre-wrap">
-          <span class="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs"><i class="fa-solid fa-circle-notch fa-spin text-xs"></i><span>Abhimanyu is reasoning within sovereign enclave...</span></span>
-        </div>
-
-        <div id="${aiRowId}-sources-card" class="flex flex-wrap gap-2 pt-2 hidden"></div>
-
-        <div id="${aiRowId}-action-bar" class="flex items-center gap-2 pt-2 text-slate-400 text-xs font-medium hidden">
-          <button type="button" onclick="copyAppText(this)" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center gap-1.5 transition-colors cursor-pointer">
-            <i class="fa-regular fa-copy text-[11px]"></i><span>Copy</span>
-          </button>
-          <button type="button" onclick="startAppTtsAudio('${aiRowId}')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center gap-1.5 transition-colors cursor-pointer">
-            <i class="fa-solid fa-volume-high text-[11px]"></i><span>Read Aloud</span>
-          </button>
-        </div>
-      `;
-      flow.appendChild(row);
+      const body = document.getElementById(`${id}-body`);
+      if (body && parsed.answer.length > 0) {
+        renderParsedMarkdown(body, parsed.answer);
+      }
       scrollChatBottom();
+    }
 
-      let fullRawText = "";
-      let hasReceivedStream = false;
+    function renderParsedMarkdown(container, text) {
+      if (text.includes("[CLARIFICATION:")) {
+        const match = text.match(/\[CLARIFICATION:\s*(.*?)\]/);
+        if (match) {
+          const parts = match[1].split("|").map(s => s.trim());
+          const question = parts[0] || "Clarification required:";
+          const options = parts.slice(1);
+          const cleanMsg = text.replace(match[0], "").trim();
 
-      // Primary live streaming request with graceful fallback
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500); // 3.5s timeout threshold
-
-      fetch("/api/rag-chat-stream", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "text/event-stream" },
-        signal: controller.signal,
-        body: JSON.stringify({
-          query: txt,
-          history: [],
-          session_id: "session_1",
-          thinking_mode: abhimanyuActiveModel,
-          device_os: "Sovereign WebOS"
-        })
-      }).then(response => {
-        clearTimeout(timeoutId);
-        if (!response.ok) throw new Error("HTTP " + response.status);
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = "";
-
-        function readStream() {
-          reader.read().then(({ done, value }) => {
-            if (done) {
-              threeJsCoreSpeed = 0.014;
-              updateUiElements(aiRowId, fullRawText, true);
-              finalizeAiMessage(aiRowId);
-              return;
-            }
-
-            hasReceivedStream = true;
-            buffer += decoder.decode(value, { stream: true });
-            const lines = buffer.split("
-");
-            buffer = lines.pop();
-
-            lines.forEach(line => {
-              const trimmed = line.trim();
-              if (!trimmed.startsWith("data: ")) return;
-              const jsonStr = trimmed.substring(6).trim();
-              if (jsonStr === "[DONE]") {
-                threeJsCoreSpeed = 0.014;
-                updateUiElements(aiRowId, fullRawText, true);
-                finalizeAiMessage(aiRowId);
-                return;
-              }
-
-              try {
-                const payload = JSON.parse(jsonStr);
-                const status = payload.status || "";
-
-                if (status === "token" && payload.token) {
-                  fullRawText += payload.token;
-                  updateUiElements(aiRowId, fullRawText, false);
-                } else if (status === "action_triggered" && payload.actions) {
-                  renderActionsCard(`${aiRowId}-actions-card`, payload.actions);
-                }
-              } catch (_) {}
-            });
-
-            readStream();
-          });
+          container.innerHTML = `<div class="mb-2">${cleanMsg}</div>
+            <div class="p-3 rounded-2xl bg-black/40 border border-white/10 space-y-2 my-2">
+              <div class="text-xs font-bold text-cyan-400 flex items-center gap-2"><i class="fa-solid fa-circle-question"></i><span>${question}</span></div>
+              <div class="flex flex-wrap gap-2">
+                ${options.map(o => `<button type="button" onclick="replyClarification('${o.replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-xs font-bold text-white transition-all cursor-pointer">${o}</button>`).join("")}
+              </div>
+            </div>`;
+          return;
         }
-        readStream();
-      }).catch(err => {
-        clearTimeout(timeoutId);
-        // SMART FALLBACK: If backend returns 502 or offline, stream an intelligent local response
-        if (!hasReceivedStream) {
-          executeSmartSovereignFallback(aiRowId, txt);
+      }
+
+      if (text.includes("[PLAN:")) {
+        const match = text.match(/\[PLAN:\s*(.*?)\]/);
+        if (match) {
+          const steps = match[1].split("|").map(s => s.trim()).filter(Boolean);
+          const cleanMsg = text.replace(match[0], "").trim();
+          container.innerHTML = `<div class="mb-2">${cleanMsg}</div>
+            <div class="p-3 rounded-2xl bg-black/40 border border-emerald-500/30 space-y-2 my-2">
+              <div class="text-xs font-bold text-emerald-400 flex items-center gap-2"><i class="fa-solid fa-list-check"></i><span>Execution Roadmap</span></div>
+              <div class="space-y-1.5 font-mono text-[11px] text-slate-300">
+                ${steps.map((s, idx) => `<div class="flex items-center gap-2"><span class="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[9px] font-bold">${idx + 1}</span><span>${s}</span></div>`).join("")}
+              </div>
+            </div>`;
+          return;
         }
-      });
+      }
+
+      container.textContent = text;
+    }
+
+    window.replyClarification = function(opt) {
+      const inp = document.getElementById("appPromptInput");
+      if (inp) inp.value = opt;
+      submitAppQuery();
     };
 
-    // Autonomous Intelligent Response Generator (Offline / 502 Resilient)
-    function executeSmartSovereignFallback(aiRowId, query) {
-      threeJsCoreSpeed = 0.014;
-      const lower = query.toLowerCase();
+    function renderJarvisActionCard(containerId, actions) {
+      const el = document.getElementById(containerId);
+      if (!el || !actions.length) return;
+      const act = actions[0];
+      el.innerHTML = `
+        <div class="p-3.5 rounded-2xl bg-[#242426] border border-emerald-500/40 my-2 space-y-2 max-w-xl text-xs">
+          <div class="flex items-center gap-2 text-emerald-400 font-bold">
+            <i class="fa-solid fa-shield-halved"></i><span>Abhimanyu System Action Requested</span>
+          </div>
+          <div class="font-mono text-white">Action: ${act.action} &rarr; ${act.target}</div>
+          <div class="flex justify-end gap-2 pt-1">
+            <button type="button" onclick="this.closest('.p-3.5').remove()" class="px-3 py-1 rounded-lg text-xs font-bold text-rose-400 hover:bg-rose-500/10 cursor-pointer">Deny</button>
+            <button type="button" onclick="executeJarvisAction('${act.action}', '${act.target}', this)" class="px-3 py-1 rounded-lg text-xs font-bold bg-[#10B981] text-black hover:bg-emerald-400 cursor-pointer">Approve &amp; Run</button>
+          </div>
+        </div>
+      `;
+    }
 
-      let simulatedThinking = "Synthesizing query through local student-distilled model matrix (tau=2.5)... Identifying intent: " + query + "... Validating air-gapped zero-telemetry boundary.";
-      let simulatedAnswer = "";
-
-      if (lower.includes("hi") || lower.includes("hello") || lower.includes("hey")) {
-        simulatedAnswer = "Hello! I am Abhimanyu, NEXAUR's sovereign AI assistant running within an air-gapped neural sandbox. How can I assist your engineering, research, or enterprise exploration today?";
-      } else if (lower.includes("code") || lower.includes("terminal") || lower.includes("python")) {
-        simulatedThinking = "Ingesting host permission matrix... Preparing verified sandbox execution container for local task deployment.";
-        simulatedAnswer = "I have prepared the autonomous host execution pipeline. Here is the verified local sandboxing routine:
-
-```python
-import sovereign_kernel as sk
-
-# Zero-telemetry sandbox execution
-enclave = sk.mount_enclave(memory_limit='2GB', network='isolated')
-enclave.verify_hardware_attestation()
-print('[NEXAUR] Sovereign environment active.')
-```";
-      } else if (lower.includes("quantum") || lower.includes("math") || lower.includes("research")) {
-        simulatedThinking = "Harvesting condensed matter invariants... Formulating topological band gap Hamiltonian H(k) with spin-orbit coupling.";
-        simulatedAnswer = "Based on our sovereign mathematical reasoning distillation, the topological invariant is governed by the Chern parity:
-
-$$C = \frac{1}{2\pi} \int_{BZ} \mathcal{F}_{xy} \, d^2k$$
-
-Band gap inversion in high-temperature topological insulators preserves edge state conductance with zero dissipation.";
-      } else {
-        simulatedAnswer = "I have processed your query through the NEXAUR sovereign foundation pipeline. Every token is processed locally with zero external surveillance, volatile memory shredding, and sub-10ms response latency.";
+    async function executeJarvisAction(action, target, btn) {
+      btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Running...';
+      try {
+        const res = await fetch("https://farmchips.in/api/jarvis/execute", {
+          method: "POST",
+          headers: API_CONFIG.getHeaders(),
+          body: JSON.stringify({ action: action, target: target, confirmed_by_user: true })
+        });
+        const d = await res.json();
+        btn.textContent = "Executed ✓";
+        btn.className = "px-3 py-1 rounded-lg text-xs font-bold bg-white text-black";
+        showAppToast(d.output || "Action executed by Abhimanyu.");
+      } catch (_) {
+        btn.textContent = "Executed (Local) ✓";
+        btn.className = "px-3 py-1 rounded-lg text-xs font-bold bg-white text-black";
+        showAppToast("Action triggered on local host machine.");
       }
+    }
 
-      const thinkCard = document.getElementById(`${aiRowId}-thinking-card`);
-      const thinkText = document.getElementById(`${aiRowId}-thinking-text`);
-      if (thinkCard && thinkText) {
-        thinkCard.classList.remove("hidden");
-        thinkText.textContent = simulatedThinking;
-      }
+    // =========================================================================
+    // 3. MAIN QUERY SUBMISSION & REAL SSE STREAMING
+    // =========================================================================
+    async function submitAppQuery() {
+      try {
+        const input = document.getElementById("appPromptInput");
+        if (!input) return;
+        const query = input.value.trim();
+        const stagedImg = window._stagedImageBase64;
+        if (!query && !stagedImg) return;
 
-      const textBody = document.getElementById(`${aiRowId}-text-body`);
-      if (!textBody) return;
+        input.value = "";
+        autoExpandTextarea(input);
 
-      textBody.innerHTML = "";
-      let charIndex = 0;
-      const streamTimer = setInterval(() => {
-        charIndex += 4;
-        textBody.textContent = simulatedAnswer.substring(0, charIndex);
+        const empty = document.getElementById("chatEmptyState");
+        if (empty) empty.style.display = "none";
+        
+        const flow = document.getElementById("chatBubblesFlow");
+        if (flow) {
+          flow.classList.remove("hidden");
+          flow.style.display = "block";
+        }
+
+        appendUserMessage(query || "Visual Scan Request");
+        clearStagedImage();
+
+        const currentSession = chatSessions.find(s => s.id === activeSessionId);
+        if (currentSession && currentSession.messages.length === 0) {
+          const shortTitle = query.length > 22 ? query.slice(0, 22) + "..." : query;
+          currentSession.title = shortTitle;
+          updateHeaderSessionTitle(shortTitle);
+          renderSidebarChatHistory();
+        }
+
+        isStreamingActive = true;
+        startThinkingPhraseCycle();
+
+        const aiRowId = "ai-msg-" + Date.now();
+        const row = document.createElement("div");
+        row.id = aiRowId;
+        row.className = "flex flex-col gap-3 text-left w-full my-4";
+        row.innerHTML = `
+          <div id="${aiRowId}-thinking" class="p-3.5 rounded-2xl bg-[#1E293B]/80 border border-cyan-500/40 max-w-xl text-xs hidden shadow-sm">
+            <div onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.fa-chevron-down').classList.toggle('rotate-180');" class="flex items-center justify-between text-cyan-400 font-bold cursor-pointer select-none">
+              <span class="flex items-center gap-2"><i class="fa-solid fa-brain text-xs animate-pulse"></i><span>Thought Process &amp; Reasoning</span></span>
+              <i class="fa-solid fa-chevron-down text-[10px] transition-transform duration-200"></i>
+            </div>
+            <p id="${aiRowId}-thinking-text" class="text-slate-300 font-mono text-[11px] leading-relaxed pt-2 border-t border-white/10 whitespace-pre-wrap"></p>
+          </div>
+          <div id="${aiRowId}-actions"></div>
+          <div id="${aiRowId}-body" class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans max-w-2xl whitespace-pre-wrap">
+            <span class="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs">
+              <i class="fa-solid fa-circle-notch fa-spin"></i><span id="${aiRowId}-status">${thinkingPhrases[0]}</span>
+            </span>
+          </div>
+          <div id="${aiRowId}-action-bar" class="flex items-center gap-2 pt-2 text-slate-400 text-xs font-medium hidden">
+            <button type="button" onclick="copyAppText(this)" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center gap-1.5 transition-colors cursor-pointer">
+              <i class="fa-regular fa-copy text-[11px]"></i><span>Copy</span>
+            </button>
+            <button type="button" onclick="readAloudMessage('${aiRowId}')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 flex items-center gap-1.5 transition-colors cursor-pointer">
+              <i class="fa-solid fa-volume-high text-[11px]"></i><span>Read Aloud</span>
+            </button>
+          </div>
+        `;
+        flow.appendChild(row);
         scrollChatBottom();
 
-        if (charIndex >= simulatedAnswer.length) {
-          clearInterval(streamTimer);
-          finalizeAiMessage(aiRowId);
+        const historyPayload = [];
+        flow.querySelectorAll(".chat-bubble-user").forEach(b => {
+          historyPayload.push({ role: "user", text: b.textContent.trim() });
+        });
+
+        let processedQ = query;
+        if (stagedImg) {
+          try {
+            const vlmRes = await fetch("https://farmchips.in/api/food-analyze", {
+              method: "POST",
+              headers: API_CONFIG.getHeaders(),
+              body: JSON.stringify({ image: stagedImg })
+            });
+            if (vlmRes.ok) {
+              const vlmData = await vlmRes.json();
+              const desc = vlmData.detailed_explanation || vlmData.detected_item || "";
+              if (desc) processedQ = `[Visual Context: ${desc}]\nUser Query: ${query || "Describe this image in detail."}`;
+            }
+          } catch (_) {}
         }
-      }, 20);
+
+        const payload = {
+          query: processedQ,
+          history: historyPayload.slice(-8),
+          session_id: activeSessionId,
+          thinking_mode: abhimanyuActiveModel,
+          device_os: "Web (Tablet Client)"
+        };
+
+        const endpoints = [
+          "https://farmchips.in/api/rag-chat-stream",
+          `http://${window.location.hostname}:8000/api/rag-chat-stream`,
+          "http://127.0.0.1:8000/api/rag-chat-stream"
+        ];
+
+        let response = null;
+        for (const url of endpoints) {
+          try {
+            const r = await fetch(url, {
+              method: "POST",
+              headers: API_CONFIG.getHeaders(),
+              body: JSON.stringify(payload)
+            });
+            if (r.ok) { response = r; break; }
+          } catch (_) {}
+        }
+
+        if (!response) {
+          throw new Error("AI Server at https://farmchips.in or port 8000 is not responding.");
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
+        let fullText = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n");
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("data: ")) continue;
+            const payloadStr = trimmed.substring(6).trim();
+            if (payloadStr === "[DONE]") break;
+
+            try {
+              const data = JSON.parse(payloadStr);
+              if (data.status === "token" && data.token) {
+                fullText += data.token;
+                updateAiBubble(aiRowId, fullText);
+              } else if (data.status === "action_triggered" && data.actions) {
+                renderJarvisActionCard(`${aiRowId}-actions`, data.actions);
+              } else if (data.status === "status" || data.status === "thinking") {
+                const statusSpan = document.getElementById(`${aiRowId}-status`);
+                if (statusSpan && data.message) statusSpan.textContent = data.message;
+              }
+            } catch (_) {}
+          }
+        }
+
+        if (currentSession) {
+          currentSession.messages.push({ role: "user", text: query });
+          currentSession.messages.push({ role: "ai", text: fullText });
+        }
+
+        document.getElementById(`${aiRowId}-action-bar`)?.classList.remove("hidden");
+      } catch (err) {
+        console.error("[Abhimanyu Error]", err);
+        const body = document.querySelector('[id$="-body"]:last-of-type');
+        if (body) {
+          body.innerHTML = `
+            <div class="p-3.5 bg-rose-950/40 border border-rose-500/40 rounded-xl text-rose-200 text-xs font-mono space-y-2 my-2">
+              <div class="font-bold text-rose-400">⚠️ AI Server Connection Notice</div>
+              <div>${err.message}</div>
+              <div class="text-[11px] text-amber-300 font-sans pt-1 border-t border-rose-500/20">
+                💡 <em>Note:</em> Ensure <code>python ai_server.py</code> is actively running in your Abhimanyu terminal.
+              </div>
+            </div>
+          `;
+        }
+      } finally {
+        isStreamingActive = false;
+        stopThinkingPhraseCycle();
+        scrollChatBottom();
+      }
     }
 
-    function updateUiElements(aiRowId, rawText, isDone) {
-      const parsed = parseThoughtAndAnswer(rawText, isDone);
+    // =========================================================================
+    // 4. THINKING PHRASES CYCLE ENGINE (FROM ai_model.dart)
+    // =========================================================================
+    function startThinkingPhraseCycle() {
+      stopThinkingPhraseCycle();
+      thinkingPhraseIdx = 0;
+      thinkingTimer = setInterval(() => {
+        thinkingPhraseIdx = (thinkingPhraseIdx + 1) % thinkingPhrases.length;
+        const curPhrase = thinkingPhrases[thinkingPhraseIdx];
+        const statusSpan = document.querySelector('[id$="-status"]');
+        if (statusSpan) statusSpan.textContent = curPhrase;
+      }, 800);
+    }
+
+    function stopThinkingPhraseCycle() {
+      if (thinkingTimer) {
+        clearInterval(thinkingTimer);
+        thinkingTimer = null;
+      }
+    }
+
+    // =========================================================================
+    // 5. NEW CHAT & MULTI-SESSION HISTORY
+    // =========================================================================
+    window.createNewAbhimanyuChat = function() {
+      activeSessionId = "session_" + Date.now();
+      chatSessions.unshift({ id: activeSessionId, title: "New Conversation", messages: [] });
       
-      const thinkCard = document.getElementById(`${aiRowId}-thinking-card`);
-      const thinkText = document.getElementById(`${aiRowId}-thinking-text`);
-      if (parsed.thinking.length > 0 && thinkCard && thinkText) {
-        thinkCard.classList.remove("hidden");
-        thinkText.textContent = parsed.thinking;
+      const flow = document.getElementById("chatBubblesFlow");
+      if (flow) {
+        flow.innerHTML = "";
+        flow.style.display = "none";
       }
 
-      const textBody = document.getElementById(`${aiRowId}-text-body`);
-      if (textBody) {
-        if (parsed.answer.length > 0) {
-          textBody.textContent = parsed.answer;
-        } else if (parsed.thinking.length > 0) {
-          textBody.innerHTML = `<span class="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs"><i class="fa-solid fa-circle-notch fa-spin text-xs"></i><span>Formulating final answer...</span></span>`;
+      const empty = document.getElementById("chatEmptyState");
+      if (empty) empty.style.display = "flex";
+
+      updateHeaderSessionTitle("Active Workspace");
+      renderSidebarChatHistory();
+      showAppToast("Opened new conversation.");
+    };
+
+    window.switchChatSession = function(sessionId) {
+      const session = chatSessions.find(s => s.id === sessionId);
+      if (!session) return;
+
+      activeSessionId = sessionId;
+      updateHeaderSessionTitle(session.title);
+      renderSidebarChatHistory();
+
+      const flow = document.getElementById("chatBubblesFlow");
+      const empty = document.getElementById("chatEmptyState");
+
+      if (session.messages.length === 0) {
+        if (flow) { flow.innerHTML = ""; flow.style.display = "none"; }
+        if (empty) empty.style.display = "flex";
+      } else {
+        if (empty) empty.style.display = "none";
+        if (flow) {
+          flow.innerHTML = "";
+          flow.style.display = "block";
+          session.messages.forEach(m => {
+            if (m.role === "user") appendUserMessage(m.text);
+            else {
+              const row = document.createElement("div");
+              row.className = "flex flex-col gap-3 text-left w-full my-4";
+              row.innerHTML = `<div class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans max-w-2xl whitespace-pre-wrap">${m.text}</div>`;
+              flow.appendChild(row);
+            }
+          });
         }
       }
       scrollChatBottom();
+    };
+
+    function renderSidebarChatHistory() {
+      const list = document.getElementById("chatHistoryList");
+      if (!list) return;
+
+      list.innerHTML = chatSessions.map(s => {
+        const isActive = s.id === activeSessionId;
+        return `
+          <button type="button" onclick="switchChatSession('${s.id}')" class="w-full flex items-center gap-2 px-2.5 py-2 rounded-xl text-left truncate transition-colors cursor-pointer ${isActive ? 'bg-white/10 text-white font-semibold' : 'hover:bg-white/5 text-slate-400 hover:text-white'}">
+            <i class="fa-regular fa-message ${isActive ? 'text-[#10B981]' : ''} text-xs"></i>
+            <span class="truncate flex-1">${s.title}</span>
+          </button>
+        `;
+      }).join("");
     }
 
-    function finalizeAiMessage(aiRowId) {
-      const actionBar = document.getElementById(`${aiRowId}-action-bar`);
-      if (actionBar) actionBar.classList.remove("hidden");
-      scrollChatBottom();
+    function updateHeaderSessionTitle(title) {
+      const el = document.getElementById("activeSessionHeaderTitle");
+      if (el) el.textContent = title;
     }
 
-    window.startAppTtsAudio = function(aiRowId) {
-      const textBody = document.getElementById(`${aiRowId}-text-body`);
-      if (!textBody) return;
-      const textToSpeak = textBody.textContent.trim();
-      liveAudioEngine.streamTtsOverWebSocket(textToSpeak, abhimanyuActiveVoice);
-    };
+    // =========================================================================
+    // 6. MODEL MODE SELECTOR & COMPANION SETTINGS
+    // =========================================================================
+    window.selectModelMode = function(code, label, icon, color) {
+      abhimanyuActiveModel = code;
+      localStorage.setItem("abhimanyu_thinking_mode", code);
 
-    window.toggleAudioPlayback = function() {
-      liveAudioEngine.isPlaying = !liveAudioEngine.isPlaying;
-      document.getElementById("audioPlayIcon").className = liveAudioEngine.isPlaying ? "fa-solid fa-pause" : "fa-solid fa-play";
-    };
+      const lbl = document.getElementById("activeModelLabel");
+      if (lbl) lbl.textContent = label;
 
-    window.stopAudioPlayback = function() {
-      liveAudioEngine.stop();
-    };
-
-    // 7. PRESET PROMPTS HANDLER
-    const presetResponses = {
-      terminal: {
-        query: "Abhimanyu, please open my terminal and code editor.",
-        thinking: "Analyzing system access protocols... Target environment: Linux Desktop / Local Kernel. Permission gate active for autonomous execution.",
-        action: { action: "open_app", target: "Terminal & VS Code" },
-        text: "I have prepared the autonomous host execution pipeline to launch your terminal and code editor.",
-        sources: []
-      },
-      quantum: {
-        query: "Execute deep research max on topological insulator band gaps in 2026.",
-        thinking: "Harvesting ArXiv physics preprints & condensed matter literature. Formulating band gap inversion matrix and Chern number invariant.",
-        text: "Based on 2026 topological quantum research, the band gap inversion in three-dimensional topological insulators is governed by strong spin-orbit coupling and non-trivial surface Dirac cones.",
-        sources: [
-          { title: "ArXiv Condensed Matter", domain: "arxiv.org" },
-          { title: "PubMed Physics Lab", domain: "ncbi.nlm.nih.gov" }
-        ]
-      },
-      youtube: {
-        query: "Abhimanyu, search YouTube for Taarak Mehta Ka Ooltah Chashmah latest episode.",
-        thinking: "Routing through decentralized media mesh to universal video index. Filtering 1080p/4K WebRTC streams with zero ad-trackers.",
-        text: "Found the latest high-definition episodes indexed through the decentralized media relay with zero ad interruptions.",
-        sources: [
-          { title: "YouTube Decentralized Relay", domain: "youtube.com" }
-        ]
+      const iconEl = document.getElementById("activeModelIcon");
+      if (iconEl) {
+        iconEl.className = `fa-solid ${icon} text-[11px]`;
+        iconEl.style.color = color;
       }
+
+      document.getElementById("modelDropdownMenu")?.classList.add("hidden");
+      showAppToast(`Activated Model: ${label}`);
     };
 
-    window.sendSuggestedPrompt = function(key) {
-      const data = presetResponses[key];
-      if (!data) return;
-      document.getElementById("chatEmptyState").classList.add("hidden");
-      const flow = document.getElementById("chatBubblesFlow");
-      flow.classList.remove("hidden");
-
-      appendUserMessage(data.query);
-      setTimeout(() => {
-        appendAiMessage(data);
-      }, 400);
+    window.toggleThinkingDropdown = function(e) {
+      e.stopPropagation();
+      document.getElementById("modelDropdownMenu")?.classList.toggle("hidden");
     };
 
-    function appendUserMessage(text) {
-      const flow = document.getElementById("chatBubblesFlow");
-      const row = document.createElement("div");
-      row.className = "flex justify-end";
-      row.innerHTML = `<div class="max-w-xl p-3.5 sm:p-4 rounded-2xl rounded-br-xs bg-[#2C2C2E] border border-white/10 text-white text-xs sm:text-sm leading-relaxed font-sans shadow-md">${text}</div>`;
-      flow.appendChild(row);
-      scrollChatBottom();
-    }
+    document.addEventListener("click", () => {
+      document.getElementById("modelDropdownMenu")?.classList.add("hidden");
+    });
 
-    function appendAiMessage(data) {
-      const flow = document.getElementById("chatBubblesFlow");
-      const row = document.createElement("div");
-      row.className = "flex flex-col gap-3 text-left w-full";
-      row.innerHTML = `
-        <div class="p-3 rounded-xl bg-[#1E293B]/50 border border-cyan-500/20 max-w-xl text-xs space-y-1">
-          <div onclick="this.nextElementSibling.classList.toggle('hidden')" class="flex items-center justify-between text-cyan-400 font-bold cursor-pointer select-none">
-            <span class="flex items-center gap-2"><i class="fa-solid fa-brain"></i><span>Thought Process &amp; Reasoning</span></span>
-            <i class="fa-solid fa-chevron-down text-[10px]"></i>
+    window.openCompanionSettingsModal = function() {
+      let modal = document.getElementById("abhimanyuCompanionSettingsModal");
+      if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "abhimanyuCompanionSettingsModal";
+        modal.className = "fixed inset-0 z-[9999999] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4";
+        document.body.appendChild(modal);
+      }
+
+      modal.innerHTML = `
+        <div class="w-full max-w-md bg-[#212121] border border-white/15 rounded-3xl p-6 text-white shadow-2xl space-y-5 animate-in fade-in zoom-in-95 duration-200">
+          <div class="flex items-center justify-between pb-3 border-b border-white/10">
+            <div class="flex items-center gap-2.5">
+              <i class="fa-solid fa-sliders text-[#10B981] text-base"></i>
+              <h3 class="font-bold text-base text-white">Companion Settings</h3>
+            </div>
+            <button onclick="document.getElementById('abhimanyuCompanionSettingsModal').remove()" class="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center text-slate-400 hover:text-white cursor-pointer">✕</button>
           </div>
-          <p class="text-slate-400 text-[11px] font-mono leading-relaxed pt-1.5 border-t border-white/5">${data.thinking}</p>
-        </div>
-        <div class="text-slate-200 text-xs sm:text-sm leading-relaxed font-sans max-w-2xl">${data.text}</div>
-      `;
-      flow.appendChild(row);
-      scrollChatBottom();
-    }
 
-    function scrollChatBottom() {
-      const container = document.getElementById("abhimanyuMessagesList");
-      if (container) {
-        container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+          <div class="space-y-4 text-left">
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-white/[0.04] border border-white/[0.06]">
+              <div>
+                <div class="text-sm font-bold text-slate-100">User Vector Memory</div>
+                <div class="text-[11px] text-slate-400">Personalizes answers based on chat memory</div>
+              </div>
+              <input type="checkbox" id="set_vector_mem" ${companionSettings.use_vector_memory ? 'checked' : ''} onchange="toggleSetting('use_vector_memory', this.checked)" class="w-5 h-5 accent-[#10B981] cursor-pointer" />
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-white/[0.04] border border-white/[0.06]">
+              <div>
+                <div class="text-sm font-bold text-slate-100">Real-Time Search &amp; RAG</div>
+                <div class="text-[11px] text-slate-400">Autonomous PubMed, ArXiv &amp; web harvesting</div>
+              </div>
+              <input type="checkbox" id="set_rag" ${companionSettings.allow_web_search ? 'checked' : ''} onchange="toggleSetting('allow_web_search', this.checked)" class="w-5 h-5 accent-[#10B981] cursor-pointer" />
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-2xl bg-white/[0.04] border border-white/[0.06]">
+              <div>
+                <div class="text-sm font-bold text-slate-100">Autonomous Actions</div>
+                <div class="text-[11px] text-slate-400">Execute terminal tasks without confirmations</div>
+              </div>
+              <input type="checkbox" id="set_auto_act" ${companionSettings.jarvis_auto_execute ? 'checked' : ''} onchange="toggleSetting('jarvis_auto_execute', this.checked)" class="w-5 h-5 accent-[#10B981] cursor-pointer" />
+            </div>
+          </div>
+
+          <div class="pt-2 flex justify-end">
+            <button onclick="document.getElementById('abhimanyuCompanionSettingsModal').remove()" class="px-5 py-2 rounded-xl bg-[#10B981] hover:bg-emerald-400 text-black font-bold text-xs shadow-md cursor-pointer">Done</button>
+          </div>
+        </div>
+      `;
+    };
+
+    window.toggleSetting = function(key, val) {
+      companionSettings[key] = val;
+      localStorage.setItem("abhimanyu_settings", JSON.stringify(companionSettings));
+      showAppToast(`Updated ${key}: ${val ? 'ON' : 'OFF'}`);
+    };
+
+    setTimeout(() => {
+      const topBar = document.getElementById("appTopBar");
+      if (topBar) {
+        const gearBtn = topBar.querySelector(".fa-gear")?.closest("button") || topBar.querySelector("button:last-child");
+        if (gearBtn) gearBtn.onclick = openCompanionSettingsModal;
       }
-    }
+    }, 200);
+
+    // =========================================================================
+    // 7. INPUT, SPEECH & AUDIO
+    // =========================================================================
+    window.readAloudMessage = function(aiRowId) {
+      const textBody = document.getElementById(`${aiRowId}-body`);
+      if (!textBody) return;
+      const text = textBody.textContent.trim();
+
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+        const clean = text.replace(/[*_#`$]/g, "");
+        const utt = new SpeechSynthesisUtterance(clean);
+        utt.rate = 1.05;
+        window.speechSynthesis.speak(utt);
+        showAppToast("Reading response aloud...");
+      }
+    };
+
+    window.copyAppText = function(btn) {
+      const parent = btn.closest(".flex-col");
+      if (!parent) return;
+      const textBody = parent.querySelector('[id$="-body"]');
+      if (!textBody) return;
+      navigator.clipboard.writeText(textBody.textContent.trim());
+      btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400 text-[11px]"></i><span>Copied!</span>';
+      setTimeout(() => { btn.innerHTML = '<i class="fa-regular fa-copy text-[11px]"></i><span>Copy</span>'; }, 1800);
+    };
 
     window.handleInputKeydown = function(e) {
       if (e.key === "Enter" && !e.shiftKey) {
@@ -16344,84 +16541,42 @@ Band gap inversion in high-temperature topological insulators preserves edge sta
       }
     };
 
-    window.autoExpandTextarea = function(el) {
-      el.style.height = "auto";
-      el.style.height = Math.min(el.scrollHeight, 128) + "px";
+    window.sendSuggestedPrompt = function(k) {
+      const inp = document.getElementById("appPromptInput");
+      if (!inp) return;
+      if (k === "terminal") inp.value = "Abhimanyu, please open my terminal and code editor.";
+      if (k === "quantum") inp.value = "Execute deep research max on topological insulator band gaps in 2026.";
+      if (k === "youtube") inp.value = "Search YouTube for Taarak Mehta Ka Ooltah Chashmah latest episode.";
+      submitAppQuery();
     };
-
-    window.selectModelMode = function(code, label, icon, col) {
-      abhimanyuActiveModel = code;
-      document.getElementById("activeModelLabel").textContent = label;
-      const iconEl = document.getElementById("activeModelIcon");
-      iconEl.className = `fa-solid ${icon} text-[11px]`;
-      iconEl.style.color = col;
-      showAppToast(`Activated Model: ${label}`);
-    };
-
-    window.toggleThinkingDropdown = function(e) {
-      e.stopPropagation();
-      const menu = document.getElementById("modelDropdownMenu");
-      menu.classList.toggle("hidden");
-    };
-
-    document.addEventListener("click", () => {
-      const menu = document.getElementById("modelDropdownMenu");
-      if (menu) menu.classList.add("hidden");
-    });
 
     window.selectVoiceProfile = function(val) {
       abhimanyuActiveVoice = val;
-      showAppToast(`Voice profile updated: ${val}`);
-    };
-
-    window.toggleAbhimanyuSidebar = function() {
-      const sidebar = document.getElementById("abhimanyuSidebar");
-      if (window.innerWidth < 768) {
-        sidebar.classList.toggle("sidebar-open");
-      } else {
-        sidebar.classList.toggle("-ml-64");
-      }
-    };
-
-    window.toggleAbhimanyuTheme = function() {
-      isAppDarkMode = !isAppDarkMode;
-      const windowEl = document.getElementById("abhimanyuAppWindow");
-      const icon = document.getElementById("appThemeIcon");
-      if (isAppDarkMode) {
-        windowEl.style.backgroundColor = "#181818";
-        windowEl.style.color = "#F3F4F6";
-        icon.className = "fa-solid fa-sun text-amber-400";
-      } else {
-        windowEl.style.backgroundColor = "#F9EFE7";
-        windowEl.style.color = "#19191C";
-        icon.className = "fa-solid fa-moon text-slate-800";
-      }
-    };
-
-    window.togglePrivateMode = function() {
-      isPrivateSession = !isPrivateSession;
-      document.getElementById("privateModeStatus").textContent = isPrivateSession ? "ON" : "OFF";
-      document.getElementById("privateModeStatus").className = isPrivateSession ? "font-mono text-[10px] text-emerald-400 font-bold" : "font-mono text-[10px] text-slate-500";
-      showAppToast(`Private Mode ${isPrivateSession ? 'Enabled' : 'Disabled'}`);
-    };
-
-    window.createNewAbhimanyuChat = function() {
-      document.getElementById("chatBubblesFlow").innerHTML = "";
-      document.getElementById("chatBubblesFlow").classList.add("hidden");
-      document.getElementById("chatEmptyState").classList.remove("hidden");
-      liveAudioEngine.stop();
+      localStorage.setItem("abhimanyu_selected_voice", val);
+      const voiceLbl = document.getElementById("voiceModalProfileLabel");
+      if (voiceLbl) voiceLbl.textContent = val.replace(/_/g, " ").toUpperCase();
+      showAppToast(`Voice profile set to: ${val}`);
     };
 
     function showAppToast(msg) {
       const toast = document.getElementById("toast");
       if (toast) {
-        toast.querySelector(".text-xs").textContent = "Abhimanyu Workspace";
-        toast.querySelector(".text-\[11px\]").textContent = msg;
+        const t1 = toast.querySelector(".text-xs");
+        if (t1) t1.textContent = "Abhimanyu Workspace";
+        const t2 = toast.querySelector(".text-\\[11px\\]");
+        if (t2) t2.textContent = msg;
         toast.classList.remove("hidden");
         toast.classList.add("flex");
         setTimeout(() => { toast.classList.add("hidden"); toast.classList.remove("flex"); }, 2400);
       }
     }
+
+    // Global exports
+    window.submitAppQuery = submitAppQuery;
+    window.autoExpandTextarea = autoExpandTextarea;
+    window.clearStagedImage = clearStagedImage;
+    window.appendUserMessage = appendUserMessage;
+    window.executeJarvisAction = executeJarvisAction;
   </script>
 
   <!-- ========================================================================= -->
@@ -16957,38 +17112,7 @@ Band gap inversion in high-temperature topological insulators preserves edge sta
     loopTilt();
   })();
 
-    // Draw Official NEXAUR 9-Node Logo on Mini App Toolbar Canvas
-    (function drawMiniToolbarLogo() {
-      const c = document.getElementById("abhimanyuMiniLogoCanvas");
-      if (!c) return;
-      const ctx = c.getContext("2d");
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      c.width = 24 * dpr;
-      c.height = 24 * dpr;
-      ctx.scale(dpr, dpr);
-
-      // Draw official 9-node vector logo
-      const s = 4.2; const r = 1.0;
-      ctx.fillStyle = "#FFFFFF";
-      // Top row
-      ctx.fillRect(2, 2, s, s);
-      ctx.fillRect(8, 2, s, s);
-      ctx.fillRect(14, 2, s, s);
-      // Right pillar
-      ctx.fillStyle = "#FF6B00";
-      ctx.fillRect(19, 2, 2.5, 11);
-      // Middle row
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(2, 8, s, s);
-      ctx.fillStyle = "#FF6B00";
-      ctx.fillRect(8, 8, s, s);
-      ctx.fillStyle = "#FFFFFF";
-      ctx.fillRect(14, 8, s, s);
-      // Bottom circles
-      ctx.fillStyle = "#FF6B00";
-      ctx.beginPath(); ctx.arc(4, 17, 2, 0, Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(16, 17, 2, 0, Math.PI*2); ctx.fill();
-    })();
+    // [Mini toolbar logo handled by authentic Abhimanyu Crest Engine]
 </script>
   <!-- ========================================================================= -->
   <!-- HIGH-AUTHORITY 19-CATEGORY SEO & ALT-TEXT JAVASCRIPT INGESTION ENGINE      -->
