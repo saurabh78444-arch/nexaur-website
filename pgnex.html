@@ -1,1 +1,2397 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PGNEX — Terms & Conditions</title>
+
+<meta name="description"
+      content="PGNEX Terms and Conditions covering PG bookings, payments, cancellations, refunds, complaints, ratings, security, owners and students.">
+
+<style>
+:root{
+    --bg:#f6f7f9;
+    --card:#ffffff;
+    --text:#15171a;
+    --muted:#68707b;
+    --border:#e5e7eb;
+    --dark:#111315;
+    --dark2:#1b1e22;
+    --accent:#111315;
+    --success:#087443;
+    --success-bg:#ecfdf3;
+    --warning:#9a6700;
+    --warning-bg:#fff8e6;
+    --danger:#b42318;
+    --danger-bg:#fff1f0;
+    --shadow:0 12px 35px rgba(0,0,0,.07);
+    --radius:18px;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+    scroll-padding-top:90px;
+}
+
+body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.75;
+}
+
+/* =========================
+   TOP NAVIGATION
+========================= */
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:1000;
+    height:70px;
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid var(--border);
+    display:flex;
+    align-items:center;
+}
+
+.topbar-inner{
+    width:min(1400px,94%);
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
+    color:var(--text);
+    font-weight:800;
+    letter-spacing:-.5px;
+}
+
+.logo{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:var(--dark);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    font-size:19px;
+    box-shadow:0 5px 15px rgba(0,0,0,.15);
+}
+
+.brand span{
+    font-size:20px;
+}
+
+.menu-button{
+    display:none;
+    border:0;
+    background:var(--dark);
+    color:#fff;
+    width:42px;
+    height:42px;
+    border-radius:11px;
+    cursor:pointer;
+    font-size:20px;
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    background:
+        radial-gradient(circle at 15% 20%,rgba(255,255,255,.08),transparent 25%),
+        radial-gradient(circle at 90% 80%,rgba(255,255,255,.06),transparent 25%),
+        var(--dark);
+    color:white;
+    padding:75px 20px;
+}
+
+.hero-inner{
+    width:min(1100px,94%);
+    margin:auto;
+}
+
+.badge{
+    display:inline-flex;
+    padding:7px 13px;
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:100px;
+    font-size:12px;
+    font-weight:700;
+    color:#d7dbe0;
+    margin-bottom:22px;
+}
+
+.hero h1{
+    font-size:clamp(36px,6vw,64px);
+    line-height:1.05;
+    letter-spacing:-2px;
+    margin-bottom:20px;
+}
+
+.hero p{
+    max-width:760px;
+    color:#c8ccd1;
+    font-size:17px;
+}
+
+.hero-meta{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:28px;
+}
+
+.hero-meta span{
+    padding:8px 13px;
+    border-radius:9px;
+    background:rgba(255,255,255,.08);
+    color:#dfe2e6;
+    font-size:13px;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.page{
+    width:min(1400px,94%);
+    margin:45px auto;
+    display:grid;
+    grid-template-columns:280px minmax(0,1fr);
+    gap:35px;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar{
+    position:sticky;
+    top:95px;
+    height:calc(100vh - 115px);
+    overflow-y:auto;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:var(--shadow);
+}
+
+.sidebar-title{
+    font-size:13px;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--muted);
+    margin-bottom:13px;
+}
+
+.sidebar a{
+    display:block;
+    text-decoration:none;
+    color:#606873;
+    font-size:13px;
+    line-height:1.4;
+    padding:8px 10px;
+    border-radius:9px;
+    margin:2px 0;
+    transition:.2s ease;
+}
+
+.sidebar a:hover{
+    background:#f1f2f4;
+    color:#111;
+}
+
+.sidebar a.active{
+    background:var(--dark);
+    color:white;
+    font-weight:700;
+}
+
+/* =========================
+   MOBILE SIDEBAR
+========================= */
+
+.mobile-nav{
+    display:none;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+    padding:12px 4%;
+}
+
+.mobile-nav.open{
+    display:block;
+}
+
+.mobile-nav a{
+    display:block;
+    text-decoration:none;
+    color:#30343a;
+    padding:10px 4px;
+    border-bottom:1px solid #f0f0f0;
+    font-size:14px;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content{
+    min-width:0;
+}
+
+.intro-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:30px;
+    margin-bottom:25px;
+    box-shadow:var(--shadow);
+}
+
+.intro-card h2{
+    margin-bottom:10px;
+    font-size:24px;
+}
+
+.intro-card p{
+    color:var(--muted);
+}
+
+/* =========================
+   SECTIONS
+========================= */
+
+.policy-section{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:30px;
+    margin-bottom:18px;
+    box-shadow:0 5px 20px rgba(0,0,0,.025);
+    scroll-margin-top:90px;
+}
+
+.section-number{
+    display:inline-flex;
+    width:32px;
+    height:32px;
+    border-radius:9px;
+    align-items:center;
+    justify-content:center;
+    background:#f0f1f3;
+    color:#34383d;
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:12px;
+}
+
+.policy-section h2{
+    font-size:23px;
+    line-height:1.3;
+    letter-spacing:-.4px;
+    margin-bottom:13px;
+}
+
+.policy-section p{
+    color:#505762;
+    margin-bottom:13px;
+}
+
+.policy-section p:last-child{
+    margin-bottom:0;
+}
+
+.policy-section ul,
+.policy-section ol{
+    margin:12px 0 14px 22px;
+    color:#505762;
+}
+
+.policy-section li{
+    margin-bottom:7px;
+    padding-left:3px;
+}
+
+.policy-section strong{
+    color:#202328;
+}
+
+/* =========================
+   SPECIAL BOXES
+========================= */
+
+.info-box{
+    border-radius:14px;
+    padding:19px 20px;
+    margin:20px 0;
+    border:1px solid var(--border);
+    background:#f8f9fa;
+}
+
+.info-box strong{
+    display:block;
+    margin-bottom:4px;
+}
+
+.success-box{
+    background:var(--success-bg);
+    border-color:#bbefd3;
+}
+
+.success-box strong{
+    color:var(--success);
+}
+
+.warning-box{
+    background:var(--warning-bg);
+    border-color:#f4d99b;
+}
+
+.warning-box strong{
+    color:var(--warning);
+}
+
+.danger-box{
+    background:var(--danger-bg);
+    border-color:#f5c1bd;
+}
+
+.danger-box strong{
+    color:var(--danger);
+}
+
+/* =========================
+   TWO COLUMN CARDS
+========================= */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:15px;
+    margin:20px 0;
+}
+
+.small-card{
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:#fafafa;
+}
+
+.small-card h3{
+    font-size:16px;
+    margin-bottom:7px;
+}
+
+.small-card p{
+    font-size:14px;
+    margin:0;
+}
+
+/* =========================
+   FLOW
+========================= */
+
+.flow{
+    display:grid;
+    gap:10px;
+    margin-top:18px;
+}
+
+.flow-step{
+    display:flex;
+    gap:13px;
+    align-items:flex-start;
+    border:1px solid var(--border);
+    padding:14px;
+    border-radius:12px;
+}
+
+.flow-number{
+    min-width:30px;
+    height:30px;
+    border-radius:50%;
+    background:var(--dark);
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:800;
+}
+
+.flow-step div:last-child{
+    color:#555c65;
+    font-size:14px;
+}
+
+/* =========================
+   CONTACT CARDS
+========================= */
+
+.contact-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:14px;
+    margin-top:20px;
+}
+
+.contact-card{
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    background:#fafafa;
+}
+
+.contact-card h3{
+    font-size:15px;
+    margin-bottom:6px;
+}
+
+.contact-card a{
+    color:#111;
+    font-weight:700;
+    text-decoration:none;
+    word-break:break-word;
+}
+
+.contact-card a:hover{
+    text-decoration:underline;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+footer{
+    background:var(--dark);
+    color:#c9cdd2;
+    padding:45px 20px;
+    margin-top:50px;
+}
+
+.footer-inner{
+    width:min(1100px,94%);
+    margin:auto;
+    text-align:center;
+}
+
+.footer-logo{
+    width:45px;
+    height:45px;
+    background:white;
+    color:#111;
+    border-radius:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 15px;
+    font-weight:900;
+}
+
+footer h3{
+    color:white;
+    margin-bottom:8px;
+}
+
+footer p{
+    font-size:13px;
+    margin:5px 0;
+}
+
+.footer-links{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-top:20px;
+}
+
+.footer-links a{
+    color:#fff;
+    text-decoration:none;
+    font-size:13px;
+}
+
+.footer-links a:hover{
+    text-decoration:underline;
+}
+
+/* =========================
+   BACK TO TOP
+========================= */
+
+#topButton{
+    position:fixed;
+    right:22px;
+    bottom:22px;
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:13px;
+    background:var(--dark);
+    color:white;
+    cursor:pointer;
+    font-size:19px;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 8px 25px rgba(0,0,0,.2);
+    z-index:999;
+}
+
+#topButton.show{
+    display:flex;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:950px){
+
+    .menu-button{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+    }
+
+    .desktop-sidebar{
+        display:none;
+    }
+
+    .page{
+        display:block;
+        width:94%;
+        margin:25px auto;
+    }
+
+    .sidebar{
+        display:none;
+    }
+
+    .mobile-nav{
+        display:none;
+    }
+
+    .mobile-nav.open{
+        display:block;
+    }
+
+    .hero{
+        padding:55px 20px;
+    }
+
+    .hero h1{
+        letter-spacing:-1px;
+    }
+
+    .policy-section{
+        padding:23px;
+    }
+
+    .cards{
+        grid-template-columns:1fr;
+    }
+
+    .contact-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:550px){
+
+    .topbar{
+        height:62px;
+    }
+
+    .logo{
+        width:36px;
+        height:36px;
+    }
+
+    .brand span{
+        font-size:18px;
+    }
+
+    .hero{
+        padding:45px 16px;
+    }
+
+    .hero p{
+        font-size:15px;
+    }
+
+    .hero-meta span{
+        font-size:11px;
+    }
+
+    .intro-card,
+    .policy-section{
+        padding:20px;
+        border-radius:15px;
+    }
+
+    .policy-section h2{
+        font-size:20px;
+    }
+
+    .policy-section p,
+    .policy-section li{
+        font-size:14px;
+    }
+
+    .page{
+        width:92%;
+    }
+}
+</style>
+</head>
+
+<body id="top">
+
+<!-- =========================
+     TOP BAR
+========================= -->
+
+<header class="topbar">
+
+    <div class="topbar-inner">
+
+        <a href="#top" class="brand">
+            <div class="logo">P</div>
+            <span>PGNEX</span>
+        </a>
+
+        <button
+            class="menu-button"
+            id="menuButton"
+            aria-label="Open navigation"
+            aria-expanded="false">
+            ☰
+        </button>
+
+    </div>
+
+</header>
+
+<!-- =========================
+     MOBILE NAVIGATION
+========================= -->
+
+<nav class="mobile-nav" id="mobileNav">
+
+    <a href="#section-1">1. Introduction</a>
+    <a href="#section-2">2. Definitions</a>
+    <a href="#section-3">3. Eligibility</a>
+    <a href="#section-4">4. PGNEX Platform</a>
+    <a href="#section-5">5. PG Listings</a>
+    <a href="#section-6">6. Verified PG</a>
+    <a href="#section-7">7. Owner Responsibilities</a>
+    <a href="#section-8">8. Student Responsibilities</a>
+    <a href="#section-9">9. Booking Process</a>
+    <a href="#section-10">10. Owner Approval</a>
+    <a href="#section-11">11. 48-Hour Response</a>
+    <a href="#section-12">12. Property Visit</a>
+    <a href="#section-13">13. Payment Options</a>
+    <a href="#section-14">14. Payment Processing</a>
+    <a href="#section-15">15. Payment Confirmation</a>
+    <a href="#section-16">16. Fees & Charges</a>
+    <a href="#section-17">17. Rent Payments</a>
+    <a href="#section-18">18. Security Deposit</a>
+    <a href="#section-19">19. Agreement</a>
+    <a href="#section-20">20. Student Cancellation</a>
+    <a href="#section-21">21. Owner Cancellation</a>
+    <a href="#section-22">22. Revocation</a>
+    <a href="#section-23">23. Refunds</a>
+    <a href="#section-24">24. Ratings & Reviews</a>
+    <a href="#section-25">25. Fake PGs & Scams</a>
+    <a href="#section-26">26. Fraud Prevention</a>
+    <a href="#section-27">27. Communication</a>
+    <a href="#section-28">28. PG Complaints</a>
+    <a href="#section-29">29. Student Complaints</a>
+    <a href="#section-30">30. Investigation</a>
+    <a href="#section-31">31. False Complaints</a>
+    <a href="#section-32">32. Safety</a>
+    <a href="#section-33">33. User Content</a>
+    <a href="#section-34">34. Moderation</a>
+    <a href="#section-35">35. Account Security</a>
+    <a href="#section-36">36. Prohibited Activities</a>
+    <a href="#section-37">37. Suspension</a>
+    <a href="#section-38">38. Appeals</a>
+    <a href="#section-39">39. Property Availability</a>
+    <a href="#section-40">40. Third Parties</a>
+    <a href="#section-41">41. Platform Availability</a>
+    <a href="#section-42">42. Intellectual Property</a>
+    <a href="#section-43">43. User Content License</a>
+    <a href="#section-44">44. Privacy</a>
+    <a href="#section-45">45. Taxes</a>
+    <a href="#section-46">46. Electronic Records</a>
+    <a href="#section-47">47. Limitation of Responsibility</a>
+    <a href="#section-48">48. Indemnification</a>
+    <a href="#section-49">49. Force Majeure</a>
+    <a href="#section-50">50. Governing Law</a>
+    <a href="#section-51">51. Dispute Resolution</a>
+    <a href="#section-52">52. Changes</a>
+    <a href="#section-53">53. Severability</a>
+    <a href="#section-54">54. Entire Agreement</a>
+    <a href="#section-55">55. Contact & Reporting</a>
+    <a href="#section-56">56. Trust & Safety</a>
+    <a href="#section-57">57. Safety Notice</a>
+    <a href="#section-58">58. Acceptance</a>
+
+</nav>
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="hero">
+
+    <div class="hero-inner">
+
+        <div class="badge">
+            PGNEX • LEGAL
+        </div>
+
+        <h1>Terms & Conditions</h1>
+
+        <p>
+            These Terms and Conditions govern the use of PGNEX,
+            including PG discovery, bookings, property visits,
+            payments, refunds, ratings, complaints, security,
+            owner responsibilities and student responsibilities.
+        </p>
+
+        <div class="hero-meta">
+            <span>Effective: 5 October 2026</span>
+            <span>Last Updated: 5 October 2026</span>
+            <span>Operated by Nexaur Technologies Private Limited</span>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     MAIN PAGE
+========================= -->
+
+<main class="page">
+
+    <!-- DESKTOP SIDEBAR -->
+
+    <aside class="sidebar desktop-sidebar">
+
+        <div class="sidebar-title">
+            Contents
+        </div>
+
+        <a href="#section-1">1. Introduction</a>
+        <a href="#section-2">2. Definitions</a>
+        <a href="#section-3">3. Eligibility</a>
+        <a href="#section-4">4. PGNEX Platform</a>
+        <a href="#section-5">5. PG Listings</a>
+        <a href="#section-6">6. Verified PG</a>
+        <a href="#section-7">7. Owner Responsibilities</a>
+        <a href="#section-8">8. Student Responsibilities</a>
+        <a href="#section-9">9. Booking Process</a>
+        <a href="#section-10">10. Owner Approval</a>
+        <a href="#section-11">11. 48-Hour Response</a>
+        <a href="#section-12">12. Property Visit</a>
+        <a href="#section-13">13. Payment Options</a>
+        <a href="#section-14">14. Payment Processing</a>
+        <a href="#section-15">15. Payment Confirmation</a>
+        <a href="#section-16">16. Fees & Charges</a>
+        <a href="#section-17">17. Rent Payments</a>
+        <a href="#section-18">18. Security Deposit</a>
+        <a href="#section-19">19. Agreement</a>
+        <a href="#section-20">20. Student Cancellation</a>
+        <a href="#section-21">21. Owner Cancellation</a>
+        <a href="#section-22">22. Revocation</a>
+        <a href="#section-23">23. Refunds</a>
+        <a href="#section-24">24. Ratings & Reviews</a>
+        <a href="#section-25">25. Fake PGs & Scams</a>
+        <a href="#section-26">26. Fraud Prevention</a>
+        <a href="#section-27">27. Communication</a>
+        <a href="#section-28">28. PG Complaints</a>
+        <a href="#section-29">29. Student Complaints</a>
+        <a href="#section-30">30. Investigation</a>
+        <a href="#section-31">31. False Complaints</a>
+        <a href="#section-32">32. Safety</a>
+        <a href="#section-33">33. User Content</a>
+        <a href="#section-34">34. Moderation</a>
+        <a href="#section-35">35. Account Security</a>
+        <a href="#section-36">36. Prohibited Activities</a>
+        <a href="#section-37">37. Suspension</a>
+        <a href="#section-38">38. Appeals</a>
+        <a href="#section-39">39. Property Availability</a>
+        <a href="#section-40">40. Third Parties</a>
+        <a href="#section-41">41. Platform Availability</a>
+        <a href="#section-42">42. Intellectual Property</a>
+        <a href="#section-43">43. User Content License</a>
+        <a href="#section-44">44. Privacy</a>
+        <a href="#section-45">45. Taxes</a>
+        <a href="#section-46">46. Electronic Records</a>
+        <a href="#section-47">47. Limitation</a>
+        <a href="#section-48">48. Indemnification</a>
+        <a href="#section-49">49. Force Majeure</a>
+        <a href="#section-50">50. Governing Law</a>
+        <a href="#section-51">51. Dispute Resolution</a>
+        <a href="#section-52">52. Changes</a>
+        <a href="#section-53">53. Severability</a>
+        <a href="#section-54">54. Entire Agreement</a>
+        <a href="#section-55">55. Contact & Reporting</a>
+        <a href="#section-56">56. Trust & Safety</a>
+        <a href="#section-57">57. Safety Notice</a>
+        <a href="#section-58">58. Acceptance</a>
+
+    </aside>
+
+    <!-- CONTENT -->
+
+    <article class="content">
+
+        <div class="intro-card">
+
+            <h2>Important Information</h2>
+
+            <p>
+                Please read these Terms and Conditions carefully before
+                using PGNEX. By creating an account, listing a property,
+                requesting a booking, making a payment, visiting a PG,
+                or otherwise using PGNEX, you acknowledge that you have
+                read, understood and agreed to these Terms.
+            </p>
+
+            <div class="info-box warning-box">
+                <strong>Important</strong>
+                PGNEX is a technology platform connecting students/tenants
+                with PG owners or managers. PGNEX does not automatically
+                become the owner, landlord, operator or manager of every
+                property listed on the platform.
+            </div>
+
+        </div>
+
+        <!-- 1 -->
+
+        <section class="policy-section" id="section-1">
+            <div class="section-number">01</div>
+            <h2>Introduction</h2>
+
+            <p>
+                PGNEX is a PG accommodation discovery, booking and
+                management platform operated by Nexaur Technologies
+                Private Limited.
+            </p>
+
+            <p>
+                These Terms apply to students, tenants, PG owners,
+                property managers, administrators and other users of
+                PGNEX applications, websites and related services.
+            </p>
+        </section>
+
+        <!-- 2 -->
+
+        <section class="policy-section" id="section-2">
+            <div class="section-number">02</div>
+            <h2>Definitions</h2>
+
+            <ul>
+                <li><strong>PGNEX:</strong> The platform operated by Nexaur Technologies Private Limited.</li>
+                <li><strong>Owner:</strong> A person or entity listing or managing a PG/property.</li>
+                <li><strong>Student/Tenant:</strong> A person searching for or booking accommodation.</li>
+                <li><strong>PG:</strong> Paying guest accommodation or related residential accommodation.</li>
+                <li><strong>Booking:</strong> A request or confirmed accommodation reservation through PGNEX.</li>
+                <li><strong>Platform:</strong> PGNEX applications, websites, APIs and related services.</li>
+            </ul>
+        </section>
+
+        <!-- 3 -->
+
+        <section class="policy-section" id="section-3">
+            <div class="section-number">03</div>
+            <h2>Eligibility</h2>
+
+            <p>
+                Users must provide accurate information and must have
+                the legal capacity required to use the service.
+            </p>
+
+            <p>
+                Users must not create accounts using false identities,
+                impersonate another person or provide misleading
+                information.
+            </p>
+        </section>
+
+        <!-- 4 -->
+
+        <section class="policy-section" id="section-4">
+            <div class="section-number">04</div>
+            <h2>PGNEX as a Technology Platform</h2>
+
+            <p>
+                PGNEX provides technology for discovering properties,
+                submitting booking requests, managing listings,
+                processing eligible transactions and facilitating
+                platform-related communication.
+            </p>
+
+            <p>
+                Unless specifically stated otherwise, PGNEX does not
+                own or operate every PG listed on the platform.
+            </p>
+        </section>
+
+        <!-- 5 -->
+
+        <section class="policy-section" id="section-5">
+            <div class="section-number">05</div>
+            <h2>PG Listings</h2>
+
+            <p>
+                Owners are responsible for ensuring that listing
+                information is accurate, current and not misleading.
+            </p>
+
+            <ul>
+                <li>Property information must be genuine.</li>
+                <li>Images should represent the actual property.</li>
+                <li>Availability must be kept reasonably updated.</li>
+                <li>Rent and other disclosed charges must not be misleading.</li>
+                <li>Owners must not create fake properties or duplicate fraudulent listings.</li>
+            </ul>
+        </section>
+
+        <!-- 6 -->
+
+        <section class="policy-section" id="section-6">
+            <div class="section-number">06</div>
+            <h2>Verified PG and Verification</h2>
+
+            <p>
+                PGNEX may verify PG owners, property information,
+                documents or other relevant details before providing
+                a verification status or badge.
+            </p>
+
+            <div class="info-box warning-box">
+                <strong>Verification is not a guarantee</strong>
+                A verified badge does not guarantee permanent availability,
+                property quality, safety, owner conduct or future
+                compliance. Users should independently inspect the
+                property before making accommodation decisions.
+            </div>
+        </section>
+
+        <!-- 7 -->
+
+        <section class="policy-section" id="section-7">
+            <div class="section-number">07</div>
+            <h2>Owner Responsibilities</h2>
+
+            <ul>
+                <li>Provide truthful property information.</li>
+                <li>Maintain accurate room and bed availability.</li>
+                <li>Respond to booking requests within the applicable time.</li>
+                <li>Honor confirmed bookings except for legitimate reasons.</li>
+                <li>Follow applicable laws and property requirements.</li>
+                <li>Cooperate with complaint and verification investigations.</li>
+                <li>Do not engage in fraudulent or deceptive activity.</li>
+            </ul>
+        </section>
+
+        <!-- 8 -->
+
+        <section class="policy-section" id="section-8">
+            <div class="section-number">08</div>
+            <h2>Student/Tenant Responsibilities</h2>
+
+            <ul>
+                <li>Provide accurate identity and booking information.</li>
+                <li>Pay applicable amounts according to the selected payment method.</li>
+                <li>Attend property visits responsibly.</li>
+                <li>Follow legitimate PG rules.</li>
+                <li>Protect property and avoid intentional damage.</li>
+                <li>Do not create fake accounts or fake complaints.</li>
+                <li>Do not misuse the PGNEX platform.</li>
+            </ul>
+        </section>
+
+        <!-- 9 -->
+
+        <section class="policy-section" id="section-9">
+            <div class="section-number">09</div>
+            <h2>Booking Process</h2>
+
+            <p>
+                A typical PGNEX booking may follow the following process:
+            </p>
+
+            <div class="flow">
+
+                <div class="flow-step">
+                    <div class="flow-number">1</div>
+                    <div>Student searches and selects a PG.</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-number">2</div>
+                    <div>Student submits a booking request.</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-number">3</div>
+                    <div>Owner reviews the booking request.</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-number">4</div>
+                    <div>Student may visit the property where applicable.</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-number">5</div>
+                    <div>Payment is made online or through an enabled cash option.</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-number">6</div>
+                    <div>Booking confirmation is recorded through PGNEX.</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-number">7</div>
+                    <div>Agreement/check-in process may be completed.</div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 10 -->
+
+        <section class="policy-section" id="section-10">
+            <div class="section-number">10</div>
+            <h2>Owner Approval</h2>
+
+            <p>
+                A booking request does not automatically mean that the
+                accommodation is confirmed.
+            </p>
+
+            <p>
+                Owner approval may be required before a booking becomes
+                confirmed, depending on the booking flow.
+            </p>
+        </section>
+
+        <!-- 11 -->
+
+        <section class="policy-section" id="section-11">
+            <div class="section-number">11</div>
+            <h2>48-Hour Owner Response Period</h2>
+
+            <p>
+                Owners are generally expected to respond to applicable
+                booking requests within <strong>48 hours</strong>.
+            </p>
+
+            <div class="info-box success-box">
+                <strong>No response after 48 hours</strong>
+                If the owner does not respond within the applicable
+                48-hour period, PGNEX may cancel or expire the booking
+                request and initiate an eligible refund where applicable.
+            </div>
+        </section>
+
+        <!-- 12 -->
+
+        <section class="policy-section" id="section-12">
+            <div class="section-number">12</div>
+            <h2>Booking After Property Visit</h2>
+
+            <p>
+                PGNEX may allow a student to visit a PG before making
+                or completing payment.
+            </p>
+
+            <p>
+                Where a cash-after-visit option is enabled, the student
+                may choose to pay after visiting the property, subject
+                to the applicable booking rules.
+            </p>
+        </section>
+
+        <!-- 13 -->
+
+        <section class="policy-section" id="section-13">
+            <div class="section-number">13</div>
+            <h2>Payment Options</h2>
+
+            <div class="cards">
+
+                <div class="small-card">
+                    <h3>Online Payment</h3>
+                    <p>
+                        Users may make eligible payments through supported
+                        online payment methods.
+                    </p>
+                </div>
+
+                <div class="small-card">
+                    <h3>Cash Payment</h3>
+                    <p>
+                        Cash payment may be available for eligible bookings
+                        after a property visit where enabled.
+                    </p>
+                </div>
+
+            </div>
+
+            <p>
+                The payment method available for a particular booking
+                may depend on the property, booking stage and platform
+                configuration.
+            </p>
+        </section>
+
+        <!-- 14 -->
+
+        <section class="policy-section" id="section-14">
+            <div class="section-number">14</div>
+            <h2>Payment Processing</h2>
+
+            <p>
+                Online payments may be processed through third-party
+                payment service providers.
+            </p>
+
+            <p>
+                Payment providers may apply their own terms, security
+                procedures and processing timelines.
+            </p>
+
+            <p>
+                PGNEX does not ask users to share OTPs, UPI PINs,
+                card PINs or passwords with PGNEX staff.
+            </p>
+        </section>
+
+        <!-- 15 -->
+
+        <section class="policy-section" id="section-15">
+            <div class="section-number">15</div>
+            <h2>Payment Confirmation</h2>
+
+            <p>
+                A payment is considered successfully completed only
+                when the applicable payment system or PGNEX system
+                receives confirmation.
+            </p>
+
+            <p>
+                A failed, cancelled, pending or incomplete transaction
+                should not be treated as a successful payment merely
+                because a payment screen was opened.
+            </p>
+        </section>
+
+        <!-- 16 -->
+
+        <section class="policy-section" id="section-16">
+            <div class="section-number">16</div>
+            <h2>Fees and Charges</h2>
+
+            <p>
+                Depending on the service and booking, PGNEX may apply
+                applicable fees or charges.
+            </p>
+
+            <ul>
+                <li>Booking fees</li>
+                <li>Platform/service fees</li>
+                <li>Convenience charges</li>
+                <li>Payment processing charges</li>
+                <li>Applicable cancellation charges</li>
+                <li>Other clearly disclosed charges</li>
+            </ul>
+
+            <p>
+                Applicable charges should be displayed or communicated
+                before the relevant transaction wherever reasonably possible.
+            </p>
+        </section>
+
+        <!-- 17 -->
+
+        <section class="policy-section" id="section-17">
+            <div class="section-number">17</div>
+            <h2>Rent and Recurring Payments</h2>
+
+            <p>
+                Rent after the initial booking may be payable according
+                to the agreement between the student and the owner.
+            </p>
+
+            <p>
+                PGNEX may provide reminders or payment-management
+                functionality where available, but users remain
+                responsible for paying amounts legally due.
+            </p>
+        </section>
+
+        <!-- 18 -->
+
+        <section class="policy-section" id="section-18">
+            <div class="section-number">18</div>
+            <h2>Security Deposit</h2>
+
+            <p>
+                A security deposit may be required by a PG owner.
+            </p>
+
+            <p>
+                Depending on the applicable booking arrangement,
+                the security deposit may be handled through PGNEX
+                or directly between the student and owner.
+            </p>
+
+            <p>
+                Legitimate deductions may include unpaid rent,
+                documented property damage or other agreed amounts,
+                subject to applicable law and the relevant agreement.
+            </p>
+        </section>
+
+        <!-- 19 -->
+
+        <section class="policy-section" id="section-19">
+            <div class="section-number">19</div>
+            <h2>Agreement Generation</h2>
+
+            <p>
+                PGNEX may generate or facilitate an accommodation
+                agreement based on information provided by the parties.
+            </p>
+
+            <p>
+                Users are responsible for reviewing the agreement and
+                ensuring that relevant information is correct before
+                accepting it.
+            </p>
+        </section>
+
+        <!-- 20 -->
+
+        <section class="policy-section" id="section-20">
+            <div class="section-number">20</div>
+            <h2>Cancellation by Student</h2>
+
+            <p>
+                Students may request cancellation depending on the
+                booking status and applicable cancellation conditions.
+            </p>
+
+            <p>
+                Refund eligibility may vary depending on when the
+                cancellation occurs, whether services have been used,
+                applicable charges and the circumstances of cancellation.
+            </p>
+        </section>
+
+        <!-- 21 -->
+
+        <section class="policy-section" id="section-21">
+            <div class="section-number">21</div>
+            <h2>Cancellation by Owner</h2>
+
+            <p>
+                Owners should avoid cancelling confirmed bookings
+                without a legitimate reason.
+            </p>
+
+            <p>
+                Where payment has already been made, applicable refund
+                procedures may be initiated depending on the circumstances.
+            </p>
+
+            <p>
+                Repeated unjustified cancellations may result in
+                warnings, restrictions, suspension or removal.
+            </p>
+        </section>
+
+        <!-- 22 -->
+
+        <section class="policy-section" id="section-22">
+            <div class="section-number">22</div>
+            <h2>Revocation of Booking or Room</h2>
+
+            <p>
+                An owner may revoke a student's booking or room allocation
+                for legitimate reasons, subject to applicable law and
+                platform rules.
+            </p>
+
+            <p>
+                Prior notice should generally be provided where reasonably
+                possible.
+            </p>
+
+            <div class="info-box warning-box">
+                <strong>Urgent situations</strong>
+                Immediate action may be taken in circumstances involving
+                safety risks, fraud, serious misconduct, legal requirements
+                or other urgent circumstances.
+            </div>
+        </section>
+
+        <!-- 23 -->
+
+        <section class="policy-section" id="section-23">
+            <div class="section-number">23</div>
+            <h2>Refunds</h2>
+
+            <p>
+                Refunds may be available in eligible situations including:
+            </p>
+
+            <ul>
+                <li>Owner rejection where payment was already captured.</li>
+                <li>No owner response after the applicable 48-hour period.</li>
+                <li>Property becoming unavailable.</li>
+                <li>Duplicate successful payments.</li>
+                <li>Eligible student cancellation.</li>
+                <li>Approved complaint or dispute resolution.</li>
+                <li>Technical payment errors resulting in an actual duplicate charge.</li>
+            </ul>
+
+            <p>
+                Refunds may not be available for disclosed non-refundable
+                charges, consumed services, legitimate deductions,
+                property damage, fraudulent claims or other excluded
+                circumstances.
+            </p>
+
+            <div class="info-box">
+                <strong>Refund timing</strong>
+                The time required for a refund to reach the user's bank
+                account may depend on the payment provider, bank,
+                payment method and applicable processing timelines.
+            </div>
+        </section>
+
+        <!-- 24 -->
+
+        <section class="policy-section" id="section-24">
+            <div class="section-number">24</div>
+            <h2>Ratings and Reviews</h2>
+
+            <p>
+                PGNEX may provide ratings and review functionality.
+            </p>
+
+            <p>
+                Reviews must be based on genuine experience and should
+                be relevant, accurate and respectful.
+            </p>
+
+            <ul>
+                <li>No fake reviews.</li>
+                <li>No purchased reviews.</li>
+                <li>No review manipulation.</li>
+                <li>No threats to obtain a positive review.</li>
+                <li>No coordinated rating abuse.</li>
+                <li>No impersonation or multiple-account manipulation.</li>
+            </ul>
+        </section>
+
+        <!-- 25 -->
+
+        <section class="policy-section" id="section-25">
+            <div class="section-number">25</div>
+            <h2>Fake PGs and Scams</h2>
+
+            <div class="info-box danger-box">
+                <strong>Zero tolerance for fraud</strong>
+                Fake PG listings, fake owners, non-existent properties,
+                fraudulent payment requests and impersonation of PGNEX
+                staff are prohibited.
+            </div>
+
+            <ul>
+                <li>Fake property listings</li>
+                <li>Fake photographs</li>
+                <li>False availability</li>
+                <li>Fake discounts</li>
+                <li>Fraudulent advance-payment demands</li>
+                <li>Fake PGNEX employees</li>
+                <li>Fake payment links</li>
+                <li>Phishing links</li>
+                <li>Fraudulent documents</li>
+            </ul>
+        </section>
+
+        <!-- 26 -->
+
+        <section class="policy-section" id="section-26">
+            <div class="section-number">26</div>
+            <h2>Off-Platform Fraud Prevention</h2>
+
+            <p>
+                Users must be careful when receiving payment requests
+                or instructions outside official PGNEX systems.
+            </p>
+
+            <p>
+                PGNEX will never require users to share their OTP,
+                UPI PIN, card PIN, password or authentication code
+                with another user.
+            </p>
+        </section>
+
+        <!-- 27 -->
+
+        <section class="policy-section" id="section-27">
+            <div class="section-number">27</div>
+            <h2>User Communication</h2>
+
+            <p>
+                PGNEX does not provide unrestricted direct communication
+                between students and owners outside the official platform
+                process.
+            </p>
+
+            <p>
+                Users must not attempt to bypass platform safeguards,
+                obtain private contact information improperly or use
+                the platform to facilitate unauthorized transactions.
+            </p>
+        </section>
+
+        <!-- 28 -->
+
+        <section class="policy-section" id="section-28">
+            <div class="section-number">28</div>
+            <h2>Complaints Against PGs or Owners</h2>
+
+            <p>
+                Students may submit complaints regarding a PG, owner
+                or property.
+            </p>
+
+            <p>
+                Complaints may relate to inaccurate listings, safety
+                concerns, fraud, payment issues, property conditions,
+                booking issues, harassment, misconduct or other
+                legitimate concerns.
+            </p>
+
+            <p>
+                Users should provide truthful and relevant information
+                and supporting evidence where available.
+            </p>
+        </section>
+
+        <!-- 29 -->
+
+        <section class="policy-section" id="section-29">
+            <div class="section-number">29</div>
+            <h2>Complaints Against Students</h2>
+
+            <p>
+                Owners may submit complaints against students for
+                legitimate reasons including fraud, property damage,
+                harassment, misconduct, false information, non-payment
+                or serious violations of PG rules.
+            </p>
+
+            <p>
+                PGNEX may review such complaints according to its
+                investigation process.
+            </p>
+        </section>
+
+        <!-- 30 -->
+
+        <section class="policy-section" id="section-30">
+            <div class="section-number">30</div>
+            <h2>Complaint Investigation</h2>
+
+            <p>
+                PGNEX may investigate complaints by reviewing relevant
+                information available through the platform.
+            </p>
+
+            <ul>
+                <li>Booking records</li>
+                <li>Payment records</li>
+                <li>Account information</li>
+                <li>Platform communications</li>
+                <li>Listing information</li>
+                <li>Documents or evidence submitted by users</li>
+                <li>Technical and security records</li>
+            </ul>
+
+            <p>
+                PGNEX may provide the affected party with an opportunity
+                to respond where reasonably appropriate.
+            </p>
+        </section>
+
+        <!-- 31 -->
+
+        <section class="policy-section" id="section-31">
+            <div class="section-number">31</div>
+            <h2>False or Malicious Complaints</h2>
+
+            <p>
+                Users must not knowingly submit false, fabricated,
+                malicious or retaliatory complaints.
+            </p>
+
+            <p>
+                Abuse of the complaint system may result in warning,
+                removal of content, account restrictions, suspension
+                or termination.
+            </p>
+        </section>
+
+        <!-- 32 -->
+
+        <section class="policy-section" id="section-32">
+            <div class="section-number">32</div>
+            <h2>Serious Safety and Emergency Matters</h2>
+
+            <p>
+                PGNEX is not an emergency response service.
+            </p>
+
+            <p>
+                In an immediate emergency, users should contact the
+                appropriate local emergency services, law enforcement,
+                medical services or other competent authorities.
+            </p>
+        </section>
+
+        <!-- 33 -->
+
+        <section class="policy-section" id="section-33">
+            <div class="section-number">33</div>
+            <h2>User-Generated Content</h2>
+
+            <p>
+                Users may provide property information, reviews,
+                photographs, documents or other content where supported.
+            </p>
+
+            <p>
+                Users must have the necessary rights to upload such
+                content and must not upload unlawful, infringing,
+                fraudulent or harmful material.
+            </p>
+        </section>
+
+        <!-- 34 -->
+
+        <section class="policy-section" id="section-34">
+            <div class="section-number">34</div>
+            <h2>Content Moderation</h2>
+
+            <p>
+                PGNEX may review, restrict, remove or disable content
+                that violates these Terms, applicable law, safety
+                requirements or platform policies.
+            </p>
+
+            <p>
+                PGNEX may also take action against accounts responsible
+                for repeated violations.
+            </p>
+        </section>
+
+        <!-- 35 -->
+
+        <section class="policy-section" id="section-35">
+            <div class="section-number">35</div>
+            <h2>Account Security</h2>
+
+            <p>
+                Users are responsible for protecting their account
+                credentials and authentication information.
+            </p>
+
+            <ul>
+                <li>Do not share passwords.</li>
+                <li>Do not share OTPs.</li>
+                <li>Do not share UPI PINs.</li>
+                <li>Use strong authentication information.</li>
+                <li>Report suspected unauthorized access immediately.</li>
+            </ul>
+        </section>
+
+        <!-- 36 -->
+
+        <section class="policy-section" id="section-36">
+            <div class="section-number">36</div>
+            <h2>Prohibited Activities</h2>
+
+            <ul>
+                <li>Fraud or attempted fraud.</li>
+                <li>Impersonation.</li>
+                <li>Fake PG listings.</li>
+                <li>Fake accounts.</li>
+                <li>Payment fraud.</li>
+                <li>Harassment or threats.</li>
+                <li>Unauthorized access to accounts or systems.</li>
+                <li>Manipulation of ratings or reviews.</li>
+                <li>Uploading unlawful content.</li>
+                <li>Attempting to disrupt the platform.</li>
+            </ul>
+        </section>
+
+        <!-- 37 -->
+
+        <section class="policy-section" id="section-37">
+            <div class="section-number">37</div>
+            <h2>Account Suspension or Termination</h2>
+
+            <p>
+                PGNEX may suspend, restrict or terminate accounts,
+                listings or platform access when reasonably necessary.
+            </p>
+
+            <p>
+                Serious complaints, fraud, repeated violations,
+                security threats, illegal activity or significant
+                misuse may result in immediate restrictions.
+            </p>
+        </section>
+
+        <!-- 38 -->
+
+        <section class="policy-section" id="section-38">
+            <div class="section-number">38</div>
+            <h2>Appeals</h2>
+
+            <p>
+                Where an account or listing is restricted, users may
+                contact PGNEX support to request review or clarification.
+            </p>
+
+            <p>
+                PGNEX may request additional information before
+                reconsidering a decision.
+            </p>
+        </section>
+
+        <!-- 39 -->
+
+        <section class="policy-section" id="section-39">
+            <div class="section-number">39</div>
+            <h2>Property Quality and Availability</h2>
+
+            <p>
+                Owners are responsible for maintaining their property
+                and providing accurate availability information.
+            </p>
+
+            <p>
+                PGNEX does not guarantee that every property will
+                permanently maintain the same condition, availability,
+                services or facilities.
+            </p>
+        </section>
+
+        <!-- 40 -->
+
+        <section class="policy-section" id="section-40">
+            <div class="section-number">40</div>
+            <h2>Third-Party Services</h2>
+
+            <p>
+                PGNEX may rely on third-party services for payments,
+                hosting, analytics, notifications, authentication,
+                security or other technical functions.
+            </p>
+
+            <p>
+                Such services may have their own terms and privacy
+                practices.
+            </p>
+        </section>
+
+        <!-- 41 -->
+
+        <section class="policy-section" id="section-41">
+            <div class="section-number">41</div>
+            <h2>Platform Availability</h2>
+
+            <p>
+                PGNEX aims to provide reliable services but does not
+                guarantee uninterrupted or error-free availability.
+            </p>
+
+            <p>
+                Service interruptions may occur due to maintenance,
+                technical failures, internet issues, third-party
+                failures, security events or circumstances beyond
+                reasonable control.
+            </p>
+        </section>
+
+        <!-- 42 -->
+
+        <section class="policy-section" id="section-42">
+            <div class="section-number">42</div>
+            <h2>Intellectual Property</h2>
+
+            <p>
+                PGNEX software, branding, design, logos, text,
+                graphics and other platform materials may be protected
+                by intellectual property laws.
+            </p>
+
+            <p>
+                Users may not copy, modify, distribute, reverse engineer
+                or commercially exploit PGNEX materials without
+                appropriate authorization.
+            </p>
+        </section>
+
+        <!-- 43 -->
+
+        <section class="policy-section" id="section-43">
+            <div class="section-number">43</div>
+            <h2>User Content License</h2>
+
+            <p>
+                By submitting content to PGNEX, users grant PGNEX the
+                permissions reasonably necessary to host, process,
+                display and operate that content as part of the service,
+                subject to applicable law and the Privacy Policy.
+            </p>
+        </section>
+
+        <!-- 44 -->
+
+        <section class="policy-section" id="section-44">
+            <div class="section-number">44</div>
+            <h2>Privacy</h2>
+
+            <p>
+                Personal information is handled according to the
+                applicable PGNEX Privacy Policy.
+            </p>
+
+            <p>
+                Users should review the Privacy Policy to understand
+                how information may be collected, used, stored,
+                protected and deleted.
+            </p>
+
+            <div class="info-box">
+                <strong>Privacy Policy</strong>
+                <a href="privacy-policy.html">
+                    View PGNEX Privacy Policy
+                </a>
+            </div>
+        </section>
+
+        <!-- 45 -->
+
+        <section class="policy-section" id="section-45">
+            <div class="section-number">45</div>
+            <h2>Taxes</h2>
+
+            <p>
+                Users and owners are responsible for taxes, charges,
+                registrations and other legal obligations applicable
+                to their activities.
+            </p>
+        </section>
+
+        <!-- 46 -->
+
+        <section class="policy-section" id="section-46">
+            <div class="section-number">46</div>
+            <h2>Electronic Records</h2>
+
+            <p>
+                Electronic records, confirmations, notifications,
+                booking records and payment records generated through
+                the platform may be used as records of transactions,
+                subject to applicable law.
+            </p>
+        </section>
+
+        <!-- 47 -->
+
+        <section class="policy-section" id="section-47">
+            <div class="section-number">47</div>
+            <h2>Limitation of Responsibility</h2>
+
+            <p>
+                To the maximum extent permitted by applicable law,
+                PGNEX is not responsible for losses arising solely
+                from the independent acts, omissions or misconduct
+                of users or property owners.
+            </p>
+
+            <p>
+                Nothing in these Terms is intended to exclude liability
+                that cannot legally be excluded under applicable law.
+            </p>
+        </section>
+
+        <!-- 48 -->
+
+        <section class="policy-section" id="section-48">
+            <div class="section-number">48</div>
+            <h2>Indemnification</h2>
+
+            <p>
+                To the extent permitted by law, a user may be responsible
+                for losses, claims or reasonable costs arising from
+                their unlawful conduct, fraud, intentional misuse,
+                violation of these Terms or infringement of another
+                person's rights.
+            </p>
+        </section>
+
+        <!-- 49 -->
+
+        <section class="policy-section" id="section-49">
+            <div class="section-number">49</div>
+            <h2>Force Majeure</h2>
+
+            <p>
+                PGNEX will not be responsible for delays or failures
+                caused by circumstances beyond reasonable control,
+                including natural disasters, government actions,
+                infrastructure failures, major network outages,
+                cyber incidents, strikes or other extraordinary events.
+            </p>
+        </section>
+
+        <!-- 50 -->
+
+        <section class="policy-section" id="section-50">
+            <div class="section-number">50</div>
+            <h2>Governing Law</h2>
+
+            <p>
+                These Terms are governed by the applicable laws of India,
+                subject to mandatory rights and protections available
+                under applicable law.
+            </p>
+        </section>
+
+        <!-- 51 -->
+
+        <section class="policy-section" id="section-51">
+            <div class="section-number">51</div>
+            <h2>Dispute Resolution</h2>
+
+            <p>
+                Users are encouraged to contact PGNEX support first
+                for platform-related disputes.
+            </p>
+
+            <p>
+                If a dispute cannot be resolved through support,
+                the parties may pursue remedies available under
+                applicable law.
+            </p>
+        </section>
+
+        <!-- 52 -->
+
+        <section class="policy-section" id="section-52">
+            <div class="section-number">52</div>
+            <h2>Changes to These Terms</h2>
+
+            <p>
+                PGNEX may update these Terms from time to time to
+                reflect changes in services, law, security requirements
+                or business operations.
+            </p>
+
+            <p>
+                The updated version will be published through an
+                appropriate PGNEX channel.
+            </p>
+        </section>
+
+        <!-- 53 -->
+
+        <section class="policy-section" id="section-53">
+            <div class="section-number">53</div>
+            <h2>Severability</h2>
+
+            <p>
+                If any provision of these Terms is determined to be
+                invalid or unenforceable, the remaining provisions
+                will continue to apply to the extent permitted by law.
+            </p>
+        </section>
+
+        <!-- 54 -->
+
+        <section class="policy-section" id="section-54">
+            <div class="section-number">54</div>
+            <h2>Entire Agreement</h2>
+
+            <p>
+                These Terms, together with applicable policies and
+                agreements referenced within them, form the applicable
+                understanding governing use of PGNEX services.
+            </p>
+        </section>
+
+        <!-- 55 -->
+
+        <section class="policy-section" id="section-55">
+            <div class="section-number">55</div>
+            <h2>Contact, Support and Reporting</h2>
+
+            <p>
+                Users can contact PGNEX for support, privacy questions,
+                security reports, complaints, fraud reports or account
+                concerns.
+            </p>
+
+            <div class="contact-grid">
+
+                <div class="contact-card">
+                    <h3>General Support</h3>
+                    <a href="mailto:nexaurpvtltd@gmail.com">
+                        Email Support
+                    </a>
+                </div>
+
+                <div class="contact-card">
+                    <h3>Fraud / Scam</h3>
+                    <a href="mailto:nexaurpvtltd@gmail.com?subject=PGNEX%20Fraud%20Report">
+                        Report Fraud
+                    </a>
+                </div>
+
+                <div class="contact-card">
+                    <h3>Privacy</h3>
+                    <a href="mailto:nexaurpvtltd@gmail.com?subject=PGNEX%20Privacy%20Request">
+                        Privacy Request
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 56 -->
+
+        <section class="policy-section" id="section-56">
+            <div class="section-number">56</div>
+            <h2>PGNEX Trust & Safety Principles</h2>
+
+            <div class="cards">
+
+                <div class="small-card">
+                    <h3>Verify</h3>
+                    <p>Verify relevant owners and property information where possible.</p>
+                </div>
+
+                <div class="small-card">
+                    <h3>Inform</h3>
+                    <p>Provide clear booking, payment and platform information.</p>
+                </div>
+
+                <div class="small-card">
+                    <h3>Protect</h3>
+                    <p>Use reasonable technical and operational security measures.</p>
+                </div>
+
+                <div class="small-card">
+                    <h3>Report</h3>
+                    <p>Provide channels for legitimate complaints and fraud reports.</p>
+                </div>
+
+                <div class="small-card">
+                    <h3>Review</h3>
+                    <p>Review serious complaints and platform violations.</p>
+                </div>
+
+                <div class="small-card">
+                    <h3>Act</h3>
+                    <p>Take appropriate action where violations are established.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 57 -->
+
+        <section class="policy-section" id="section-57">
+            <div class="section-number">57</div>
+            <h2>Important User Safety Notice</h2>
+
+            <div class="info-box danger-box">
+
+                <strong>Never share sensitive payment credentials</strong>
+
+                <ul>
+                    <li>OTP</li>
+                    <li>UPI PIN</li>
+                    <li>ATM PIN</li>
+                    <li>Card PIN</li>
+                    <li>Password</li>
+                    <li>Authentication codes</li>
+                </ul>
+
+                <p>
+                    PGNEX staff or legitimate platform processes should
+                    not require users to disclose these confidential
+                    credentials.
+                </p>
+
+            </div>
+
+            <p>
+                If you suspect a scam, fraudulent PG listing,
+                unauthorized payment request or account compromise,
+                report it to PGNEX as soon as possible and contact
+                your bank/payment provider where appropriate.
+            </p>
+        </section>
+
+        <!-- 58 -->
+
+        <section class="policy-section" id="section-58">
+            <div class="section-number">58</div>
+            <h2>Final Acceptance</h2>
+
+            <p>
+                By creating an account, listing a property, requesting
+                a booking, making a payment or using PGNEX services,
+                you acknowledge that you have read and understood
+                these Terms and Conditions.
+            </p>
+
+            <div class="info-box success-box">
+
+                <strong>Thank you for using PGNEX.</strong>
+
+                Our objective is to make PG accommodation discovery
+                and booking more transparent, secure and convenient
+                for students and property owners.
+
+            </div>
+
+        </section>
+
+    </article>
+
+</main>
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer>
+
+    <div class="footer-inner">
+
+        <div class="footer-logo">P</div>
+
+        <h3>PGNEX</h3>
+
+        <p>
+            PG discovery, booking and management platform.
+        </p>
+
+        <p>
+            Operated by Nexaur Technologies Private Limited.
+        </p>
+
+        <div class="footer-links">
+
+            <a href="privacy-policy.html">
+                Privacy Policy
+            </a>
+
+            <a href="terms-and-conditions.html">
+                Terms & Conditions
+            </a>
+
+            <a href="mailto:nexaurpvtltd@gmail.com">
+                Contact Support
+            </a>
+
+            <a href="#top">
+                Back to Top
+            </a>
+
+        </div>
+
+        <p style="margin-top:25px;color:#8d939a;">
+            © 2026 Nexaur Technologies Private Limited. All rights reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+<!-- BACK TO TOP -->
+
+<button id="topButton" aria-label="Back to top">
+    ↑
+</button>
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script>
+
+/* =====================================
+   MOBILE MENU
+===================================== */
+
+const menuButton = document.getElementById("menuButton");
+const mobileNav = document.getElementById("mobileNav");
+
+menuButton.addEventListener("click", function(){
+
+    mobileNav.classList.toggle("open");
+
+    const isOpen = mobileNav.classList.contains("open");
+
+    menuButton.setAttribute(
+        "aria-expanded",
+        isOpen ? "true" : "false"
+    );
+
+    menuButton.textContent = isOpen ? "✕" : "☰";
+
+});
+
+
+/* =====================================
+   CLOSE MOBILE MENU AFTER CLICK
+===================================== */
+
+const mobileLinks =
+    document.querySelectorAll("#mobileNav a");
+
+mobileLinks.forEach(function(link){
+
+    link.addEventListener("click", function(){
+
+        mobileNav.classList.remove("open");
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        menuButton.textContent = "☰";
+
+    });
+
+});
+
+
+/* =====================================
+   SMOOTH SCROLL
+===================================== */
+
+document.querySelectorAll(
+    'a[href^="#"]'
+).forEach(function(anchor){
+
+    anchor.addEventListener("click", function(event){
+
+        const targetId =
+            this.getAttribute("href");
+
+        if(targetId === "#top"){
+            event.preventDefault();
+
+            window.scrollTo({
+                top:0,
+                behavior:"smooth"
+            });
+
+            return;
+        }
+
+        const target =
+            document.querySelector(targetId);
+
+        if(target){
+
+            event.preventDefault();
+
+            target.scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+            });
+
+        }
+
+    });
+
+});
+
+
+/* =====================================
+   ACTIVE SIDEBAR SECTION
+===================================== */
+
+const sections =
+    document.querySelectorAll(".policy-section");
+
+const desktopLinks =
+    document.querySelectorAll(".desktop-sidebar a");
+
+const mobileLinksAll =
+    document.querySelectorAll("#mobileNav a");
+
+const observer =
+    new IntersectionObserver(
+
+        function(entries){
+
+            entries.forEach(function(entry){
+
+                if(entry.isIntersecting){
+
+                    const id =
+                        entry.target.getAttribute("id");
+
+                    desktopLinks.forEach(function(link){
+
+                        link.classList.remove("active");
+
+                        if(
+                            link.getAttribute("href")
+                            === "#" + id
+                        ){
+                            link.classList.add("active");
+                        }
+
+                    });
+
+                    mobileLinksAll.forEach(function(link){
+
+                        link.classList.remove("active");
+
+                        if(
+                            link.getAttribute("href")
+                            === "#" + id
+                        ){
+                            link.classList.add("active");
+                        }
+
+                    });
+
+                }
+
+            });
+
+        },
+
+        {
+            rootMargin:"-15% 0px -70% 0px",
+            threshold:0
+        }
+
+    );
+
+
+sections.forEach(function(section){
+    observer.observe(section);
+});
+
+
+/* =====================================
+   BACK TO TOP BUTTON
+===================================== */
+
+const topButton =
+    document.getElementById("topButton");
+
+window.addEventListener("scroll", function(){
+
+    if(window.scrollY > 500){
+
+        topButton.classList.add("show");
+
+    }else{
+
+        topButton.classList.remove("show");
+
+    }
+
+});
+
+
+topButton.addEventListener("click", function(){
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+});
+
+
+/* =====================================
+   ESCAPE KEY CLOSES MOBILE MENU
+===================================== */
+
+document.addEventListener("keydown", function(event){
+
+    if(event.key === "Escape"){
+
+        mobileNav.classList.remove("open");
+
+        menuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        menuButton.textContent = "☰";
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
