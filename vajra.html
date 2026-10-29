@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>VAJRA Browser — The Sovereign Web Engine | NEXAUR Technologies</title>
+<meta name="description" content="VAJRA is the fast, sovereign, and privacy-hardened web engine engineered by NEXAUR Technologies Private Limited. Linux kernel sandboxing, ad blocking, VPN, and zero telemetry.">
+<meta name="author" content="NEXAUR Technologies Private Limited">
+<meta name="theme-color" content="#ff4c00">
+<meta property="og:title" content="VAJRA Browser — The Sovereign Web Engine">
+<meta property="og:description" content="Engineered from the ground up by NEXAUR Technologies Private Limited. Zero telemetry, Linux kernel isolation, deterministic rendering.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nexaur.online/">
+<meta property="og:image" content="/static/vajra_figo_icon.png">
+<link rel="icon" type="image/png" href="/static/vajra_figo_icon.png">
+<link rel="apple-touch-icon" href="/static/vajra_figo_icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{
+  fontFamily:{sans:['"Plus Jakarta Sans"','sans-serif'],display:['"Space Grotesk"','sans-serif'],mono:['"JetBrains Mono"','monospace']},
+  colors:{brandOrange:'#ff4c00',brandOrangeDark:'#e03a00',brandBlue:'#1a73e8',brandGreen:'#1e8e3e',brandNavy:'#070a13'},
+  boxShadow:{'chrome-pill':'0 4px 20px -2px rgba(0,0,0,.08),0 2px 6px -1px rgba(0,0,0,.04)'}
+}}}
+/* Logo fallback chain: /static -> root -> inline SVG */
+const SVG_LOGO='data:image/svg+xml,'+encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path fill='white' d='M13 2 4 14h6l-1 8 9-12h-6z'/></svg>");
+window.vFallback=function(img){const n=+img.dataset.n||0;img.dataset.n=n+1;if(n===0)img.src='/vajra_figo_icon.png';else{img.onerror=null;img.src=SVG_LOGO}};
+</script>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"VAJRA Browser","operatingSystem":"Linux","applicationCategory":"BrowserApplication","publisher":{"@type":"Organization","name":"NEXAUR Technologies Private Limited","url":"https://nexaur.online/"}}
+</script>
+
+<style>
+:root{--orange:#ff4c00;--ink:#070a13;scroll-padding-top:84px}
+html{-webkit-text-size-adjust:100%}
+body{background:#fff;color:var(--ink);font-feature-settings:"cv02","cv03","cv04","cv11";overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{-webkit-user-drag:none}
+.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+.glass-nav{background:rgba(255,255,255,.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+
+/* ---- Brand primitives ---- */
+.eyebrow{display:inline-flex;align-items:center;gap:.5rem;font:700 .72rem/1 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);background:#fff7ed;border:1px solid #fed7aa;padding:.45rem .9rem;border-radius:999px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.logo-tile{display:grid;place-items:center;background:linear-gradient(135deg,#ff4c00,#f59e0b);border:1px solid rgba(251,146,60,.5);border-radius:12px;padding:12%;overflow:hidden;flex-shrink:0}
+.logo-tile img{width:100%;height:100%;object-fit:contain}
+.h-display{font-family:'Space Grotesk',sans-serif;letter-spacing:-.03em;line-height:1.05}
+.hero-bg{background:radial-gradient(60% 55% at 50% 0%,rgba(255,76,0,.11),transparent 70%),radial-gradient(#0f172a14 1px,transparent 1px) 0 0/24px 24px,#fff}
+.desk{background:linear-gradient(180deg,#f8fafc 0%,#eef2f7 65%,#e2e8f0 100%)}
+
+/* ---- Toast ---- */
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translate(-50%,24px);opacity:0;pointer-events:none;z-index:200;max-width:min(92vw,460px);background:rgba(7,10,19,.94);color:#fff;border:1px solid rgba(255,76,0,.5);border-radius:14px;padding:.7rem 1rem;font:500 .8rem/1.4 'Plus Jakarta Sans',sans-serif;box-shadow:0 18px 50px rgba(0,0,0,.45);transition:all .3s cubic-bezier(.16,1,.3,1);display:flex;gap:.6rem;align-items:flex-start}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* =====================================================================
+   REALISTIC LAPTOP (pure CSS + SVG, no external assets)
+   ===================================================================== */
+.laptop-stage{width:100%;max-width:1180px;margin:0 auto;perspective:2000px;position:relative;user-select:none}
+.laptop{position:relative;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transform-style:preserve-3d;will-change:transform}
+.laptop-lid{position:relative;padding:9px 9px 0;border-radius:24px 24px 6px 6px;background:linear-gradient(180deg,#f4f6f9 0%,#d5dbe3 35%,#aab3bf 100%);box-shadow:inset 0 1.5px 0 #fff,inset 0 0 0 1px rgba(255,255,255,.55),0 0 0 1px rgba(15,23,42,.28),0 40px 80px -30px rgba(15,23,42,.55)}
+.lid-bezel{position:relative;background:#04060b;border:1px solid #0b1220;border-radius:15px 15px 0 0;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.06),inset 0 0 24px rgba(0,0,0,.9)}
+.lid-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);z-index:60;width:clamp(72px,11%,132px);height:clamp(10px,1.7vw,18px);background:#04060b;border-radius:0 0 11px 11px;display:flex;align-items:center;justify-content:center;gap:7px}
+.cam{width:clamp(4px,.55vw,6px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 35%,#2563eb,#030712 80%);box-shadow:0 0 4px rgba(56,189,248,.55)}
+.led{width:3px;height:3px;border-radius:50%;background:#10b981;box-shadow:0 0 5px #10b981}
+.screen{position:relative;width:100%;aspect-ratio:16/10;background:#04070d;overflow:hidden}
+.wp{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.1s ease}
+.wp.on{opacity:1}
+.glare{position:absolute;inset:0;z-index:55;pointer-events:none;background:radial-gradient(circle at var(--gx,55%) var(--gy,30%),rgba(255,255,255,.14),transparent 62%),linear-gradient(125deg,rgba(255,255,255,.07),transparent 45%)}
+.hinge{height:7px;margin:0 1.5%;background:linear-gradient(180deg,#05080e,#3b4658 50%,#0b1220);border-radius:0 0 8px 8px}
+.deck{display:block;width:108%;margin:-1px 0 0 -4%;height:auto;filter:drop-shadow(0 14px 18px rgba(15,23,42,.28))}
+.laptop-shadow{position:absolute;left:4%;right:4%;bottom:-22px;height:46px;background:radial-gradient(ellipse at 50% 0%,var(--glow,rgba(255,76,0,.28)),rgba(15,23,42,.28) 40%,transparent 72%);filter:blur(14px);transition:background .5s;pointer-events:none}
+@media (max-width:640px){
+  .laptop-lid{padding:5px 5px 0;border-radius:16px 16px 4px 4px}.lid-bezel{border-radius:11px 11px 0 0}
+  .screen{aspect-ratio:4/4.5}.deck{width:104%;margin-left:-2%}
+}
+
+/* ---- OS chrome inside the screen ---- */
+.statusbar{height:24px;background:rgba(8,12,20,.9);backdrop-filter:blur(10px);position:relative;z-index:30}
+.vwin{position:absolute;top:30px;left:4%;width:92%;height:calc(100% - 76px);background:#090d15;border:1px solid rgba(255,255,255,.16);border-radius:12px;display:flex;flex-direction:column;overflow:hidden;z-index:35;box-shadow:0 20px 60px -10px rgba(0,0,0,.75);transition:opacity .28s ease,transform .28s cubic-bezier(.16,1,.3,1)}
+.vwin.is-min{transform:scale(.1) translateY(700px);opacity:0;pointer-events:none}
+.vwin.is-max{top:24px!important;left:0!important;width:100%!important;height:calc(100% - 66px)!important;border-radius:0}
+.wtab{height:28px;padding:0 12px;border-radius:8px 8px 0 0;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:500;color:#94a3b8;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.wtab:hover{background:rgba(255,255,255,.05);color:#e2e8f0}
+.wtab.on{background:#141824;color:#fff;border:1px solid rgba(255,255,255,.15);border-bottom:0}
+.tabview{display:none;width:100%;height:100%}.tabview.on{display:flex}
+.drag-head{cursor:grab;touch-action:none}.drag-head:active{cursor:grabbing}
+.dock{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);height:48px;background:rgba(10,15,26,.82);backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:4px 10px;display:flex;align-items:center;gap:8px;z-index:42;box-shadow:0 10px 30px rgba(0,0,0,.6),inset 0 1px 1px rgba(255,255,255,.2)}
+.tile{position:relative;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:#fff;cursor:pointer;flex-shrink:0;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.tile:hover,.tile.hot{transform:translateY(-8px) scale(1.18);z-index:45}
+.tile .tip{position:absolute;top:-30px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,.95);font:500 9.5px 'JetBrains Mono',monospace;padding:2px 7px;border-radius:6px;border:1px solid rgba(255,255,255,.2);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s}
+.tile:hover .tip{opacity:1}
+.tile .dot{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--orange);box-shadow:0 0 5px var(--orange)}
+@media (max-width:640px){.dock{height:38px;gap:5px;padding:3px 6px;border-radius:12px}.tile{width:28px;height:28px;border-radius:8px}.vwin{top:28px;left:2%;width:96%;height:calc(100% - 62px)}}
+#vcursor{position:absolute;top:0;left:0;width:30px;height:30px;z-index:60;pointer-events:none;opacity:0;filter:drop-shadow(0 6px 14px rgba(0,0,0,.85))}
+#vcursor svg{width:26px;height:26px;transform-origin:top left;transition:transform .15s}
+.cur-bubble{position:absolute;top:24px;left:20px;background:rgba(15,23,42,.96);color:#fff;font:700 11px 'Space Grotesk',sans-serif;padding:5px 12px;border-radius:20px;border:1px solid rgba(255,76,0,.65);white-space:nowrap;display:flex;gap:7px;align-items:center}
+.cur-bubble i{width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 6px var(--orange)}
+.ripple{position:absolute;top:0;left:0;width:28px;height:28px;border-radius:50%;border:2px solid var(--orange);background:rgba(255,76,0,.35);opacity:0;transform:scale(0)}
+.ripple.go{animation:rip .5s cubic-bezier(.1,.8,.3,1) forwards}
+@keyframes rip{0%{transform:scale(.2);opacity:1}100%{transform:scale(2.6);opacity:0}}
+.hud{transition:all .5s cubic-bezier(.16,1,.3,1);transform:translateY(-8px) scale(.95);opacity:0}.hud.on{transform:none;opacity:1}
+
+/* =====================================================================
+   STUDIO DISPLAY + COMPARISON SLIDER
+   ===================================================================== */
+.studio{width:100%;max-width:1080px;margin:0 auto}
+.studio-chassis{background:linear-gradient(180deg,#64748b,#334155 12%,#1e293b 40%,#0f172a 75%,#020617);border-radius:24px;padding:9px;box-shadow:inset 0 -2px 0 1px rgba(255,255,255,.4),0 38px 95px -15px rgba(15,23,42,.6),0 0 0 1px rgba(148,163,184,.35)}
+.studio-bezel{background:#04070d;border:1.5px solid #0f172a;border-radius:17px;overflow:hidden;box-shadow:inset 0 0 25px rgba(0,0,0,.95)}
+.stand-neck{width:140px;height:54px;margin:0 auto;background:linear-gradient(180deg,#1e293b,#475569 35%,#94a3b8 70%,#1e293b);clip-path:polygon(18% 0,82% 0,100% 100%,0 100%)}
+.stand-foot{width:240px;height:10px;margin:0 auto;background:linear-gradient(180deg,#e2e8f0,#94a3b8 35%,#475569 85%,#0f172a);border-radius:4px;box-shadow:0 16px 36px rgba(15,23,42,.5),inset 0 1px 1px rgba(255,255,255,.8)}
+.cmp{position:relative;flex:1;min-width:0;aspect-ratio:16/10;background:#fff;overflow:hidden;--split:50%;touch-action:pan-y}
+.cmp-layer{position:absolute;inset:0;background:#fff;z-index:10;clip-path:inset(0 calc(100% - var(--split)) 0 0);pointer-events:none}
+.cmp-line{position:absolute;top:0;bottom:0;left:var(--split);width:3.5px;background:var(--orange);box-shadow:0 0 18px rgba(255,76,0,.95);transform:translateX(-50%);z-index:25;pointer-events:none}
+.cmp-handle{position:absolute;top:50%;left:var(--split);transform:translate(-50%,-50%);z-index:35;pointer-events:none}
+.cmp-handle div{width:44px;height:44px;border-radius:50%;background:#090d16;border:2.5px solid var(--orange);color:#fff;display:flex;align-items:center;justify-content:center;gap:2px;box-shadow:0 4px 20px rgba(0,0,0,.7),0 0 18px rgba(255,76,0,.9)}
+.cmp.smooth .cmp-layer{transition:clip-path .4s cubic-bezier(.16,1,.3,1)}
+.cmp.smooth .cmp-line,.cmp.smooth .cmp-handle{transition:left .4s cubic-bezier(.16,1,.3,1)}
+.cmp-range{position:absolute;inset:0;width:100%;height:100%;opacity:0;z-index:40;cursor:ew-resize;appearance:none;-webkit-appearance:none;margin:0}
+.cmp-badge{position:absolute;bottom:14px;z-index:28;display:flex;align-items:center;gap:10px;padding:8px 14px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 12px 28px -4px rgba(0,0,0,.25);font:700 13px 'Space Grotesk',sans-serif;pointer-events:none}
+.pc-side{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#94a3b8;font-size:12px;cursor:pointer;transition:all .2s}
+.pc-side:hover{color:#fff;background:rgba(255,255,255,.12);transform:scale(1.08)}
+.pc-side.on{color:var(--orange);background:rgba(255,76,0,.18);border:1px solid rgba(255,76,0,.4)}
+.cmp-btn{padding:.5rem 1rem;border-radius:999px;background:#fff;color:#334155;font-weight:600;border:1px solid #cbd5e1;display:flex;align-items:center;gap:.5rem;cursor:pointer;transition:all .2s;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.cmp-btn:hover{background:#f1f5f9}.cmp-btn.on{background:#020617;color:#fff;border-color:#020617;font-weight:700}
+@media (max-width:640px){.cmp{aspect-ratio:4/4.8}.cmp-badge{padding:5px 8px;font-size:10px;border-radius:10px;bottom:8px}.cmp-badge .logo-tile{width:22px!important;height:22px!important}.stand-neck{width:90px;height:34px}.stand-foot{width:160px}.studio-chassis{border-radius:16px;padding:6px}}
+
+/* ---- Feature cards ---- */
+.fcard{--c:#059669;position:relative;flex-shrink:0;width:min(82vw,330px);height:440px;text-align:left;border-radius:2rem;background:#f8fafc;border:1px solid #e2e8f0;padding:1.75rem;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;cursor:pointer;box-shadow:0 12px 35px -10px rgba(15,23,42,.08),0 0 0 1px rgba(226,232,240,.8);transition:transform .4s cubic-bezier(.16,1,.3,1),box-shadow .4s;scroll-snap-align:start}
+.fcard:hover{transform:translateY(-8px);box-shadow:0 25px 50px -12px rgba(15,23,42,.16),0 0 0 1.5px var(--c)}
+.fcard::before{content:'';position:absolute;right:-32px;top:-32px;width:128px;height:128px;border-radius:50%;background:var(--c);opacity:.1;filter:blur(24px);transition:opacity .3s}
+.fcard:hover::before{opacity:.22}
+.fcard .ico{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:1.25rem;margin-bottom:1.5rem;color:var(--c);background:color-mix(in srgb,var(--c) 14%,#fff);border:1px solid color-mix(in srgb,var(--c) 30%,#fff)}
+.fcard .tag{font:700 10.5px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--c);background:color-mix(in srgb,var(--c) 10%,#fff);border:1px solid color-mix(in srgb,var(--c) 28%,#fff);padding:2px 10px;border-radius:999px}
+.spring{transition:all .4s cubic-bezier(.16,1,.3,1);transform:scale(.93) translateY(30px);opacity:0}.spring.on{transform:none;opacity:1}
+@keyframes tiger{0%{transform:scale(1.02) translate(0,0)}50%{transform:scale(1.12) translate(-1.5%,-1.5%)}100%{transform:scale(1.02) translate(0,0)}}
+.tiger-pan{animation:tiger 14s ease-in-out infinite alternate}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</head>
+
+<body class="relative selection:bg-brandOrange selection:text-white font-sans">
+
+<!-- Announcement bar -->
+<div class="bg-brandNavy text-white py-2 px-4 text-center text-xs font-mono flex items-center justify-center gap-2 flex-wrap border-b border-white/10">
+  <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+  <span class="font-bold text-orange-400">VAJRA BROWSER v2.0.4:</span>
+  <span class="text-slate-300">Engineered by</span>
+  <a href="https://nexaur.online/" target="_blank" rel="noopener noreferrer" class="font-bold underline hover:text-orange-400 transition-colors">NEXAUR Technologies Private Limited</a>
+  <span class="hidden md:inline text-slate-400">&bull; Linux Kernel Sandboxed &bull; Zero Corporate Telemetry</span>
+</div>
+
+<!-- Navbar -->
+<header class="sticky top-0 z-50 glass-nav border-b border-slate-200/80 px-4 sm:px-8 py-3">
+  <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-8">
+      <a href="#" class="flex items-center gap-3 group">
+        <span class="logo-tile w-10 h-10 group-hover:scale-105 transition-transform"><img class="vl" src="/static/vajra_figo_icon.png" alt="Vajra logo" onerror="vFallback(this)"></span>
+        <span class="flex flex-col">
+          <span class="font-display text-2xl font-extrabold tracking-tight text-slate-950 flex items-center gap-2 leading-none">VAJRA <span class="text-[9px] font-mono font-bold text-orange-600 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full uppercase">Sovereign</span></span>
+          <span class="text-[9px] font-semibold tracking-wider text-slate-500 uppercase font-mono mt-1">Nexaur Technologies</span>
+        </span>
+      </a>
+      <nav class="hidden lg:flex items-center gap-8 text-xs font-bold uppercase tracking-wider text-slate-600" aria-label="Primary">
+        <a href="#workstation" class="hover:text-brandOrange transition-colors">Linux Workstation</a>
+        <a href="#compare" class="hover:text-brandOrange transition-colors">Live Comparison</a>
+        <a href="#ecosystem" class="hover:text-brandOrange transition-colors">Ecosystem</a>
+        <a href="#features" class="hover:text-brandOrange transition-colors">Sovereign Modules</a>
+        <a href="https://nexaur.online/" target="_blank" rel="noopener noreferrer" class="hover:text-brandOrange transition-colors flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-brandOrange"></span>Corporate Portal</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="https://nexaur.online/" target="_blank" rel="noopener noreferrer" class="bg-brandBlue hover:bg-blue-600 text-white font-display font-bold text-xs px-4 sm:px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all flex items-center gap-2"><i class="fa-solid fa-arrow-down text-blue-200"></i><span class="hidden sm:inline">Download Vajra</span><span>(.deb)</span></a>
+      <button id="nav-toggle" class="lg:hidden w-9 h-9 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-700" aria-label="Toggle navigation menu" aria-expanded="false"><i id="nav-icon" class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="hidden lg:hidden pt-4 pb-2 px-2 border-t border-slate-200/80 mt-3 flex-col gap-1 font-mono text-xs" aria-label="Mobile">
+    <a href="#workstation" class="p-2.5 hover:bg-orange-50 rounded text-slate-700 font-bold">Linux Workstation</a>
+    <a href="#compare" class="p-2.5 hover:bg-orange-50 rounded text-slate-700 font-bold">Live Comparison</a>
+    <a href="#ecosystem" class="p-2.5 hover:bg-orange-50 rounded text-slate-700 font-bold">Ecosystem</a>
+    <a href="#features" class="p-2.5 hover:bg-orange-50 rounded text-slate-700 font-bold">Sovereign Modules</a>
+    <a href="https://nexaur.online/" target="_blank" rel="noopener noreferrer" class="p-2.5 text-brandOrange font-bold flex items-center gap-2"><i class="fa-solid fa-arrow-up-right-from-square"></i>Corporate Portal (nexaur.online)</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero-bg relative pt-14 pb-20 sm:pt-24 sm:pb-28 border-b border-slate-200/80 overflow-hidden text-center">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 space-y-7">
+    <span class="eyebrow"><span class="w-2 h-2 rounded-full bg-brandOrange animate-ping"></span>Sovereign Deep-Tech Web Engine</span>
+    <div id="hero-heading">
+      <h1 class="h-display font-black text-slate-950 max-w-4xl mx-auto text-[clamp(2.4rem,8vw,5.4rem)]">
+        The browser built to be <br class="hidden sm:inline">
+        <span id="hero-pill" class="inline-flex items-center gap-3 px-5 sm:px-8 py-1.5 sm:py-2.5 rounded-full border shadow-chrome-pill align-middle bg-orange-50 border-orange-200 text-brandOrange transition-all duration-300">
+          <i id="hero-pill-icon" class="fa-solid fa-crown text-[.55em]"></i>
+          <span id="hero-pill-text" class="font-display tracking-tight font-black">sovereign</span>
+        </span>
+        <button id="pill-pause" title="Pause animation" aria-label="Pause word animation" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs inline-flex items-center justify-center align-middle ml-2 transition-all"><i id="pill-pause-icon" class="fa-solid fa-pause"></i></button>
+      </h1>
+    </div>
+    <p class="text-base sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">Engineered from the ground up by <strong class="text-slate-950 font-semibold">NEXAUR Technologies Private Limited</strong> (CIN: U63111MR2026PTC473561). High-performance Linux kernel sandboxing, pure 4K streaming, zero ad injection, and deterministic DOM rendering.</p>
+    <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-4 pt-2">
+      <a href="#workstation" class="bg-brandOrange hover:bg-brandOrangeDark text-white font-display font-bold text-sm px-7 sm:px-9 py-4 rounded-full shadow-lg shadow-orange-500/25 hover:shadow-xl transition-all flex items-center gap-3"><i class="fa-solid fa-laptop"></i>Operate Linux Workstation</a>
+      <a href="#features" class="bg-slate-50 hover:bg-slate-100 text-slate-800 font-display font-bold text-sm px-7 sm:px-8 py-4 rounded-full border border-slate-300 shadow-sm transition-all flex items-center gap-2"><i class="fa-solid fa-layer-group text-brandOrange"></i>Explore Sovereign Modules</a>
+    </div>
+    <div class="pt-8 border-t border-slate-200/80 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto font-mono text-xs text-slate-500">
+      <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200/80"><div class="text-slate-950 font-black text-xl">3.4x Faster</div><div class="mt-0.5">Cold-Start Pipeline</div></div>
+      <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200/80"><div class="text-emerald-600 font-black text-xl">0.00 KB</div><div class="mt-0.5">Telemetry Leakage</div></div>
+      <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200/80"><div class="text-blue-600 font-black text-xl">-40% RAM</div><div class="mt-0.5">Process Shredder</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Philosophy -->
+<section class="py-20 sm:py-28 bg-[#fafbfc] border-b border-slate-200/90">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto space-y-4 mb-12">
+      <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-slate-900 text-white text-[11px] font-mono uppercase tracking-widest font-bold"><span class="w-2 h-2 rounded-full bg-brandOrange animate-ping"></span>Sovereign Paradigm Shift</span>
+      <h2 class="h-display font-extrabold text-slate-950 text-[clamp(1.9rem,5vw,3.75rem)]">What if your browser wasn't built to track you, <span class="text-brandOrange">but to protect you?</span></h2>
+      <p class="text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">A browser is no longer a simple app—it is your single window into human knowledge, confidential transactions, and intellectual property. VAJRA strips out the multi-billion-dollar ad auction delays and corporate tracking backdoors, replacing them with a sovereign operating environment.</p>
+      <div class="pt-3 flex flex-wrap items-center justify-center gap-3 font-mono text-xs">
+        <a href="#workstation" class="bg-brandOrange hover:bg-brandOrangeDark text-white font-bold px-6 py-3 rounded-full shadow-md transition-all flex items-center gap-2"><i class="fa-solid fa-laptop"></i>Operate Linux Workstation</a>
+        <a href="#ecosystem" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-6 py-3 rounded-full shadow-md transition-all flex items-center gap-2"><i class="fa-solid fa-network-wired text-cyan-400"></i>Explore PC &amp; Mobile</a>
+        <a href="https://nexaur.online/" target="_blank" rel="noopener noreferrer" class="bg-white hover:bg-slate-100 text-slate-700 font-semibold px-5 py-3 rounded-full border border-slate-300 shadow-sm transition-all flex items-center gap-2"><i class="fa-solid fa-shield-halved text-emerald-600"></i>Inspect Zero-Telemetry Spec</a>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
+      <article class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-3"><div class="w-10 h-10 rounded-xl bg-orange-100 text-brandOrange grid place-items-center text-lg"><i class="fa-solid fa-microchip"></i></div><h3 class="font-display font-bold text-lg">Deterministic DOM Engine</h3><p class="text-sm text-slate-600 leading-relaxed">Pages render in pure native memory buffers without invasive 3rd-party tracking scripts pre-empting the main browser thread.</p></article>
+      <article class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-3"><div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 grid place-items-center text-lg"><i class="fa-solid fa-fire"></i></div><h3 class="font-display font-bold text-lg">Cryptographic Register Shredder</h3><p class="text-sm text-slate-600 leading-relaxed">On tab closure, session keys and volatile SQLite cache addresses are zero-filled automatically in under 0.08ms.</p></article>
+      <article class="p-6 sm:p-8 rounded-3xl bg-white border border-slate-200/90 shadow-sm hover:shadow-md transition-all space-y-3"><div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 grid place-items-center text-lg"><i class="fa-solid fa-brain"></i></div><h3 class="font-display font-bold text-lg">Local Neural Shaders</h3><p class="text-sm text-slate-600 leading-relaxed">Run quantized language and speech intelligence locally on Vulkan GPU pipes without sending tokens to cloud datacenters.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LINUX WORKSTATION (REALISTIC LAPTOP) ============ -->
+<section id="workstation" class="desk py-16 sm:py-24 border-b border-slate-200/90 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+    <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+      <span class="eyebrow">Precision CNC Aluminium Chassis</span>
+      <h2 class="h-display font-bold text-slate-950 mt-4 mb-2 text-[clamp(1.9rem,5vw,3.25rem)]">Operate the Live Vajra Workstation</h2>
+      <p class="text-slate-600 text-xs sm:text-sm font-mono">Real tab strip, bookmarks, kernel omnibox, 4K wallpapers, draggable window, live terminal and system telemetry.</p>
+    </div>
+
+    <div class="laptop-stage" id="laptop-stage">
+      <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-4/5 h-96 bg-gradient-to-b from-orange-400/10 via-purple-400/5 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+      <div class="laptop" id="laptop">
+        <div class="laptop-lid">
+          <div class="lid-bezel">
+            <div class="lid-notch"><i class="led"></i><i class="cam" title="Optical enclave"></i><i class="led" style="background:#38bdf8;box-shadow:0 0 5px #38bdf8"></i></div>
+
+            <div class="screen" id="screen">
+              <div id="wallpapers"></div>
+              <div class="glare" id="glare"></div>
+
+              <!-- Virtual guided cursor -->
+              <div id="vcursor">
+                <svg viewBox="0 0 24 24" fill="none" id="vcursor-svg"><path d="M3 2l6.5 18 3.5-6.5L20 10 3 2z" fill="#fff" stroke="#0f172a" stroke-width="1.8" stroke-linejoin="round"/></svg>
+                <div class="ripple" id="ripple"></div>
+                <div class="cur-bubble"><i></i><span id="cursor-text">👉 Please view the browser →</span></div>
+              </div>
+
+              <!-- Desktop status bar -->
+              <div class="statusbar px-3 flex items-center justify-between text-white border-b border-white/10 select-none">
+                <div class="flex items-center gap-2.5 font-mono text-[10.5px] min-w-0">
+                  <button data-act="tab:3" class="font-black text-brandOrange flex items-center gap-1.5 hover:underline shrink-0" title="Open sandbox terminal"><i class="fa-solid fa-terminal text-[10px]"></i><span class="hidden min-[420px]:inline">nexaur@sovereign:~$</span></button>
+                  <span class="text-slate-300 font-sans font-medium hidden md:inline truncate">Vajra Web Engine (Linux x86_64)</span>
+                </div>
+                <div class="flex items-center gap-2 sm:gap-3 font-mono text-[10px] text-slate-300">
+                  <span class="text-emerald-400 hidden sm:flex items-center"><i class="fa-solid fa-microchip text-[9px] mr-1"></i><span id="m-cpu">CPU 2%</span></span>
+                  <span class="text-blue-400 hidden sm:flex items-center"><i class="fa-solid fa-memory text-[9px] mr-1"></i><span id="m-ram">RAM 412MB</span></span>
+                  <button id="launch-btn" data-act="launch" class="bg-brandOrange/25 hover:bg-brandOrange/40 text-orange-300 border border-brandOrange/40 px-2 py-0.5 rounded text-[9px] font-bold flex items-center gap-1" title="Replay auto-launch demo"><i class="fa-solid fa-wand-magic-sparkles text-[8px]"></i><span class="hidden sm:inline">Auto Launch</span></button>
+                  <button data-act="wp" class="bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded text-[9px] font-bold flex items-center gap-1"><i class="fa-solid fa-image"></i><span id="wp-label">1/6</span></button>
+                  <button data-act="glow" class="bg-orange-500/15 hover:bg-orange-500/25 text-orange-300 border border-orange-500/30 px-1.5 py-0.5 rounded text-[9px] font-bold hidden md:flex items-center gap-1"><i class="fa-solid fa-lightbulb text-[8.5px]"></i><span id="glow-label">Glow: Orange</span></button>
+                  <i class="fa-solid fa-wifi text-[9px] text-emerald-400" title="Mesh tunnel latency &lt; 8ms"></i>
+                  <span id="os-time" class="font-bold text-white tracking-tight hidden min-[480px]:inline">Tue Sep 15 09:41 AM</span>
+                </div>
+              </div>
+
+              <!-- Draggable Vajra window -->
+              <div id="vwin" class="vwin is-min" role="application" aria-label="Vajra browser window">
+                <div class="h-8 bg-[#090d16] border-b border-white/10 px-2 flex items-center justify-between select-none shrink-0">
+                  <div id="tab-strip" class="flex items-center gap-1 overflow-x-auto no-scrollbar flex-1 mr-2"></div>
+                  <div class="flex items-center gap-2.5 text-slate-400 pr-1">
+                    <button data-act="min" title="Minimize" class="hover:text-white text-xs" aria-label="Minimize"><i class="fa-solid fa-minus"></i></button>
+                    <button data-act="max" title="Maximize / restore" class="hover:text-white text-xs" aria-label="Maximize"><i id="max-icon" class="fa-regular fa-square"></i></button>
+                    <button data-act="min" title="Close to dock" class="hover:text-rose-400 text-xs" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                  </div>
+                </div>
+
+                <div id="drag-head" class="h-10 bg-[#141824] border-b border-white/10 px-3 flex items-center gap-3 select-none drag-head shrink-0">
+                  <div class="flex items-center gap-2 text-slate-400 text-xs">
+                    <i class="fa-solid fa-arrow-left hover:text-white cursor-pointer" data-act="tab:0" title="Back"></i>
+                    <i class="fa-solid fa-arrow-right hover:text-white cursor-pointer" data-act="tab:1" title="Forward"></i>
+                    <i class="fa-solid fa-rotate-right hover:text-white cursor-pointer text-[10px]" data-act="reload" title="Reload sandbox"></i>
+                  </div>
+                  <form data-form="omni" class="flex-1 max-w-xl bg-[#080b13] border border-white/15 rounded-lg h-7 px-3 flex items-center justify-between text-slate-300 shadow-inner">
+                    <div class="flex items-center gap-2 flex-1 min-w-0"><i class="fa-solid fa-lock text-[9px] text-emerald-400"></i><input id="omni" type="text" value="vajra://newtab" aria-label="Address bar" class="bg-transparent font-mono text-[11px] text-slate-200 focus:outline-none w-full"></div>
+                    <span class="hidden sm:flex shrink-0 ml-2 text-[8.5px] font-mono text-emerald-400 uppercase font-bold items-center gap-1 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20"><i class="fa-solid fa-shield-halved text-[8px]"></i>Kernel isolated</span>
+                  </form>
+                  <div class="hidden sm:flex items-center gap-2.5 text-slate-400 text-xs">
+                    <i class="fa-regular fa-star hover:text-amber-400 cursor-pointer text-[11px]" data-act="toast:Bookmarked to Sovereign Vault" title="Bookmark"></i>
+                    <span class="logo-tile w-5 h-5 !rounded-full !p-[2px]"><img class="vl" src="/static/vajra_figo_icon.png" alt="" onerror="vFallback(this)"></span>
+                  </div>
+                </div>
+
+                <div id="bookmarks" class="h-6 bg-[#0d121c] border-b border-white/10 px-3 flex items-center gap-3 text-[10px] font-mono text-slate-300 select-none overflow-x-auto no-scrollbar shrink-0"></div>
+
+                <div class="flex-1 bg-[#090c12] relative overflow-hidden text-white min-h-0">
+                  <!-- Tab 0: New tab -->
+                  <div class="tabview on relative flex-col items-center justify-center p-4 sm:p-6 bg-cover bg-center" data-tv="0" id="nt-bg">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-black/55 to-black/40"></div>
+                    <div class="relative z-10 text-center flex flex-col items-center max-w-xl w-full">
+                      <div class="flex items-center gap-2.5 mb-2 sm:mb-3"><span class="logo-tile w-9 h-9 sm:w-10 sm:h-10"><img class="vl" src="/static/vajra_figo_icon.png" alt="" onerror="vFallback(this)"></span><span class="font-display font-black text-2xl sm:text-3xl tracking-widest">VAJRA</span></div>
+                      <div id="hud" class="hud mb-3 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-orange-500/40 text-orange-300 text-[10px] font-mono flex items-center gap-2 shadow-2xl backdrop-blur-md max-w-full"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span><span class="font-bold text-white uppercase tracking-wider">Enclave online:</span><span class="hidden sm:inline">Zero Telemetry &amp; Sandboxing Initialized</span></div>
+                      <div class="bg-slate-900/80 backdrop-blur-md border border-white/15 px-6 sm:px-8 py-2.5 sm:py-3 rounded-2xl shadow-2xl mb-3 sm:mb-4"><div id="nt-clock" class="text-3xl sm:text-5xl font-mono font-bold tracking-tight">09:41:16 AM</div><div id="nt-date" class="text-xs text-slate-300 mt-1 font-mono">Tuesday, September 15, 2026</div></div>
+                      <form data-form="vajra" class="w-full bg-white/95 backdrop-blur-md rounded-full px-4 py-2 sm:py-2.5 flex items-center justify-between shadow-2xl mb-3 sm:mb-4">
+                        <div class="flex items-center gap-2.5 flex-1 mr-2"><i class="fa-solid fa-bolt text-brandOrange text-sm"></i><input type="text" placeholder="Search with Vajra Sovereign or enter URL..." aria-label="Search" class="w-full bg-transparent text-xs sm:text-sm text-slate-900 placeholder-slate-500 font-medium focus:outline-none"></div>
+                        <button type="submit" aria-label="Search" class="w-7 h-7 rounded-full bg-brandOrange text-white grid place-items-center text-xs shadow hover:bg-brandOrangeDark"><i class="fa-solid fa-arrow-right"></i></button>
+                      </form>
+                      <div id="nt-pills" class="flex flex-wrap items-center justify-center gap-2 font-mono text-[10px]"></div>
+                    </div>
+                  </div>
+
+                  <!-- Tab 1: SVARA player -->
+                  <div class="tabview flex-col md:flex-row bg-black overflow-hidden" data-tv="1">
+                    <div class="flex-[2] min-h-0 p-3 md:border-r border-white/10 flex">
+                      <div class="relative flex-1 rounded-xl overflow-hidden bg-slate-950 border border-white/10">
+                        <video id="vid" class="w-full h-full object-cover" loop muted playsinline preload="none" poster="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=75"><source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4"></video>
+                        <div class="absolute bottom-2 left-3 right-3 bg-black/60 backdrop-blur-md rounded-lg p-2 flex items-center justify-between text-xs border border-white/15">
+                          <div class="flex items-center gap-2.5"><button id="vid-btn" aria-label="Play or pause" class="text-brandOrange hover:text-white"><i id="vid-icon" class="fa-solid fa-play"></i></button><span id="vid-time" class="text-[10px] font-mono text-slate-300">00:00 / 09:56</span><span class="text-[8.5px] font-mono bg-red-600 px-1.5 py-0.5 rounded font-bold uppercase">4K HDR</span></div>
+                          <i class="fa-solid fa-expand text-slate-400 text-xs cursor-pointer" data-act="toast:SVARA 4K lossless fullscreen engaged"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="flex-1 bg-[#0d131f] p-3 overflow-y-auto hidden sm:block">
+                      <span class="text-[9px] font-mono text-red-400 uppercase font-bold tracking-wider">SVARA mesh relay</span>
+                      <h4 class="font-display font-bold text-sm mt-0.5">Alpine Glacier 4K HDR Timelapse</h4>
+                      <p class="text-slate-400 text-[11px] mt-1">Direct peer-to-peer decentralized video streaming without buffering throttles.</p>
+                      <div class="mt-3 space-y-2">
+                        <div class="p-2 rounded-lg bg-white/5 border border-white/10 flex items-center gap-2"><div class="w-7 h-7 rounded bg-brandOrange/20 text-brandOrange grid place-items-center text-xs"><i class="fa-solid fa-bolt"></i></div><div><div class="text-[10px] font-bold">Quantum Encryption Matrix</div><div class="text-[8.5px] text-slate-400 font-mono">Nexaur R&amp;D • 214K streams</div></div></div>
+                        <div class="p-2 rounded-lg bg-white/5 border border-white/10 flex items-center gap-2"><div class="w-7 h-7 rounded bg-emerald-500/20 text-emerald-400 grid place-items-center text-xs"><i class="fa-solid fa-shield"></i></div><div><div class="text-[10px] font-bold">Zero Telemetry Pipeline 4K</div><div class="text-[8.5px] text-slate-400 font-mono">Security Node • 180K streams</div></div></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Tab 2: Shield -->
+                  <div class="tabview flex-col p-4 sm:p-5 bg-[#0b0f19] overflow-y-auto" data-tv="2">
+                    <div class="flex items-start sm:items-center justify-between gap-3 flex-wrap">
+                      <div><span class="text-[9px] font-mono uppercase tracking-widest text-emerald-400 font-bold">Active defense shield</span><h3 class="font-display font-bold text-base sm:text-lg mt-0.5">Vajra Sovereign Security Enclave</h3></div>
+                      <button data-act="purge" class="bg-brandOrange hover:bg-brandOrangeDark text-xs font-mono px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 shadow"><i class="fa-solid fa-fire"></i>Purge Memory Registers</button>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 sm:gap-3 my-3 sm:my-4">
+                      <div class="bg-[#121826] border border-white/10 p-2.5 sm:p-3 rounded-xl"><div class="text-[9px] sm:text-[10px] font-mono text-slate-400">TRACKERS DESTROYED</div><div id="trk" class="text-lg sm:text-2xl font-black text-brandOrange mt-1">3,482</div></div>
+                      <div class="bg-[#121826] border border-white/10 p-2.5 sm:p-3 rounded-xl"><div class="text-[9px] sm:text-[10px] font-mono text-slate-400">RAM PURGE</div><div id="purge-stat" class="text-lg sm:text-2xl font-black text-emerald-400 mt-1">&lt; 0.08ms</div></div>
+                      <div class="bg-[#121826] border border-white/10 p-2.5 sm:p-3 rounded-xl"><div class="text-[9px] sm:text-[10px] font-mono text-slate-400">TELEMETRY LEAK</div><div class="text-lg sm:text-2xl font-black text-blue-400 mt-1">0.00 KB</div></div>
+                    </div>
+                    <div class="bg-[#101522] border border-white/10 p-3.5 rounded-xl font-mono text-slate-300">
+                      <div class="text-slate-400 text-[10px] uppercase font-bold mb-2">Active kernel isolation policies</div>
+                      <div class="space-y-1 text-[10.5px] sm:text-[11px]">
+                        <div><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Seccomp-BPF syscall filter: <b class="text-emerald-400">STRICT_ENFORCED</b></div>
+                        <div><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Linux namespaces: <b class="text-emerald-400">PID, NET, IPC, MOUNT ISOLATED</b></div>
+                        <div><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Third-party cookie store: <b class="text-blue-400">ZERO-PERSISTENCE (RAM-ONLY)</b></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Tab 3: Terminal -->
+                  <div class="tabview flex-col p-3 sm:p-4 bg-[#05080e] font-mono text-xs" data-tv="3">
+                    <div id="term-log" class="flex-1 min-h-0 overflow-y-auto space-y-1 text-slate-300 pr-1">
+                      <div class="text-brandOrange font-bold">VAJRA Sovereign Kernel OS [Linux x86_64 6.10.8-sovereign]</div>
+                      <div class="text-slate-500">Kernel sandboxing engaged. Type <b class="text-slate-300">help</b> to list commands.</div>
+                      <div class="text-emerald-400">[OK] Mounted tmpfs sandbox filesystem</div>
+                      <div class="text-emerald-400">[OK] BPF socket filter bound to PID 4192 (0 telemetry egress)</div>
+                      <div class="text-cyan-400">[INFO] Memory compaction: reclaimed 142MB unmapped blocks</div>
+                    </div>
+                    <form data-form="term" class="flex items-center gap-2 border-t border-white/10 pt-2 mt-2 shrink-0">
+                      <span class="text-brandOrange font-bold shrink-0">nexaur@sovereign:~$</span>
+                      <input id="term-in" type="text" autocomplete="off" spellcheck="false" aria-label="Terminal input" placeholder="help · status · purge · clear" class="bg-transparent text-white focus:outline-none flex-1 min-w-0">
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Dock -->
+              <div class="dock" id="dock"></div>
+            </div>
+          </div>
+        </div>
+        <div class="hinge"></div>
+        <svg class="deck" viewBox="0 0 1000 102" aria-hidden="true">
+          <defs>
+            <linearGradient id="dk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef1f5"/><stop offset=".45" stop-color="#d3d9e1"/><stop offset="1" stop-color="#aab3bf"/></linearGradient>
+            <linearGradient id="lip" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c3cad4"/><stop offset="1" stop-color="#5b6575"/></linearGradient>
+            <linearGradient id="well" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9c1cc"/><stop offset="1" stop-color="#c9d0da"/></linearGradient>
+          </defs>
+          <path d="M36 0H964L1000 84Q1000 98 984 98H16Q0 98 0 84Z" fill="url(#dk)" stroke="rgba(255,255,255,.9)" stroke-width="1.2"/>
+          <path d="M62 6H938L958 58H42Z" fill="url(#well)" stroke="rgba(15,23,42,.18)"/>
+          <g id="deck-keys" fill="#1e293b"></g>
+          <rect x="380" y="66" width="240" height="24" rx="6" fill="rgba(255,255,255,.28)" stroke="rgba(15,23,42,.22)"/>
+          <path d="M0 84Q0 98 16 98H984Q1000 98 1000 84L996 80H4Z" fill="url(#lip)"/>
+          <path d="M430 98Q500 87 570 98Z" fill="rgba(15,23,42,.3)"/>
+          <rect x="70" y="97" width="90" height="4" rx="2" fill="#0b1220"/><rect x="840" y="97" width="90" height="4" rx="2" fill="#0b1220"/>
+        </svg>
+      </div>
+      <div class="laptop-shadow" id="laptop-shadow"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ LIVE COMPARISON ============ -->
+<section id="compare" class="py-20 sm:py-28 bg-[#f8fafc] border-b border-slate-200 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <div class="max-w-3xl mx-auto space-y-3 mb-8">
+      <span class="eyebrow">Live sovereign comparison engine</span>
+      <h2 class="h-display font-extrabold text-slate-950 text-[clamp(1.9rem,5vw,3.75rem)]">See what others force you to see.</h2>
+      <p class="text-slate-600 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">Drag the orange handle, or use the view buttons, to explore the same page with and without corporate ad injection.</p>
+      <div id="cmp-presets" class="pt-2 flex flex-wrap items-center justify-center gap-2 font-mono text-xs"></div>
+      <div class="flex flex-wrap items-center justify-center gap-2 pt-1 font-mono text-[11px]">
+        <button data-act="glide:100" class="px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 font-bold flex items-center gap-1.5 shadow-sm"><i class="fa-solid fa-shield-halved text-emerald-600"></i>Full VAJRA View</button>
+        <button data-act="glide:50" class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 border border-slate-300 hover:bg-slate-200 font-bold flex items-center gap-1.5 shadow-sm"><i class="fa-solid fa-arrows-left-right text-brandOrange"></i>50/50 Split</button>
+        <button data-act="glide:0" class="px-3 py-1.5 rounded-lg bg-rose-50 text-rose-800 border border-rose-300 hover:bg-rose-100 font-bold flex items-center gap-1.5 shadow-sm"><i class="fa-brands fa-chrome text-rose-600"></i>Full Chrome View</button>
+        <button id="tour-btn" data-act="tour" class="px-3.5 py-1.5 rounded-lg bg-orange-50 text-brandOrange font-bold border border-orange-300 hover:bg-orange-100 flex items-center gap-1.5 shadow-sm"><i id="tour-icon" class="fa-solid fa-pause text-[10px]"></i><span id="tour-label">Auto-Tour: Active</span></button>
+      </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto">
+      <div class="studio">
+        <div class="studio-chassis">
+          <div class="studio-bezel">
+            <div class="w-1.5 h-1.5 rounded-full mx-auto mt-[5px] mb-1" style="background:radial-gradient(circle at 35% 35%,#2563eb,#000 85%);box-shadow:0 0 4px #38bdf8"></div>
+            <div class="h-9 bg-[#0b0f19] border-b border-white/10 px-3 flex items-center justify-between text-xs text-white select-none gap-2">
+              <div class="flex items-center gap-3 flex-1 overflow-hidden">
+                <div class="hidden sm:flex items-center gap-1.5"><i class="w-2.5 h-2.5 rounded-full bg-rose-500"></i><i class="w-2.5 h-2.5 rounded-full bg-amber-500"></i><i class="w-2.5 h-2.5 rounded-full bg-emerald-500"></i></div>
+                <div class="h-7 px-3 rounded-t-lg bg-[#141824] border-t border-x border-white/15 text-[10.5px] font-medium flex items-center gap-2 max-w-[210px] min-w-0"><span class="logo-tile w-3.5 h-3.5 !rounded !p-[1px]"><img class="vl" src="/static/vajra_figo_icon.png" alt="" onerror="vFallback(this)"></span><span class="truncate" id="pc-tab">Allrecipes: Pizza Dough</span></div>
+                <button data-act="preset-next" aria-label="Next page" class="text-slate-400 hover:text-white px-1 text-xs"><i class="fa-solid fa-plus"></i></button>
+              </div>
+              <button data-act="shield" class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold border border-emerald-500/30 flex items-center gap-1.5 hover:bg-emerald-500/30 shrink-0 max-w-[55%]" title="Inspect shield protection"><i class="fa-solid fa-shield-halved text-[9px] animate-pulse"></i><span id="pc-shield" class="truncate">48 ADS &amp; 112 TRACKERS BLOCKED</span></button>
+            </div>
+            <div class="h-8 bg-[#101624] border-b border-white/10 px-3 flex items-center gap-3 text-slate-300 text-xs select-none">
+              <div class="flex items-center gap-2 text-slate-400 text-[11px]"><i class="fa-solid fa-arrow-left hover:text-white cursor-pointer" data-act="glide:100" title="VAJRA clean view"></i><i class="fa-solid fa-arrow-right hover:text-white cursor-pointer" data-act="glide:0" title="Chrome ad view"></i><i class="fa-solid fa-rotate-right hover:text-white cursor-pointer text-[10px]" data-act="glide:50" title="Reset split"></i></div>
+              <div class="flex-1 max-w-xl bg-[#070a12] border border-white/15 rounded-md h-6 px-2.5 flex items-center justify-between text-[10.5px] font-mono shadow-inner min-w-0"><div class="flex items-center gap-1.5 truncate text-slate-300"><i class="fa-solid fa-lock text-emerald-400 text-[8.5px]"></i><span id="pc-url" class="truncate">https://allrecipes.com/recipe/257198/thin-crust-pizza-dough/</span></div><span class="hidden sm:inline text-[9px] text-emerald-400 font-bold uppercase">Zero-leakage</span></div>
+              <div class="flex items-center gap-2 text-slate-400 text-xs"><i class="fa-regular fa-star hover:text-amber-400 cursor-pointer" data-act="toast:Bookmarked to Sovereign Vault"></i><button data-act="settings" aria-label="Sovereign settings" class="w-4 h-4 rounded-full bg-brandOrange/30 border border-brandOrange grid place-items-center text-[8px] font-bold text-white">V</button></div>
+            </div>
+
+            <div class="flex w-full relative">
+              <div class="hidden sm:flex w-12 bg-[#090d15] border-r border-white/10 flex-col items-center justify-between py-3 shrink-0 z-20">
+                <div class="space-y-2">
+                  <div class="pc-side on" id="side-0" data-act="preset:0" title="Pizza recipe"><span class="logo-tile w-full h-full !rounded-[10px] !p-1"><img class="vl" src="/static/vajra_figo_icon.png" alt="" onerror="vFallback(this)"></span></div>
+                  <div class="pc-side" id="side-s" data-act="shield" title="Shield defense"><i class="fa-solid fa-shield-halved text-emerald-400"></i></div>
+                  <div class="pc-side" id="side-1" data-act="preset:1" title="Neural AI news"><i class="fa-solid fa-brain text-cyan-400"></i></div>
+                  <div class="pc-side" id="side-2" data-act="preset:2" title="Sovereign 4K media"><i class="fa-solid fa-folder text-amber-400"></i></div>
+                </div>
+                <div class="pc-side" data-act="settings" title="Settings"><i class="fa-solid fa-gear"></i></div>
+              </div>
+
+              <div class="cmp" id="cmp">
+                <!-- Legacy browser (full width underneath) -->
+                <div id="cmp-ads" class="absolute inset-0 bg-[#f8fafc] text-slate-900 p-4 sm:p-7 text-left select-none overflow-hidden"></div>
+                <!-- VAJRA clean layer (clipped) -->
+                <div class="cmp-layer"><div id="cmp-clean" class="absolute inset-0 bg-white text-slate-900 p-4 sm:p-7 text-left select-none overflow-hidden"></div></div>
+                <div class="cmp-line"></div>
+                <div class="cmp-handle" title="Drag to compare"><div><i class="fa-solid fa-chevron-left text-[10px]"></i><i class="fa-solid fa-chevron-right text-[10px]"></i></div></div>
+                <input id="cmp-range" class="cmp-range" type="range" min="0" max="100" value="50" step="0.1" aria-label="Slide to compare VAJRA with legacy browsers">
+
+                <div id="settings" class="absolute inset-y-0 right-0 w-64 sm:w-72 max-w-[85%] bg-[#0a0f1d]/95 backdrop-blur-xl border-l border-white/15 p-4 sm:p-5 text-white z-50 translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
+                  <div class="space-y-4">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-3"><span class="font-display font-bold text-xs tracking-wider uppercase"><i class="fa-solid fa-gear text-brandOrange mr-2"></i>Sovereign Settings</span><button data-act="settings" aria-label="Close settings" class="w-6 h-6 rounded-md hover:bg-white/10 text-slate-400 hover:text-white text-xs"><i class="fa-solid fa-xmark"></i></button></div>
+                    <div id="settings-list" class="space-y-2.5 font-mono text-[10px]"></div>
+                  </div>
+                  <div class="pt-3 border-t border-white/10 text-center text-[9px] font-mono text-slate-500">VAJRA Web Engine OS &bull; Linux x86_64</div>
+                </div>
+
+                <div class="cmp-badge left-3 sm:left-6"><span class="logo-tile w-8 h-8"><img class="vl" src="/static/vajra_figo_icon.png" alt="" onerror="vFallback(this)"></span><div class="text-left"><div class="text-slate-950 font-black text-xs tracking-tight">VAJRA SOVEREIGN</div><div class="text-[9px] font-mono text-emerald-600 font-bold">0 ADS &bull; 100% CLEAN</div></div></div>
+                <div class="cmp-badge right-3 sm:right-6"><div class="w-8 h-8 rounded-xl bg-white border border-slate-300 grid place-items-center shadow-sm"><i class="fa-brands fa-chrome text-blue-600 text-xl"></i></div><div class="text-left"><div class="text-slate-950 font-black text-xs tracking-tight">LEGACY CHROME</div><div id="cmp-slow" class="text-[9px] font-mono text-red-600 font-bold">48 ADS &bull; SLOW</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="stand-neck"></div><div class="stand-foot"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ECOSYSTEM: TABLET + PHONE ============ -->
+<section id="ecosystem" class="py-20 sm:py-28 bg-white border-b border-slate-200 text-center select-none">
+  <div class="max-w-3xl mx-auto space-y-3 mb-10 sm:mb-16 px-4">
+    <span class="eyebrow">Cross-device ecosystem</span>
+    <h2 class="h-display font-extrabold text-slate-950 text-[clamp(1.9rem,5vw,3.75rem)]">Browse Beyond Limits.</h2>
+    <p class="text-slate-600 text-xs sm:text-base max-w-2xl mx-auto leading-relaxed">Deterministic rendering, zero telemetry, and pure speed across your desktop, tablet, and smartphone.</p>
+  </div>
+
+  <div id="eco" class="relative max-w-[1260px] mx-auto flex flex-col lg:flex-row items-center lg:items-end justify-center gap-12 lg:gap-0 px-3 sm:px-6">
+    <!-- Tablet -->
+    <div id="eco-tablet" class="relative w-full max-w-[500px] sm:max-w-[700px] lg:max-w-[960px] xl:max-w-[1040px] aspect-[16/10.2] bg-[#090d16] rounded-[22px] sm:rounded-[36px] p-2 sm:p-3 border-2 sm:border-[3px] border-[#475569] shadow-[0_30px_90px_-20px_rgba(15,23,42,.5),0_0_0_1px_rgba(148,163,184,.35)] flex flex-col shrink-0 overflow-hidden z-10 will-change-transform">
+      <div class="absolute top-1 sm:top-1.5 left-1/2 -translate-x-1/2 w-2 sm:w-2.5 aspect-square rounded-full bg-[#020617] border border-slate-700/80 z-30 grid place-items-center"><i class="w-1 h-1 rounded-full bg-blue-900"></i></div>
+      <div class="relative w-full h-full rounded-[16px] sm:rounded-[26px] overflow-hidden flex flex-col bg-cover bg-no-repeat" style="background-position:center 36%;background-image:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.98) 28%,rgba(255,255,255,.76) 46%,rgba(255,255,255,0) 74%),url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=75')">
+        <div class="bg-[#eaedf0] px-2 sm:px-3.5 pt-1 sm:pt-2 pb-1 border-b border-slate-300 shrink-0">
+          <div class="flex items-center gap-1.5 sm:gap-3">
+            <div class="flex items-center gap-1 sm:gap-1.5 px-1 sm:pr-2"><i class="w-2 sm:w-2.5 aspect-square rounded-full bg-[#ff5f56]"></i><i class="w-2 sm:w-2.5 aspect-square rounded-full bg-[#ffbd2e]"></i><i class="w-2 sm:w-2.5 aspect-square rounded-full bg-[#27c93f]"></i></div>
+            <button data-act="ttab:newtab" id="tt-newtab" class="bg-white text-slate-900 px-2 sm:px-3.5 py-0.5 sm:py-1 rounded-t-lg border-t border-x border-slate-300 shadow-sm flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[11.5px] font-bold"><span class="logo-tile w-3 sm:w-3.5 h-3 sm:h-3.5 !rounded !p-[1px]"><img class="vl" src="/static/vajra_figo_icon.png" alt="" onerror="vFallback(this)"></span>VAJRA</button>
+            <button data-act="ttab:svara" id="tt-svara" class="text-slate-500 hover:text-slate-800 px-2 sm:px-3 py-0.5 sm:py-1 rounded-t-lg flex items-center gap-1 text-[9px] sm:text-[11px]"><i class="fa-solid fa-play text-red-500 text-[8px]"></i><span class="hidden sm:inline">SVARA 4K</span></button>
+            <button data-act="ttab:shield" id="tt-shield" class="text-slate-500 hover:text-slate-800 px-2 sm:px-3 py-0.5 sm:py-1 rounded-t-lg flex items-center gap-1 text-[9px] sm:text-[11px]"><i class="fa-solid fa-shield-halved text-emerald-500 text-[8px]"></i><span class="hidden sm:inline">Enclave</span></button>
+          </div>
+          <div class="bg-white rounded-b-lg py-1 px-2 sm:px-2.5 flex items-center gap-2 sm:gap-3 text-slate-600 shadow-sm mt-0.5">
+            <div class="flex items-center gap-1.5 sm:gap-2 text-slate-500 text-[10px] sm:text-[11.5px]"><i data-act="ttab:newtab" class="fa-solid fa-arrow-left cursor-pointer hover:text-slate-800"></i><i data-act="ttab:svara" class="fa-solid fa-arrow-right cursor-pointer hover:text-slate-800"></i><i data-act="toast:Re-establishing tablet BPF sockets..." class="fa-solid fa-rotate-right cursor-pointer hover:text-slate-800 text-[9px]"></i></div>
+            <form data-form="tablet" class="flex-1 bg-[#f1f3f4] rounded-full h-5 sm:h-7 px-2.5 sm:px-3.5 flex items-center justify-between text-[9px] sm:text-[11.5px] text-slate-700 border border-slate-200 min-w-0">
+              <div class="flex items-center gap-1.5 flex-1 min-w-0"><i class="fa-solid fa-lock text-[8px] sm:text-[9px] text-emerald-600"></i><input id="t-omni" type="text" value="vajra://newtab" aria-label="Tablet address bar" class="bg-transparent focus:outline-none w-full font-medium"></div>
+              <i class="fa-solid fa-shield-halved text-[9px] sm:text-[11px] text-emerald-600"></i>
+            </form>
+            <div class="w-4 h-4 sm:w-5 sm:h-5 rounded-full overflow-hidden border border-slate-300 shrink-0"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=70" alt="" loading="lazy" class="w-full h-full object-cover"></div>
+          </div>
+        </div>
+
+        <div data-tview="newtab" class="flex-1 min-h-0 px-3 sm:px-8 lg:px-12 py-2 sm:py-6 flex flex-col justify-between overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1.5 sm:gap-3"><span class="logo-tile w-5 h-5 sm:w-9 sm:h-9 !rounded-md sm:!rounded-xl !p-[2px] sm:!p-1"><img class="vl" src="/static/vajra_figo_icon.png" alt="" onerror="vFallback(this)"></span><span class="font-display font-black text-sm sm:text-2xl lg:text-3xl tracking-tight text-slate-950">VAJRA</span></div>
+            <div class="text-[7px] sm:text-[10px] font-mono tracking-widest font-semibold text-slate-600 uppercase">A faster. safer. freer web.</div>
+          </div>
+          <div class="flex flex-col items-center justify-center space-y-1.5 sm:space-y-4 my-auto">
+            <h3 class="font-display font-black text-base sm:text-3xl lg:text-[3rem] tracking-tight text-slate-950 leading-tight">Browse Beyond Limits</h3>
+            <form data-form="tablet-search" class="w-full max-w-[260px] sm:max-w-lg lg:max-w-xl bg-white/95 backdrop-blur-md rounded-full h-7 sm:h-11 lg:h-12 px-2.5 sm:px-5 flex items-center justify-between shadow-md border border-slate-200">
+              <div class="flex items-center gap-1.5 sm:gap-3 flex-1 mr-2"><i class="fa-solid fa-magnifying-glass text-slate-400 text-[10px] sm:text-sm"></i><input type="text" placeholder="Search securely with VAJRA..." aria-label="Search" class="w-full bg-transparent text-[10px] sm:text-sm text-slate-800 placeholder-slate-500 font-medium focus:outline-none"></div>
+              <i class="fa-solid fa-microphone text-slate-500 text-[10px] sm:text-sm"></i>
+            </form>
+            <div id="t-dials" class="flex items-center justify-center gap-1.5 sm:gap-3 lg:gap-4 pt-0.5 sm:pt-2"></div>
+          </div>
+          <div class="flex items-end justify-between text-white drop-shadow-[0_2px_4px_rgba(0,0,0,.8)] pt-0.5 sm:pt-2">
+            <div class="text-left text-[8px] sm:text-xs leading-tight"><div class="font-semibold">Privacy</div><div class="font-semibold">Performance</div><div class="font-black">Your Choice</div><div class="w-5 sm:w-9 h-0.5 bg-white mt-0.5 sm:mt-1"></div></div>
+            <div class="text-right text-[7px] sm:text-[10.5px] font-mono tracking-wider lg:mr-48 xl:mr-56"><div class="uppercase font-semibold">Built for</div><div class="font-black flex items-center gap-1 justify-end">A BETTER TOMORROW<span class="w-3 sm:w-6 h-0.5 bg-white inline-block"></span></div></div>
+          </div>
+        </div>
+
+        <div data-tview="svara" class="hidden flex-1 min-h-0 bg-black p-2 sm:p-3 text-white">
+          <div class="relative w-full h-full rounded-xl overflow-hidden bg-slate-950 border border-white/10">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=75" alt="Alpine glacier" loading="lazy" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-black/40 flex flex-col items-center justify-center gap-2">
+              <button data-act="toast:Playing SVARA 4K mesh stream" aria-label="Play" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-brandOrange grid place-items-center shadow-lg hover:scale-110 transition-transform"><i class="fa-solid fa-play ml-1"></i></button>
+              <div class="font-display font-bold text-xs sm:text-lg text-center px-2">Alpine Glacier 4K HDR Lossless Stream</div>
+              <span class="bg-red-600 text-[9px] font-mono px-2 py-0.5 rounded font-bold uppercase">4K P2P Mesh</span>
+            </div>
+          </div>
+        </div>
+
+        <div data-tview="shield" class="hidden flex-1 min-h-0 bg-[#090d16] p-3 sm:p-4 text-white flex-col justify-between overflow-hidden font-mono text-xs">
+          <div>
+            <div class="text-emerald-400 font-bold uppercase tracking-wider text-[9px] sm:text-[10px]">Sovereign active defense</div>
+            <h3 class="text-sm sm:text-lg font-bold font-display mt-0.5">Kernel Security Enclave</h3>
+            <div class="grid grid-cols-3 gap-1.5 sm:gap-2 my-2 sm:my-3 text-center">
+              <div class="p-1.5 sm:p-2 rounded bg-white/5 border border-white/10"><div class="text-[7px] sm:text-[9px] text-slate-400">TRACKERS</div><div class="text-sm sm:text-lg font-black text-brandOrange">3,482</div></div>
+              <div class="p-1.5 sm:p-2 rounded bg-white/5 border border-white/10"><div class="text-[7px] sm:text-[9px] text-slate-400">RAM PURGE</div><div class="text-sm sm:text-lg font-black text-emerald-400">&lt;0.08ms</div></div>
+              <div class="p-1.5 sm:p-2 rounded bg-white/5 border border-white/10"><div class="text-[7px] sm:text-[9px] text-slate-400">LEAK</div><div class="text-sm sm:text-lg font-black text-blue-400">0.00 KB</div></div>
+            </div>
+          </div>
+          <button data-act="ttab:newtab" class="bg-brandOrange text-white py-1 px-3 rounded text-[9px] sm:text-[10px] font-bold self-start">Back to Sovereign Newtab</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div id="eco-phone" class="relative z-20 w-[240px] sm:w-[252px] aspect-[9/19] rounded-[38px] sm:rounded-[42px] p-[3px] sm:p-[3.5px] shadow-[0_30px_70px_-15px_rgba(15,23,42,.55)] border border-slate-300/80 flex flex-col shrink-0 lg:-ml-20 will-change-transform" style="background:linear-gradient(145deg,#fff 0%,#e2e8f0 18%,#cbd5e1 45%,#94a3b8 75%,#64748b 90%,#cbd5e1 100%)">
+      <i class="absolute -right-[4px] top-24 w-[3.5px] h-12 bg-gradient-to-b from-slate-200 via-white to-slate-300 rounded-r-sm shadow-md"></i>
+      <i class="absolute -right-[4px] top-40 w-[3.5px] h-8 bg-gradient-to-b from-slate-200 via-white to-slate-300 rounded-r-sm shadow-md"></i>
+      <div class="relative w-full h-full bg-black rounded-[34px] sm:rounded-[38px] p-[2.5px] overflow-hidden">
+        <div class="relative w-full h-full rounded-[31px] sm:rounded-[35px] overflow-hidden flex flex-col justify-between p-3.5 text-slate-900 bg-cover bg-no-repeat" style="background-position:center 36%;background-image:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.98) 28%,rgba(255,255,255,.82) 50%,rgba(255,255,255,0) 75%),url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=700&q=75')">
+          <div class="w-full flex items-center justify-between text-[11px] font-bold text-slate-800 pt-0.5 px-1"><span>9:41</span><span class="w-2.5 h-2.5 rounded-full bg-[#030712] border border-slate-700/80 grid place-items-center"><i class="w-1 h-1 rounded-full bg-blue-950"></i></span><span class="flex items-center gap-1.5 text-[9px]"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></span></div>
+          <div class="flex flex-col items-center justify-center my-auto space-y-3 w-full">
+            <div class="flex flex-col items-center space-y-1"><div class="flex items-center gap-2"><span class="logo-tile w-7 h-7 !rounded-xl !p-[3px]"><img class="vl" src="/static/vajra_figo_icon.png" alt="" onerror="vFallback(this)"></span><span class="font-display font-black text-xl tracking-tight text-slate-950">VAJRA</span></div><span class="text-[7.5px] font-mono font-semibold tracking-[.18em] text-slate-600 uppercase">A faster. safer. freer web.</span></div>
+            <form data-form="phone" class="w-full bg-white rounded-full h-8 px-3 flex items-center justify-between shadow-sm border border-slate-200"><div class="flex items-center gap-1.5 flex-1"><i class="fa-solid fa-magnifying-glass text-slate-400 text-[10px]"></i><input type="text" placeholder="Search or type URL" aria-label="Search" class="bg-transparent text-[10px] text-slate-800 focus:outline-none w-full font-medium"></div><i class="fa-solid fa-microphone text-slate-800 text-[10px]"></i></form>
+            <div id="p-dials" class="grid grid-cols-4 gap-2 w-full text-center text-[8.5px] font-medium text-slate-700 pt-0.5"></div>
+          </div>
+          <div class="w-full bg-white rounded-full h-8 px-3.5 flex items-center justify-between text-slate-700 shadow-sm border border-slate-200">
+            <i data-act="toast:Mobile sandbox history: zero logs saved" class="fa-solid fa-arrow-left text-[11px] cursor-pointer"></i>
+            <i data-act="toast:Forward history clean" class="fa-solid fa-arrow-right text-[11px] text-slate-400 cursor-pointer"></i>
+            <i data-act="toast:Mobile zero-telemetry shield ACTIVE · BPF sockets 100% intercepted · cookies RAM-only" class="fa-solid fa-shield-halved text-emerald-600 text-xs cursor-pointer"></i>
+            <span data-act="toast:3 active sandboxed tabs in mobile memory" class="w-4 h-4 rounded border border-slate-400 grid place-items-center text-[9px] font-bold cursor-pointer">3</span>
+            <i data-act="toast:VAJRA Mobile · Zero telemetry ON · Turbo sockets ON" class="fa-solid fa-ellipsis-vertical text-xs cursor-pointer"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section id="features" class="py-20 sm:py-24 bg-white border-b border-slate-200 overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 sm:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div>
+      <span class="eyebrow">Core browser modules</span>
+      <h2 class="h-display font-extrabold text-slate-950 mt-4 text-[clamp(1.9rem,5vw,3.5rem)]">Architected for Complete Autonomy.</h2>
+      <p class="text-slate-600 text-sm sm:text-base mt-2 max-w-2xl">Ad blocking, built-in sovereign VPN, cryptographic history shredding, and lossless multi-socket downloads—engineered directly into the engine kernel.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <button data-act="scroll:-1" aria-label="Scroll left" class="w-12 h-12 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-300 text-slate-700 grid place-items-center shadow-sm active:scale-95 transition"><i class="fa-solid fa-arrow-left text-sm"></i></button>
+      <button data-act="scroll:1" aria-label="Scroll right" class="w-12 h-12 rounded-full bg-slate-50 hover:bg-slate-100 border border-slate-300 text-slate-700 grid place-items-center shadow-sm active:scale-95 transition"><i class="fa-solid fa-arrow-right text-sm"></i></button>
+    </div>
+  </div>
+  <div id="f-track" class="flex items-center gap-5 sm:gap-6 overflow-x-auto no-scrollbar py-6 px-4 sm:px-8 lg:px-12 scroll-smooth snap-x cursor-grab"></div>
+</section>
+
+<!-- Feature modal -->
+<div id="f-overlay" class="fixed inset-0 z-[120] bg-slate-950/70 backdrop-blur-md hidden items-center justify-center p-3 sm:p-6" role="dialog" aria-modal="true" aria-labelledby="f-title">
+  <div id="f-dialog" class="spring w-full max-w-3xl max-h-[90vh] bg-white border border-slate-200 rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl relative">
+    <button id="f-close" aria-label="Close" class="absolute top-5 right-5 z-20 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 grid place-items-center shadow-sm"><i class="fa-solid fa-xmark text-sm"></i></button>
+    <div class="p-6 sm:p-12 overflow-y-auto space-y-6">
+      <div><span id="f-badge" class="eyebrow">Sovereign Module</span><h3 id="f-title" class="h-display font-extrabold text-slate-950 mt-3 text-[clamp(1.5rem,4vw,2.5rem)] pr-10"></h3></div>
+      <div id="f-body" class="text-slate-600 text-sm sm:text-base leading-relaxed space-y-4"></div>
+      <div class="pt-6 border-t border-slate-200 flex items-center justify-between gap-3 flex-wrap font-mono text-xs text-slate-500"><span class="flex items-center gap-1.5 text-emerald-700 font-bold"><i class="fa-solid fa-shield-halved"></i>NEXAUR Sovereign Verified</span><a href="https://nexaur.online/" target="_blank" rel="noopener noreferrer" class="text-brandOrange underline font-bold">Inspect Engine Specs &rarr;</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-[#f8fafc] text-slate-600 pt-16 pb-12 px-6 sm:px-12 text-xs border-t border-slate-200">
+  <div class="max-w-7xl mx-auto">
+    <div id="foot-cols" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 pb-14 border-b border-slate-200"></div>
+    <div class="py-6 relative w-full overflow-hidden select-none" aria-hidden="true">
+      <div class="relative w-full h-[18vw] min-h-[120px] max-h-[260px] overflow-hidden">
+        <div class="tiger-pan absolute inset-0 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1561731216-c3a4d99437d5?auto=format&fit=crop&w=2000&q=80');background-position:center 32%;filter:saturate(1.35) contrast(1.15)"></div>
+        <svg class="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1600 300"><defs><mask id="tiger-mask"><rect width="1600" height="300" fill="#fff"/><text x="50%" y="232" text-anchor="middle" font-family="'Space Grotesk',sans-serif" font-weight="900" font-size="285" letter-spacing=".025em" fill="#000">VAJRA</text></mask></defs><rect width="1600" height="300" fill="#f8fafc" mask="url(#tiger-mask)"/></svg>
+      </div>
+    </div>
+    <div class="pt-6 border-t border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-slate-500 font-mono">
+      <span class="text-center sm:text-left">&copy; 2024–2026 NEXAUR Technologies Private Limited. All rights reserved.</span>
+      <div class="flex items-center gap-3"><span class="text-slate-400 font-sans">Language:</span><span class="bg-white border border-slate-300 rounded-full px-4 py-1.5 font-bold text-slate-800 text-[11px] flex items-center gap-2 shadow-sm">ENGLISH <i class="fa-solid fa-caret-down text-[10px] text-slate-500"></i></span><button data-act="toast:Sovereign help desk: nexaurpvtltd@gmail.com" aria-label="Help" class="w-8 h-8 rounded-full bg-slate-900 text-white font-bold grid place-items-center shadow-md hover:bg-slate-800 text-xs">?</button></div>
+    </div>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ======================================================================
+   UTILITIES
+   ====================================================================== */
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const V={};                        // which sections are on screen
+let toastT;
+function toast(msg,icon='fa-shield-halved'){const t=$('#toast');t.innerHTML=`<i class="fa-solid ${icon} text-brandOrange mt-0.5"></i><span></span>`;t.lastChild.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2800)}
+new IntersectionObserver(es=>es.forEach(e=>V[e.target.id]=e.isIntersecting),{rootMargin:'120px'}) && ['workstation','compare','ecosystem'].forEach(id=>{const el=$('#'+id);if(el)new IntersectionObserver(([e])=>V[id]=e.isIntersecting,{rootMargin:'120px'}).observe(el)});
+const live=id=>V[id]&&!document.hidden;
+
+/* Central click delegation: data-act="name:arg" */
+const ACT={
+  tab:n=>switchTab(+n),url:u=>openUrl(u),toast:m=>toast(m),wp:()=>cycleWp(),glow:()=>cycleGlow(),min:()=>toggleMin(),max:()=>toggleMax(),
+  launch:()=>launch(),reload:()=>reloadTab(),purge:()=>purge(),glide:p=>{pauseTour();setSplit(+p,true)},tour:()=>toggleTour(),
+  preset:i=>{pauseTour();setPreset(+i)},'preset-next':()=>{pauseTour();setPreset((preset+1)%PRESETS.length)},shield:()=>openShield(),settings:()=>$('#settings').classList.toggle('translate-x-full'),
+  ttab:k=>tabletTab(k),scroll:d=>$('#f-track').scrollBy({left:340*d,behavior:'smooth'}),feature:i=>openFeature(+i)
+};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-act]');if(!el)return;const[k,...r]=el.dataset.act.split(':');if(ACT[k])ACT[k](r.join(':'),el,e)});
+const FORMS={
+  omni:f=>{const v=$('#omni').value.trim();toast(`Navigating securely to ${v}`)},
+  vajra:f=>{const q=$('input',f).value.trim();if(q)toast(`Searching “${q}” — 0 bytes of telemetry sent`,'fa-magnifying-glass')},
+  'tablet-search':f=>{const q=$('input',f).value.trim();if(q)toast(`Tablet engine: “${q}” · telemetry 100% blocked`,'fa-magnifying-glass')},
+  tablet:f=>toast(`Navigating securely to ${$('#t-omni').value}`),
+  phone:f=>{const q=$('input',f).value.trim();if(q)toast(`Mobile engine: “${q}” · P2P relay < 8ms`,'fa-magnifying-glass')},
+  term:f=>runTerm($('#term-in').value)
+};
+document.addEventListener('submit',e=>{const f=e.target.closest('[data-form]');if(!f)return;e.preventDefault();FORMS[f.dataset.form]&&FORMS[f.dataset.form](f)});
+
+/* ======================================================================
+   NAV + HERO
+   ====================================================================== */
+$('#nav-toggle').onclick=()=>{const m=$('#mobile-nav'),open=m.classList.toggle('hidden')===false;m.classList.toggle('flex',open);$('#nav-icon').className=open?'fa-solid fa-xmark':'fa-solid fa-bars';$('#nav-toggle').setAttribute('aria-expanded',open)};
+$$('#mobile-nav a').forEach(a=>a.addEventListener('click',()=>{$('#mobile-nav').classList.add('hidden');$('#mobile-nav').classList.remove('flex');$('#nav-icon').className='fa-solid fa-bars'}));
+
+let ticking=false;
+addEventListener('scroll',()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{const y=scrollY,h=$('#hero-heading');if(y<600&&!reduced){h.style.transform=`translateY(${y*.12}px)`;h.style.opacity=Math.max(.3,1-y/700)}ticking=false})},{passive:true});
+
+const PILLS=[['sovereign','fa-crown','bg-orange-50 border-orange-200 text-brandOrange'],['fast','fa-bolt','bg-emerald-50 border-emerald-200 text-brandGreen'],['safe','fa-shield-halved','bg-blue-50 border-blue-200 text-brandBlue'],['yours','fa-heart','bg-rose-50 border-rose-200 text-rose-600']];
+let pi=0,pTimer=null;
+function nextPill(){pi=(pi+1)%PILLS.length;const[t,i,c]=PILLS[pi],p=$('#hero-pill');p.style.opacity='.3';p.style.transform='scale(.96)';setTimeout(()=>{p.className=`inline-flex items-center gap-3 px-5 sm:px-8 py-1.5 sm:py-2.5 rounded-full border shadow-chrome-pill align-middle transition-all duration-300 ${c}`;$('#hero-pill-text').textContent=t;$('#hero-pill-icon').className=`fa-solid ${i} text-[.55em]`;p.style.opacity='1';p.style.transform='scale(1)'},180)}
+function playPill(){pTimer=setInterval(()=>{if(!document.hidden)nextPill()},2600);$('#pill-pause-icon').className='fa-solid fa-pause'}
+$('#pill-pause').onclick=()=>{if(pTimer){clearInterval(pTimer);pTimer=null;$('#pill-pause-icon').className='fa-solid fa-play'}else playPill()};
+if(!reduced)playPill();else $('#pill-pause-icon').className='fa-solid fa-play';
+
+/* ======================================================================
+   LAPTOP: deck keys, wallpapers, tabs, dock, clock, telemetry
+   ====================================================================== */
+(function buildDeck(){let o='';for(let r=0;r<5;r++){const y=8+r*9.6,L=(36*(1-y/84))+34,R=1000-L,n=14,w=(R-L)/n;for(let k=0;k<n;k++)o+=`<rect x="${(L+k*w+1).toFixed(1)}" y="${y.toFixed(1)}" width="${(w-2).toFixed(1)}" height="7.6" rx="1.6"/>`}$('#deck-keys').innerHTML=o})();
+
+const WPS=['photo-1519681393784-d120267933ba','photo-1506744038136-46273834b3fb','photo-1507525428034-b723cf961d3e','photo-1517411032315-54ef2cb783bb','photo-1531366936337-7c912a4589a7','photo-1451187580459-43490279c0fa'].map(p=>`https://images.unsplash.com/${p}?auto=format&fit=crop&w=1600&q=75`);
+$('#wallpapers').innerHTML=WPS.map((_,i)=>`<div class="wp${i?'':' on'}" id="wp-${i}"></div>`).join('');
+const wpSet=new Set();let wpi=0;
+function loadWp(i){if(wpSet.has(i))return;wpSet.add(i);$('#wp-'+i).style.backgroundImage=`url('${WPS[i]}')`}
+loadWp(0);$('#nt-bg').style.backgroundImage=`url('${WPS[0]}')`;
+function cycleWp(){$('#wp-'+wpi).classList.remove('on');wpi=(wpi+1)%WPS.length;loadWp(wpi);$('#wp-'+wpi).classList.add('on');$('#wp-label').textContent=`${wpi+1}/${WPS.length}`;loadWp((wpi+1)%WPS.length)}
+setInterval(()=>{if(live('workstation'))cycleWp()},12000);
+
+const GLOWS=[['rgba(255,76,0,.28)','Orange'],['rgba(6,182,212,.34)','Cyan'],['rgba(245,158,11,.34)','Amber']];let gi=0;
+function cycleGlow(){gi=(gi+1)%GLOWS.length;$('#laptop-shadow').style.setProperty('--glow',GLOWS[gi][0]);$('#glow-label').textContent='Glow: '+GLOWS[gi][1]}
+
+const TABS=[['fa-bolt','#ff4c00','Vajra Sovereign','vajra://newtab'],['fa-play','#ef4444','SVARA 4K Player','vajra://stream/4k-player'],['fa-shield-halved','#34d399','Shield & Enclave','vajra://security-enclave'],['fa-terminal','#fbbf24','vajra://terminal','vajra://terminal']];
+$('#tab-strip').innerHTML=TABS.map((t,i)=>`<div class="wtab${i?'':' on'}" data-act="tab:${i}" id="wt-${i}"><i class="fa-solid ${t[0]} text-[9px]" style="color:${t[1]}"></i><span class="truncate max-w-[100px]">${t[2]}</span></div>`).join('')+`<button data-act="toast:Fresh unprivileged sandbox spawned (Seccomp-BPF strict)" class="w-6 h-6 rounded-md hover:bg-white/10 text-slate-400 hover:text-white grid place-items-center shrink-0" aria-label="New tab"><i class="fa-solid fa-plus text-[10px]"></i></button>`;
+const BMK=[['fa-bolt','text-brandOrange','Nexaur Portal','url:https://nexaur.online/'],['fa-brands fa-github','text-white','GitHub','url:https://github.com/'],['fa-brands fa-youtube','text-red-500','SVARA 4K','tab:1'],['fa-solid fa-shield-halved','text-emerald-400','Shield Console','tab:2'],['fa-solid fa-terminal','text-amber-400','Kernel CLI','tab:3'],['fa-brands fa-linux','text-amber-400','Kernel.org','url:https://kernel.org/']];
+$('#bookmarks').innerHTML=BMK.map(b=>`<div data-act="${b[3]}" class="flex items-center gap-1.5 hover:text-white cursor-pointer shrink-0"><i class="${b[0].includes('fa-')&&b[0].includes(' ')?b[0]:'fa-solid '+b[0]} ${b[1]}"></i><span>${b[2]}</span></div>`).join('<span class="text-white/20">|</span>');
+const NT=[['fa-bolt','text-brandOrange','Nexaur','url:https://nexaur.online/'],['fa-play','text-red-400','SVARA 4K','tab:1'],['fa-shield-halved','text-emerald-400','Enclave','tab:2'],['fa-terminal','text-amber-400','Terminal','tab:3']];
+$('#nt-pills').innerHTML=NT.map(b=>`<div data-act="${b[3]}" class="bg-white/10 hover:bg-white/20 border border-white/15 px-2.5 py-1 rounded-lg cursor-pointer transition-colors flex items-center gap-1.5"><i class="fa-solid ${b[0]} ${b[1]}"></i><span>${b[2]}</span></div>`).join('');
+const DOCK=[['','Vajra Browser','min'],['fa-play bg-red-600','SVARA 4K','tab:1'],['fa-shield-halved bg-emerald-600','Security Enclave','tab:2'],['fa-terminal bg-amber-600','Kernel Terminal','tab:3'],['fa-folder bg-blue-600','Vault Files','toast:Encrypted Sovereign Vault mounted (AES-256-GCM)'],['fa-mountain-sun bg-slate-700','Cycle 4K Wallpapers','wp']];
+$('#dock').innerHTML=DOCK.map((d,i)=>i===0?`<div class="tile logo-tile !p-1 !rounded-[10px]" data-act="${d[2]}"><span class="tip">${d[1]}</span><img class="vl" src="/static/vajra_figo_icon.png" alt="Vajra" onerror="vFallback(this)"><i class="dot"></i></div>`:`<div class="tile ${d[0].split(' ')[1]}" data-act="${d[2]}"><span class="tip">${d[1]}</span><i class="fa-solid ${d[0].split(' ')[0]} text-xs"></i></div>`).join('');
+
+const win=$('#vwin'),screenEl=$('#screen'),omni=$('#omni');
+function switchTab(n){win.classList.remove('is-min');TABS.forEach((t,i)=>$('#wt-'+i).classList.toggle('on',i===n));$$('.tabview[data-tv]').forEach(v=>v.classList.toggle('on',+v.dataset.tv===n));omni.value=TABS[n][3];if(n!==1)$('#vid').pause(),syncVid();if(n===3)setTimeout(()=>$('#term-in').focus({preventScroll:true}),50)}
+function toggleMin(){win.classList.toggle('is-min')}
+let maxed=false;function toggleMax(){maxed=!maxed;win.classList.toggle('is-max',maxed);$('#max-icon').className=maxed?'fa-regular fa-window-restore':'fa-regular fa-square'}
+function reloadTab(){const o=omni.value;omni.value='Re-establishing kernel sandbox sockets...';setTimeout(()=>omni.value=o,350)}
+function openUrl(u){omni.value=u;window.open(u,'_blank','noopener');toast(`Opening ${new URL(u).host} in a fresh sandbox`,'fa-arrow-up-right-from-square')}
+
+/* Video */
+const vid=$('#vid');
+function fmt(s){s=Math.floor(s||0);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function syncVid(){$('#vid-icon').className=vid.paused?'fa-solid fa-play':'fa-solid fa-pause'}
+$('#vid-btn').onclick=()=>{vid.paused?vid.play().catch(()=>{}):vid.pause()};
+vid.addEventListener('play',syncVid);vid.addEventListener('pause',syncVid);
+vid.addEventListener('timeupdate',()=>$('#vid-time').textContent=`${fmt(vid.currentTime)} / ${fmt(vid.duration||596)}`);
+
+/* Terminal */
+const termLog=$('#term-log');
+function tprint(html,cls=''){const d=document.createElement('div');d.className=cls;d.innerHTML=html;termLog.appendChild(d);termLog.scrollTop=termLog.scrollHeight}
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function runTerm(raw){
+  const c=raw.trim();$('#term-in').value='';if(!c)return;
+  tprint(`<span class="text-brandOrange">$</span> ${esc(c)}`,'text-slate-200');
+  const [cmd]=c.toLowerCase().split(/\s+/);
+  const out={
+    help:()=>tprint('Commands: help · status · purge · whoami · uname · date · ls · telemetry · clear · exit','text-slate-400'),
+    status:()=>{tprint('Namespaces: CLONE_NEWUSER | CLONE_NEWPID | CLONE_NEWNET<br>DNS: Sovereign WireGuard mesh (nexaur.online:51820)<br>Telemetry intercept: <b class="text-emerald-400">100% BLOCKED</b>','text-white bg-slate-900/60 p-2 rounded-lg border border-white/10')},
+    purge:()=>{purge(true)},whoami:()=>tprint('nexaur (uid=1000, sandboxed, no-new-privs)','text-slate-300'),
+    uname:()=>tprint('Linux sovereign 6.10.8-sovereign x86_64 GNU/Linux','text-slate-300'),date:()=>tprint(new Date().toString(),'text-slate-300'),
+    ls:()=>tprint('<span class="text-cyan-400">vault/</span>  <span class="text-cyan-400">profiles/</span>  vajra-browser  seccomp.bpf  README.sovereign','text-slate-300'),
+    telemetry:()=>tprint('egress: 0.00 KB · blocked connections: '+$('#trk').textContent,'text-emerald-400'),
+    clear:()=>{termLog.innerHTML=''},exit:()=>{toggleMin()}
+  };
+  (out[cmd]||(()=>tprint(`${esc(cmd)}: executed in sandboxed subshell (exit 0)`,'text-slate-500')))();
+}
+function purge(fromTerm){const s=$('#purge-stat');s.textContent='< 0.02ms';s.classList.add('text-brandOrange');setTimeout(()=>{s.textContent='< 0.08ms';s.classList.remove('text-brandOrange')},1200);fromTerm?tprint('Volatile process heap zero-filled. 0 remnants found.','text-emerald-400'):toast('Volatile process heap zero-filled. 0 remnants found.','fa-fire')}
+
+/* Clocks + telemetry (only while visible) */
+function tickClocks(){
+  const n=new Date(),h=n.getHours(),h12=String(h%12||12).padStart(2,'0'),m=String(n.getMinutes()).padStart(2,'0'),s=String(n.getSeconds()).padStart(2,'0'),ap=h>=12?'PM':'AM';
+  $('#os-time').textContent=`${n.toLocaleDateString('en-US',{weekday:'short'})} ${n.toLocaleDateString('en-US',{month:'short'})} ${n.getDate()} ${h12}:${m} ${ap}`;
+  $('#nt-clock').textContent=`${h12}:${m}:${s} ${ap}`;
+  $('#nt-date').textContent=n.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+tickClocks();setInterval(()=>{if(live('workstation'))tickClocks()},1000);
+setInterval(()=>{if(!live('workstation'))return;$('#m-cpu').textContent=`CPU ${2+Math.floor(Math.random()*3)}%`;$('#m-ram').textContent=`RAM ${410+Math.floor(Math.random()*12)}MB`},4000);
+let trk=3482;setInterval(()=>{if(!live('workstation'))return;trk+=1+Math.floor(Math.random()*3);$('#trk').textContent=trk.toLocaleString()},3500);
+
+/* Draggable window (pointer events: mouse + touch + pen) */
+(function(){
+  const h=$('#drag-head');let d=null;
+  const k=()=>screenEl.getBoundingClientRect().width/screenEl.offsetWidth||1;
+  h.addEventListener('pointerdown',e=>{if(maxed||e.target.closest('button,input,i,form'))return;d={x:e.clientX,y:e.clientY,l:win.offsetLeft,t:win.offsetTop};h.setPointerCapture(e.pointerId);win.style.transition='none'});
+  h.addEventListener('pointermove',e=>{if(!d)return;const s=k(),maxL=Math.max(6,screenEl.clientWidth-win.clientWidth-6),maxT=Math.max(26,screenEl.clientHeight-win.clientHeight-50);win.style.left=clamp(d.l+(e.clientX-d.x)/s,6,maxL)+'px';win.style.top=clamp(d.t+(e.clientY-d.y)/s,26,maxT)+'px'});
+  const end=()=>{if(d){d=null;win.style.transition=''}};h.addEventListener('pointerup',end);h.addEventListener('pointercancel',end);
+})();
+
+/* Guided cursor + auto-launch (cancellable) */
+let demo=0;
+async function launch(){
+  const me=++demo,ok=()=>me===demo;
+  const cur=$('#vcursor'),svg=$('#vcursor-svg'),rip=$('#ripple'),txt=$('#cursor-text'),tile=$('#dock .tile'),hud=$('#hud');
+  win.classList.add('is-min');hud.classList.remove('on');txt.textContent='👉 Please view the browser →';
+  const sb=screenEl.getBoundingClientRect(),tr=tile.getBoundingClientRect(),k=sb.width/screenEl.offsetWidth||1;
+  const tx=(tr.left-sb.left)/k+tr.width/2/k-6,ty=(tr.top-sb.top)/k+tr.height/2/k-6;
+  cur.style.transition='none';cur.style.transform=`translate3d(${screenEl.offsetWidth*.65}px,${screenEl.offsetHeight*.22}px,0)`;cur.style.opacity='1';
+  await sleep(80);if(!ok())return;
+  cur.style.transition='transform 1.25s cubic-bezier(.25,1,.35,1)';cur.style.transform=`translate3d(${tx}px,${ty}px,0)`;
+  await sleep(1250);if(!ok())return;
+  tile.classList.add('hot');txt.textContent='🚀 Opening VAJRA Sovereign...';
+  await sleep(260);if(!ok())return;
+  svg.style.transform='scale(.82)';rip.classList.remove('go');void rip.offsetWidth;rip.classList.add('go');
+  await sleep(240);if(!ok())return;
+  svg.style.transform='scale(1)';tile.classList.remove('hot');win.classList.remove('is-min');hud.classList.add('on');txt.textContent='✨ VAJRA Web Engine Online!';
+  await sleep(700);if(!ok())return;
+  cur.style.transition='transform .85s ease-out,opacity .4s ease-out';cur.style.transform=`translate3d(${tx+85}px,${ty-60}px,0)`;cur.style.opacity='0';
+}
+function stopDemo(){demo++;$('#vcursor').style.opacity='0';$('#dock .tile').classList.remove('hot');win.classList.remove('is-min')}
+screenEl.addEventListener('pointerdown',e=>{if(!e.target.closest('#launch-btn')&&parseFloat($('#vcursor').style.opacity)>0)stopDemo()});
+let launched=false;new IntersectionObserver(([e])=>{if(e.isIntersecting&&!launched){launched=true;setTimeout(()=>win.classList.contains('is-min')&&launch(),400)}},{threshold:.3}).observe($('#workstation'));
+
+/* Realistic lid/deck parallax + glare (desktop pointers only) */
+(function(){
+  const stage=$('#laptop-stage'),lap=$('#laptop'),glare=$('#glare');
+  if(!fine||reduced)return;
+  let tx=0,ty=0,cx=0,cy=0,hover=false,raf=0,t=0;
+  function frame(){
+    if(!hover){t+=.012;tx=Math.sin(t)*.7;ty=Math.cos(t*.7)*1}
+    cx+=(tx-cx)*.08;cy+=(ty-cy)*.08;
+    lap.style.setProperty('--rx',cx.toFixed(2)+'deg');lap.style.setProperty('--ry',cy.toFixed(2)+'deg');
+    glare.style.setProperty('--gx',(55+cy*4)+'%');glare.style.setProperty('--gy',(30+cx*4)+'%');
+    raf=live('workstation')?requestAnimationFrame(frame):0;
+  }
+  const kick=()=>{if(!raf)raf=requestAnimationFrame(frame)};
+  stage.addEventListener('pointermove',e=>{if(innerWidth<768)return;const r=stage.getBoundingClientRect();tx=(.5-(e.clientY-r.top)/r.height)*6;ty=((e.clientX-r.left)/r.width-.5)*10;hover=true;kick()});
+  stage.addEventListener('pointerleave',()=>{hover=false;tx=ty=0});
+  new IntersectionObserver(([e])=>{if(e.isIntersecting)kick()}).observe(stage);
+})();
+
+/* ======================================================================
+   COMPARISON ENGINE
+   ====================================================================== */
+const PRESETS=[
+ {tab:'Allrecipes: Pizza Dough',url:'https://allrecipes.com/recipe/257198/thin-crust-pizza-dough/',title:'Thin-Crust Pizza Dough Recipe',img:'photo-1574071318508-1cdbab80d002',rating:'★★★★★ 4.6 (308 Reviews)',n:48,stat:'48 ADS & 112 TRACKERS BLOCKED',load:'0.08s',chips:['2 Cups Flour','1 Tsp Yeast','2 Tbsp Olive Oil','15 Min Bake'],blurb:'Ready to bake in just 15 minutes with cold-pressed olive oil, unbleached flour and fresh yeast. Zero ad injection delays, zero corporate profiling.',banner:'⚠️ FLASH SALE! WIN A $1,000 GROCERY GIFT CARD! CLICK HERE!',cookie:'842 advertising partners are tracking your cookies.',ad:['Kroger','fa-cart-shopping','Shop Online Today.','Fresh groceries delivered to your door within 1 hour.','Shop Now']},
+ {tab:'The Verge: Quantum AI',url:'https://theverge.com/tech-intel/quantum-neural-supercomputers',title:'Quantum Neural Supercomputers Unveiled',img:'photo-1518770660439-4636190af475',rating:'★★★★☆ 4.2 (1.2K Comments)',n:64,stat:'64 VIDEO POPUPS & ADS KILLED',load:'0.11s',chips:['128 Qubits','Cryo-Free','Open Firmware','Q4 Rollout'],blurb:'The full article, with no autoplay video, no newsletter wall and no cross-site profiling. Just the text and the figures.',banner:'🔔 SUBSCRIBE NOW — 90% OFF YOUR FIRST YEAR! LIMITED TIME!',cookie:'1,204 partners want to personalise your ads.',ad:['StreamMax','fa-tv','Watch Anywhere.','Unlimited shows on every device. First month free.','Start Free']},
+ {tab:'SVARA 4K: Alpine Glacier',url:'https://svara.tv/watch/alpine-glacier-4k-hdr-timelapse',title:'Alpine Glacier 4K HDR Lossless Timelapse',img:'photo-1506744038136-46273834b3fb',rating:'★★★★★ 4.9 (87K Views)',n:32,stat:'32 BUFFERING TRACKERS PURGED',load:'0.06s',chips:['4K 60FPS','HDR10','P2P Mesh','Lossless'],blurb:'Direct peer-to-peer streaming over the sovereign mesh. No pre-roll ads, no throttling, no watch-history profiling.',banner:'▶ AD: SKIP IN 15s — UPGRADE TO REMOVE ADS FOR $13.99/MO',cookie:'Your viewing history is shared with 310 data brokers.',ad:['TurboVPN','fa-lock','Hide Your IP.','Stay private online for $2.99/mo — 5 devices.','Get Deal']}
+];
+let preset=0;
+const img=(id,w=1000)=>`https://images.unsplash.com/${id}?auto=format&fit=crop&w=${w}&q=72`;
+function renderPreset(i){
+  const p=PRESETS[i];preset=i;
+  $('#cmp-ads').innerHTML=`<div class="max-w-4xl mx-auto flex flex-col md:flex-row gap-4 sm:gap-5 h-full"><div class="flex-1 space-y-2.5 sm:space-y-3 min-w-0">
+    <div class="p-2 bg-amber-100 border border-amber-300 rounded-lg text-center font-bold text-[10px] sm:text-[11px] text-amber-900 animate-pulse">${p.banner}</div>
+    <h3 class="text-lg sm:text-3xl font-extrabold font-display text-slate-950 leading-tight">${p.title}</h3>
+    <div class="text-[10px] sm:text-xs text-slate-500 font-mono flex flex-wrap items-center gap-x-3"><span>${p.rating}</span><span class="text-red-600 font-bold">${p.n} TRACKERS EMBEDDED</span></div>
+    <div class="aspect-video w-full rounded-xl overflow-hidden bg-slate-200 relative border border-slate-300"><img class="w-full h-full object-cover" src="${img(p.img)}" alt="" draggable="false"><span class="absolute bottom-2 left-2 bg-black/85 text-white text-[9px] px-2 py-1 rounded font-mono">Ad video playing (0:15) • audio unmuted</span></div>
+    <div class="p-2 bg-slate-900 text-white rounded-lg text-[9px] sm:text-[10px] font-mono flex items-center justify-between gap-2"><span>${p.cookie}</span><span class="bg-blue-600 px-2 py-0.5 rounded font-bold shrink-0">Accept All</span></div></div>
+    <div class="hidden md:flex w-52 lg:w-56 bg-blue-700 text-white rounded-xl p-4 flex-col justify-between shadow-lg text-center shrink-0 border-2 border-blue-500"><div class="space-y-2"><div class="text-[9px] font-mono uppercase tracking-widest text-blue-200">Advertisement</div><div class="text-2xl font-black">${p.ad[0]}</div><i class="fa-solid ${p.ad[1]} text-3xl text-amber-300 my-1"></i><div class="text-base font-bold leading-tight">${p.ad[2]}</div><p class="text-[10.5px] text-blue-100">${p.ad[3]}</p></div><span class="mt-3 bg-white text-blue-800 font-bold text-[11px] py-2 px-3 rounded-full shadow">${p.ad[4]} &rarr;</span></div></div>`;
+  $('#cmp-clean').innerHTML=`<div class="max-w-4xl mx-auto space-y-2.5 sm:space-y-3">
+    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[9.5px] sm:text-[10.5px] font-mono font-bold"><i class="fa-solid fa-shield-halved"></i>0 ADS • 0 TRACKERS • 3.4X FASTER</span>
+    <h3 class="text-lg sm:text-3xl font-extrabold font-display text-slate-950 leading-tight">${p.title}</h3>
+    <div class="text-[10px] sm:text-xs text-slate-500 font-mono flex flex-wrap items-center gap-x-4"><span>${p.rating}</span><span class="text-emerald-700 font-bold">LOAD TIME: ${p.load}</span></div>
+    <div class="aspect-video w-full rounded-2xl overflow-hidden bg-slate-950 border border-slate-200 shadow-md"><img class="w-full h-full object-cover" src="${img(p.img)}" alt="" draggable="false"></div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-[10px] sm:text-[10.5px]">${p.chips.map(c=>`<div class="p-1.5 sm:p-2 rounded-lg bg-slate-50 border border-slate-200 text-center font-bold text-slate-800">${c}</div>`).join('')}</div>
+    <p class="hidden sm:block text-sm text-slate-700 leading-relaxed max-w-3xl">${p.blurb}</p></div>`;
+  $('#pc-tab').textContent=p.tab;$('#pc-url').textContent=p.url;$('#pc-shield').textContent=p.stat;$('#cmp-slow').innerHTML=`${p.n} ADS &bull; SLOW`;
+  $$('#cmp-presets .cmp-btn').forEach((b,j)=>b.classList.toggle('on',j===i));
+  $$('.pc-side').forEach(s=>s.classList.remove('on'));$('#side-'+i)&&$('#side-'+i).classList.add('on');
+}
+$('#cmp-presets').innerHTML=[['fa-pizza-slice text-brandOrange','Thin-Crust Pizza Recipe'],['fa-newspaper text-blue-600','Tech Intel & AI News'],['fa-mountain-sun text-emerald-600','4K Alpine Streaming']].map((b,i)=>`<button data-act="preset:${i}" class="cmp-btn"><i class="fa-solid ${b[0]}"></i><span>${b[1]}</span></button>`).join('');
+$('#settings-list').innerHTML=[['Ad & Tracker Shield','Hardware socket level','STRICT','emerald'],['Kernel Sandbox','Seccomp-BPF filter','ACTIVE','emerald'],['RAM Auto-Purge','Zero-fill registers','< 0.08ms','orange'],['Telemetry Egress','Corporate logging','0.00 KB','blue']].map(r=>`<div class="p-2.5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between gap-2"><div><div class="text-white font-bold">${r[0]}</div><div class="text-slate-400 text-[9px]">${r[1]}</div></div><span class="px-2 py-0.5 rounded bg-${r[3]}-500/20 text-${r[3]}-400 font-bold border border-${r[3]}-500/30 shrink-0">${r[2]}</span></div>`).join('');
+
+const cmp=$('#cmp'),range=$('#cmp-range');let smoothT;
+function setSplit(p,smooth=false){p=clamp(+p,0,100);if(smooth){cmp.classList.add('smooth');clearTimeout(smoothT);smoothT=setTimeout(()=>cmp.classList.remove('smooth'),450)}else cmp.classList.remove('smooth');cmp.style.setProperty('--split',p+'%');if(+range.value!==p)range.value=p}
+range.addEventListener('input',e=>{pauseTour();setSplit(e.target.value)});
+function setPreset(i){renderPreset(i);setSplit(50,true)}
+function openShield(){pauseTour();setSplit(100,true);$$('.pc-side').forEach(s=>s.classList.remove('on'));$('#side-s').classList.add('on');const s=$('#pc-shield');s.textContent='SHIELD ENGAGED: 100% TELEMETRY PURGED';s.classList.add('text-orange-400');setTimeout(()=>{s.classList.remove('text-orange-400');s.textContent=PRESETS[preset].stat},1800)}
+
+let tour=true,tourRun=false;
+async function tourLoop(){
+  if(tourRun)return;tourRun=true;
+  while(tour){
+    await sleep(5000);if(!tour)break;if(!live('compare'))continue;
+    setSplit(25,true);await sleep(1400);if(!tour)break;
+    setSplit(75,true);await sleep(1400);if(!tour)break;
+    setSplit(50,true);renderPreset((preset+1)%PRESETS.length);
+  }
+  tourRun=false;
+}
+function tourUI(){$('#tour-label').textContent='Auto-Tour: '+(tour?'Active':'Paused');$('#tour-icon').className='fa-solid text-[10px] '+(tour?'fa-pause':'fa-play')}
+function pauseTour(){tour=false;tourUI()}
+function toggleTour(){tour=!tour;tourUI();if(tour)tourLoop()}
+renderPreset(0);setSplit(50);
+new IntersectionObserver(([e])=>{if(e.isIntersecting&&tour)tourLoop()},{threshold:.35}).observe($('#compare'));
+
+/* ======================================================================
+   TABLET + PHONE
+   ====================================================================== */
+const DIALS=[['fa-bolt','#ff4c00','Nexaur','url:https://nexaur.online/'],['fa-play','#dc2626','SVARA','ttab:svara'],['fa-github fa-brands','#0f172a','GitHub','url:https://github.com/'],['fa-shield-halved','#059669','Shield','ttab:shield'],['>_','#b91c1c','CLI','toast:Opening sandboxed Linux CLI'],['fa-reddit fa-brands','#ea580c','Reddit','url:https://reddit.com/']];
+$('#t-dials').innerHTML=DIALS.map(d=>`<button data-act="${d[3]}" class="w-9 h-9 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-lg sm:rounded-2xl bg-white shadow-sm sm:shadow-md border border-slate-200/80 flex flex-col items-center justify-center gap-0.5 sm:gap-1 hover:scale-105 transition-transform">${d[0]==='>_'?`<span class="font-mono font-bold text-[10px] sm:text-base" style="color:${d[1]}">&gt;_</span>`:`<i class="${d[0].includes(' ')?d[0]:'fa-solid '+d[0]} text-xs sm:text-base lg:text-lg" style="color:${d[1]}"></i>`}<span class="text-[7px] sm:text-[9.5px] font-medium text-slate-700">${d[2]}</span></button>`).join('');
+const PD=[['G','#2563eb','Google','toast:Opening Google in sandboxed vault'],['fa-play','#dc2626','YouTube','toast:Opening YouTube 4K in mobile enclave'],['fa-amazon fa-brands','#0f172a','Amazon','toast:Opening Amazon'],['fa-github fa-brands','#0f172a','GitHub','url:https://github.com/'],['fa-bolt','#ff4c00','Nexaur','url:https://nexaur.online/'],['fa-play','#dc2626','SVARA','toast:SVARA 4K media engine connected'],['fa-reddit fa-brands','#ea580c','Reddit','url:https://reddit.com/'],['fa-x-twitter fa-brands','#000','X','url:https://x.com/']];
+$('#p-dials').innerHTML=PD.map(d=>`<button data-act="${d[3]}" class="flex flex-col items-center gap-0.5"><span class="w-9 h-9 rounded-xl bg-white shadow-sm border border-slate-200 grid place-items-center text-xs font-black" style="color:${d[1]}">${d[0]==='G'?'G':`<i class="${d[0].includes(' ')?d[0]:'fa-solid '+d[0]}"></i>`}</span><span>${d[2]}</span></button>`).join('');
+function tabletTab(k){
+  $$('[data-tview]').forEach(v=>{const on=v.dataset.tview===k;v.classList.toggle('hidden',!on);v.classList.toggle('flex',on)});
+  ['newtab','svara','shield'].forEach(t=>{$('#tt-'+t).className=t===k?'bg-white text-slate-900 px-2 sm:px-3.5 py-0.5 sm:py-1 rounded-t-lg border-t border-x border-slate-300 shadow-sm flex items-center gap-1.5 sm:gap-2 text-[9px] sm:text-[11.5px] font-bold':'text-slate-500 hover:text-slate-800 px-2 sm:px-3 py-0.5 sm:py-1 rounded-t-lg flex items-center gap-1 text-[9px] sm:text-[11px]'});
+  $('#t-omni').value={newtab:'vajra://newtab',svara:'vajra://stream/4k-player',shield:'vajra://security-enclave'}[k];
+}
+/* subtle depth tilt on large screens */
+(function(){
+  const st=$('#eco'),t=$('#eco-tablet'),p=$('#eco-phone');if(!fine||reduced)return;
+  let tx=0,ty=0,cx=0,cy=0,raf=0;
+  function f(){cx+=(tx-cx)*.08;cy+=(ty-cy)*.08;t.style.transform=`perspective(1200px) rotateX(${(-cy*1.2).toFixed(2)}deg) rotateY(${(cx*1.4).toFixed(2)}deg)`;p.style.transform=`perspective(1200px) rotateX(${(-cy*2.2).toFixed(2)}deg) rotateY(${(cx*2.5).toFixed(2)}deg) translateZ(14px)`;raf=(Math.abs(tx-cx)>.01||Math.abs(ty-cy)>.01)?requestAnimationFrame(f):0}
+  st.addEventListener('pointermove',e=>{if(innerWidth<1024)return;const r=st.getBoundingClientRect();tx=((e.clientX-r.left)/r.width-.5)*2;ty=((e.clientY-r.top)/r.height-.5)*2;if(!raf)raf=requestAnimationFrame(f)});
+  st.addEventListener('pointerleave',()=>{tx=ty=0;if(!raf)raf=requestAnimationFrame(f)});
+})();
+
+/* ======================================================================
+   FEATURES (cards + modal from one data source) + carousel drag
+   ====================================================================== */
+const FEATURES=[
+ ['Zero Ad Injection','Hardware Ad & Tracker Intercept','fa-shield-halved','#059669','Cuts ad networks at the socket layer before requests execute in the render tree. Zero bidding delay.','100% Intercept Rate','Vajra intercepts network socket packets at the Linux kernel boundary. Ad-auction bidding delays are eliminated, cutting page render times by up to 3.4x.','Filtering happens before the DOM exists, so blocked scripts never run, never allocate memory and never fingerprint your device.',[['Layer','Kernel socket'],['Bidding delay','0 ms'],['Page speed','up to 3.4x']]],
+ ['Zero-Log Tunnel','Sovereign Mesh VPN Routing','fa-network-wired','#1a73e8','Multi-hop WireGuard mesh protocol routed through sovereign enterprise nodes without central ISP logs.','< 8ms Latency Mesh','Traffic hops through high-speed encrypted sovereign relays operated by NEXAUR infrastructure, without logging your IP address.','Routes are re-keyed per session, and no relay ever holds both your origin and your destination.',[['Protocol','WireGuard'],['Hops','2–3'],['Logs','None']]],
+ ['Cryptographic Purge','History & Cookie Shredder','fa-fire','#ff4c00','Never worry about forensic recovery. On session close, session keys and SQLite caches are zero-filled.','Cold-Boot Immune','Vajra runs an automated cryptographic zero-fill the moment a tab or window closes. Volatile address registers are left clean.','Cookies and storage live in RAM only by default, so there is nothing on disk to recover.',[['Purge time','< 0.08 ms'],['Storage','RAM-only'],['Recovery','None']]],
+ ['Multi-Threaded','Turbo Socket Chunking','fa-download','#b45309','Splits downloads across 16 parallel TCP pipes to maximize gigabit fiber saturation without throttles.','Up to 4.2x Faster','Vajra opens 16 concurrent HTTP/3 chunks so a single download can saturate your full gigabit bandwidth without thread hitches.','Chunks are verified and reassembled in order, and interrupted downloads resume from the last good block.',[['Streams','16'],['Protocol','HTTP/3'],['Speed-up','up to 4.2x']]],
+ ['-40% RAM Overhead','Deterministic RAM Shredder','fa-gauge-high','#4338ca','Aggressive memory compaction and idle tab freezing keep system consumption locked below 500MB.','Linux Cgroups Sandboxed','Vajra uses Linux cgroup memory sandboxes to purge inactive renderer caches aggressively. Memory stays under 500MB.','Idle tabs are frozen and compacted, then thawed instantly when you return.',[['RAM saved','-40%'],['Ceiling','500 MB'],['Isolation','cgroups v2']]],
+ ['Dynamic Themes','Infinite UI Customization','fa-palette','#7e22ce','Supports Tokyo Night, Catppuccin, Nord, and OLED titanium chassis with zero external extension bloat.','Hardware CSS','Personalize your workstation with built-in OLED dark, Tokyo Night, Catppuccin and Nord colour spaces.','Themes are native engine features, so there are no extensions to audit and nothing extra that can leak data.',[['Themes','4+'],['Extensions','0'],['Render','GPU CSS']]],
+ ['Strict Seccomp-BPF','Hardware Security Enclave','fa-lock','#be123c','Every tab operates in an isolated unprivileged user namespace. Web exploits cannot break out into the host OS.','Zero Privilege Escalation','Every tab runs in an isolated, unprivileged user namespace. A malicious zero-day cannot escalate privileges beyond its jail.','When a tab closes, the host OS stays uncompromised and fully isolated.',[['Filter','Seccomp-BPF'],['Namespaces','PID·NET·IPC'],['Escalation','Blocked']]],
+ ['Local Inference','Sovereign Neural AI Copilot','fa-brain','#0f766e','Runs quantized LLaMA and Whisper on your device GPU pipelines. Not a single token is sent to the cloud.','100% Offline','Local quantized Whisper and LLaMA models run straight on your hardware with Vulkan compute shaders and zero cloud egress.','Summarise confidential contracts, translate and transcribe without a single byte leaving the machine.',[['Runtime','Vulkan'],['Models','LLaMA·Whisper'],['Cloud egress','0 B']]]
+];
+$('#f-track').innerHTML=FEATURES.map((f,i)=>`<button class="fcard" style="--c:${f[3]}" data-act="feature:${i}" aria-label="${f[1]}"><div><div class="ico"><i class="fa-solid ${f[2]}"></i></div><span class="tag">${f[0]}</span><h3 class="font-display font-bold text-slate-950 mt-3 leading-snug text-2xl">${f[1]}</h3><p class="text-slate-600 text-xs sm:text-sm mt-2.5 leading-relaxed">${f[4]}</p></div><div class="flex items-center justify-between pt-4 border-t border-slate-200/80 font-mono text-xs text-slate-500"><b style="color:${f[3]}">${f[5]}</b><i class="fa-solid fa-arrow-up-right-from-square"></i></div></button>`).join('');
+const fo=$('#f-overlay'),fd=$('#f-dialog');let lastFocus;
+function openFeature(i){const f=FEATURES[i];lastFocus=document.activeElement;$('#f-badge').textContent=f[0];$('#f-title').textContent=f[1];$('#f-body').innerHTML=`<p>${f[6]}</p><p>${f[7]}</p><div class="grid grid-cols-3 gap-2 sm:gap-3 pt-2">${f[8].map(s=>`<div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-center"><div class="text-[9px] sm:text-[10px] font-mono uppercase text-slate-500">${s[0]}</div><div class="font-display font-bold text-slate-950 text-sm sm:text-base mt-1" style="color:${f[3]}">${s[1]}</div></div>`).join('')}</div>`;fo.classList.remove('hidden');fo.classList.add('flex');document.body.style.overflow='hidden';requestAnimationFrame(()=>fd.classList.add('on'));$('#f-close').focus()}
+function closeFeature(){fd.classList.remove('on');setTimeout(()=>{fo.classList.add('hidden');fo.classList.remove('flex');document.body.style.overflow='';lastFocus&&lastFocus.focus&&lastFocus.focus()},250)}
+$('#f-close').onclick=closeFeature;fo.addEventListener('click',e=>{if(e.target===fo)closeFeature()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!fo.classList.contains('hidden'))closeFeature()});
+
+/* Drag-to-scroll carousel (mouse only; touch scrolls natively) */
+(function(){
+  const t=$('#f-track');let down=false,sx=0,sl=0,moved=false;
+  t.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')return;down=true;moved=false;sx=e.clientX;sl=t.scrollLeft;t.classList.remove('scroll-smooth')});
+  addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-sx;if(Math.abs(dx)>5)moved=true;t.scrollLeft=sl-dx});
+  addEventListener('pointerup',()=>{if(down){down=false;t.classList.add('scroll-smooth')}});
+  t.addEventListener('click',e=>{if(moved){e.stopPropagation();e.preventDefault();moved=false}},true);
+})();
+
+/* ======================================================================
+   FOOTER (generated)
+   ====================================================================== */
+const N='https://nexaur.online/';
+const COLS={
+  Features:[['Ad Blocker','#features'],['SVARA 4K Player','#workstation'],['Sovereign Mesh VPN','#features'],['Linux Kernel Sandbox','#workstation'],['RAM Shredder','#features'],['Local Neural AI','#features']],
+  Services:[['Products',N],['Gaming Pipeline',N],['Kernel Addons',N],['Nexaur Account',N],['4K Wallpapers','#workstation'],['Zero-Ad Registry',N],['AI Articles',N]],
+  Help:[['Switch to Vajra','#compare'],['Help & Support',N],['Engine Blog',N],['Sovereign Forums',N],['FAQ',N]],
+  Legal:[['Impressum',N],['Security Enclave',N],['Privacy Policy',N],['Cookie Policy',N],['EULA',N],['Terms of Service',N],['Statutory ESG',N]],
+  Company:[['About Nexaur',N],['Press Info',N],['Jobs & Careers',N],['Board of Directors',N],['Become a Partner',N],['Contact Us',N]]
+};
+$('#foot-cols').innerHTML=Object.entries(COLS).map(([h,l])=>`<div class="space-y-3"><h4 class="font-display font-bold text-slate-950 text-sm tracking-tight">${h}</h4><ul class="space-y-2">${l.map(([t,u])=>`<li><a href="${u}" ${u.startsWith('http')?'target="_blank" rel="noopener noreferrer"':''} class="hover:text-brandOrange transition-colors">${t.replace('&','&amp;')}</a></li>`).join('')}</ul></div>`).join('')+
+`<div class="col-span-2 sm:col-span-1 space-y-4"><div class="flex items-center gap-2"><span class="logo-tile w-8 h-8 !p-[3px]"><img class="vl" src="/static/vajra_figo_icon.png" alt="" onerror="vFallback(this)"></span><span class="font-display text-xl font-black tracking-tight text-slate-950">VAJRA</span></div><p class="text-[11px] text-slate-500 leading-relaxed">Innovate and inspire, uncover the unexpected, support open sovereign standards.</p><div><div class="text-[11px] font-bold text-slate-900 mb-2">Follow us</div><div class="grid grid-cols-3 gap-2 max-w-[140px]">${[['facebook-f','facebook.com'],['tiktok','tiktok.com'],['x-twitter','x.com'],['youtube','youtube.com'],['linkedin-in','linkedin.com'],['instagram','instagram.com']].map(s=>`<a href="https://${s[1]}/" target="_blank" rel="noopener noreferrer" aria-label="${s[1]}" class="w-8 h-8 rounded-full bg-white border border-slate-300 hover:border-brandOrange grid place-items-center text-slate-700 hover:text-brandOrange shadow-sm transition-colors"><i class="fa-brands fa-${s[0]} text-xs"></i></a>`).join('')}</div></div></div>`;
+</script>
+</body>
+</html>
