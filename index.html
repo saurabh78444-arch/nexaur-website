@@ -69,7 +69,7 @@ tailwind.config={theme:{extend:{fontFamily:{sans:['-apple-system','BlinkMacSyste
       "taxID": "U63111MR2026PTC473561",
       "identifier": "U63111MR2026PTC473561",
       "foundingDate": "2026-02-18",
-      "email": "nexaurpvtltd@gmail.com",
+      "email": "support@nexaur.online",
       "description": "NEXAUR Technologies Private Limited (CIN: U63111MR2026PTC473561) is an Indian deep-tech and enterprise software company. NEXAUR engineers custom software architectures, mobile and web applications, advanced cybersecurity solutions, AI automation agents, and machine learning models, alongside flagship platforms: PG-Nex (pgnex.online) for coliving automation, Vajra zero-telemetry web browser, Abhimanyu 14B multi-agent AI, and SVARA 4K media mesh.",
       "founders": [
         {
@@ -2101,6 +2101,170 @@ body,
   background:#191815;border:1px solid rgba(255,255,255,.10);
   font:500 11.5px 'Geist','Inter',sans-serif;color:#D4D2C9;
 }
+
+/* ---------- Luxury Dark-Theme Cookie & Privacy Governance Banner ---------- */
+.nexaur-cookie-banner{
+  position:fixed;
+  bottom:24px;
+  right:24px;
+  max-width:480px;
+  width:calc(100% - 48px);
+  z-index:999998;
+  background:linear-gradient(155deg,rgba(26,25,21,.96) 0%,rgba(16,15,13,.98) 100%);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1.5px solid rgba(232,194,122,.32);
+  border-radius:20px;
+  padding:22px 24px;
+  box-shadow:0 28px 70px rgba(0,0,0,.92),inset 0 1px 0 rgba(255,255,255,.16);
+  display:none;
+  opacity:0;
+  transform:translateY(24px) scale(0.96);
+  transition:opacity .38s cubic-bezier(.16,1,.3,1),transform .38s cubic-bezier(.16,1,.3,1);
+}
+.nexaur-cookie-banner.show{
+  display:block;
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+.cookie-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  font:600 10.5px 'JetBrains Mono',monospace;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#E8C27A;
+  margin-bottom:8px;
+}
+.cookie-title{
+  font-family:'Plus Jakarta Sans','Inter',sans-serif;
+  font-size:16px;
+  font-weight:700;
+  color:#F7F6F2;
+  margin:0 0 6px;
+  letter-spacing:-.01em;
+}
+.cookie-text{
+  font-size:13px;
+  line-height:1.58;
+  color:#B8B6AC;
+  margin:0 0 18px;
+}
+.cookie-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.cookie-btn-primary{
+  background:#F0EFEA;
+  color:#111110;
+  border:1px solid #F0EFEA;
+  border-radius:999px;
+  padding:8.5px 20px;
+  font:600 13px 'Plus Jakarta Sans','Inter',sans-serif;
+  cursor:pointer;
+  transition:transform .2s ease,background .2s ease,box-shadow .2s ease;
+  box-shadow:0 6px 18px rgba(0,0,0,.4);
+}
+.cookie-btn-primary:hover{
+  background:#FFFFFF;
+  transform:translateY(-1px);
+  box-shadow:0 8px 24px rgba(0,0,0,.6);
+}
+.cookie-btn-secondary{
+  background:#21201C;
+  color:#D4D2C9;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:999px;
+  padding:8.5px 18px;
+  font:500 13px 'Plus Jakarta Sans','Inter',sans-serif;
+  cursor:pointer;
+  transition:background .2s ease,color .2s ease;
+}
+.cookie-btn-secondary:hover{
+  background:#2C2A25;
+  color:#FFFFFF;
+  border-color:rgba(232,194,122,.35);
+}
+.cookie-link{
+  font-size:12px;
+  color:#E8C27A;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  margin-left:auto;
+  transition:color .2s ease;
+}
+.cookie-link:hover{
+  color:#FFFFFF;
+}
+@media(max-width:640px){
+  .nexaur-cookie-banner{
+    bottom:16px;
+    right:16px;
+    left:16px;
+    width:auto;
+    max-width:none;
+    padding:18px 20px;
+  }
+}
+
+/* ---------- Prominently Highlighted Executive Email Badges ---------- */
+.executive-email-card{
+  background:linear-gradient(145deg,#21201C 0%,#151412 100%);
+  border:1.5px solid rgba(232,194,122,.38);
+  border-radius:14px;
+  padding:14px 18px;
+  margin:16px 0;
+  box-shadow:0 12px 32px rgba(0,0,0,.65),0 0 24px rgba(232,194,122,.08),inset 0 1px 0 rgba(255,255,255,.14);
+}
+.executive-email-link{
+  font-family:'JetBrains Mono',monospace;
+  font-size:15px;
+  font-weight:700;
+  color:#F7F6F2!important;
+  text-decoration:none!important;
+  letter-spacing:.02em;
+  display:inline-block;
+  margin-top:4px;
+  transition:color .2s ease;
+}
+.executive-email-link:hover{
+  color:#E8C27A!important;
+}
+.email-copy-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:#2A2822;
+  border:1px solid rgba(232,194,122,.3);
+  color:#EDEAE0;
+  border-radius:999px;
+  padding:4px 12px;
+  font:600 11.5px 'JetBrains Mono',monospace;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+.email-copy-btn:hover{
+  background:#E8C27A;
+  color:#111110;
+  border-color:#E8C27A;
+  transform:translateY(-1px);
+}
+.footer-email-highlight-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  background:linear-gradient(155deg,#1E1D19 0%,#131210 100%);
+  border:1.5px solid rgba(232,194,122,.35);
+  border-radius:16px;
+  padding:16px 24px;
+  margin:28px 0 20px;
+  box-shadow:0 16px 40px rgba(0,0,0,.7),0 0 28px rgba(232,194,122,.07),inset 0 1px 0 rgba(255,255,255,.12);
+}
 </style>
 </head>
 <body class="relative min-h-screen flex flex-col justify-between">
@@ -2147,7 +2311,7 @@ body,
         <span class="text-xs">🌐</span><span id="current-lang-display">English</span><i class="fa-solid fa-chevron-down text-[8px] opacity-60"></i>
       </button>
       <a href="https://pgnex.online/home" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#181715] hover:bg-[#282722] border border-white/12 text-[#ECEBE4] text-xs font-medium transition-all"><span>pgnex.online</span><i class="fa-solid fa-arrow-up-right-from-square text-[9px] opacity-70"></i></a>
-      <a href="mailto:nexaurpvtltd@gmail.com?subject=Enterprise%20Portal%20Inquiry" class="rot-enterprise-btn">
+      <a href="mailto:support@nexaur.online?subject=Enterprise%20Portal%20Inquiry" class="rot-enterprise-btn">
         <span>Enterprise →</span>
       </a>
       <button type="button" onclick="toggleMobileNav()" class="xl:hidden w-8 h-8 flex items-center justify-center text-slate-300 hover:text-white" aria-label="Toggle Navigation"><i class="fa-solid fa-bars text-sm"></i></button>
@@ -2210,7 +2374,7 @@ body,
         We are researching and building beneficial Artificial General Intelligence engineered to solve complex planetary problems, grounded in cognitive psychology, formal safety invariants, and sovereign computing infrastructure designed to advance and protect humanity.
       </p>
       <div class="flex flex-wrap items-center justify-center gap-3.5 pt-7">
-        <a href="mailto:nexaurpvtltd@gmail.com?subject=Strategic%20AGI%20Mission%20Inquiry" class="nx-btn b10">
+        <a href="mailto:support@nexaur.online?subject=Strategic%20AGI%20Mission%20Inquiry" class="nx-btn b10">
           <span class="roll"><s>Join the AGI Mission</s><s>Connect with Research Team</s></span>
           <i>&rarr;</i>
         </a>
@@ -2807,16 +2971,16 @@ body,
       <div>
         <div class="openai-col-header">Software &amp; Apps</div>
         <div class="flex flex-col space-y-1">
-          <a href="mailto:nexaurpvtltd@gmail.com?subject=Custom%20Software%20Development%20Inquiry" class="openai-footer-link">Custom Web Software <span>↗</span></a>
-          <a href="mailto:nexaurpvtltd@gmail.com?subject=Mobile%20App%20Development%20Inquiry" class="openai-footer-link">iOS &amp; Android Apps <span>↗</span></a>
-          <a href="mailto:nexaurpvtltd@gmail.com?subject=Enterprise%20System%20Architecture" class="openai-footer-link">Enterprise Cloud Systems</a>
-          <a href="mailto:nexaurpvtltd@gmail.com?subject=Brand%20Digital%20Platform" class="openai-footer-link">Brand Scaling Platforms</a>
+          <a href="mailto:support@nexaur.online?subject=Custom%20Software%20Development%20Inquiry" class="openai-footer-link">Custom Web Software <span>↗</span></a>
+          <a href="mailto:support@nexaur.online?subject=Mobile%20App%20Development%20Inquiry" class="openai-footer-link">iOS &amp; Android Apps <span>↗</span></a>
+          <a href="mailto:support@nexaur.online?subject=Enterprise%20System%20Architecture" class="openai-footer-link">Enterprise Cloud Systems</a>
+          <a href="mailto:support@nexaur.online?subject=Brand%20Digital%20Platform" class="openai-footer-link">Brand Scaling Platforms</a>
           <a href="#product-filmstrip" class="openai-footer-link">Microservices &amp; APIs</a>
         </div>
         <div class="openai-col-subheader">Cyber Security</div>
         <div class="flex flex-col space-y-1">
-          <a href="mailto:nexaurpvtltd@gmail.com?subject=Cybersecurity%20Consulting" class="openai-footer-link">Zero-Trust Hardening</a>
-          <a href="mailto:nexaurpvtltd@gmail.com?subject=Security%20Audit" class="openai-footer-link">Encrypted Data Vaults</a>
+          <a href="mailto:support@nexaur.online?subject=Cybersecurity%20Consulting" class="openai-footer-link">Zero-Trust Hardening</a>
+          <a href="mailto:support@nexaur.online?subject=Security%20Audit" class="openai-footer-link">Encrypted Data Vaults</a>
         </div>
       </div>
 
@@ -2827,8 +2991,8 @@ body,
           <a href="abhimanyu.html" class="openai-footer-link">Abhimanyu Multi-Agent <span>↗</span></a>
           <a href="abhimanyu.html" class="openai-footer-link">Automated Code Generation</a>
           <a href="abhimanyu.html" class="openai-footer-link">Deep Research Agents</a>
-          <a href="mailto:nexaurpvtltd@gmail.com?subject=Custom%20AI%20Model%20Training" class="openai-footer-link">Custom ML Model Training <span>↗</span></a>
-          <a href="mailto:nexaurpvtltd@gmail.com?subject=Workflow%20Automation%20Agents" class="openai-footer-link">Workflow Automation Agents</a>
+          <a href="mailto:support@nexaur.online?subject=Custom%20AI%20Model%20Training" class="openai-footer-link">Custom ML Model Training <span>↗</span></a>
+          <a href="mailto:support@nexaur.online?subject=Workflow%20Automation%20Agents" class="openai-footer-link">Workflow Automation Agents</a>
           <a href="#join-journey" class="openai-footer-link">AGI Research</a>
         </div>
       </div>
@@ -2855,7 +3019,7 @@ body,
           <a href="#leadership" class="openai-footer-link">Board of Directors</a>
           <button type="button" onclick="openLeaderBio('saurabh')" class="openai-footer-link text-left">Saurabh Anil Pardeshi</button>
           <button type="button" onclick="openLeaderBio('vicky')" class="openai-footer-link text-left">Vicky Brijkishor Kushwaha</button>
-          <a href="mailto:nexaurpvtltd@gmail.com?subject=Engineering%20Careers" class="openai-footer-link">Careers <span class="footer-hiring-pill">Hiring</span></a>
+          <a href="mailto:support@nexaur.online?subject=Engineering%20Careers" class="openai-footer-link">Careers <span class="footer-hiring-pill">Hiring</span></a>
         </div>
       </div>
 
@@ -2921,6 +3085,23 @@ body,
     </div>
   </div>
 </footer>
+
+<!-- ================= COOKIE & PRIVACY GOVERNANCE BANNER ================= -->
+<div id="nexaurCookieBanner" class="nexaur-cookie-banner" role="dialog" aria-labelledby="cookieTitle">
+  <div class="cookie-badge">
+    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+    <span>ZERO-TELEMETRY &bull; PRIVACY GOVERNANCE</span>
+  </div>
+  <h3 id="cookieTitle" class="cookie-title">Cookies &amp; Data Immunity</h3>
+  <p class="cookie-text">
+    NEXAUR uses only essential cryptographic tokens to maintain your session securely. Under our statutory Zero-Telemetry Mandate, we never deploy third-party advertising trackers, profiling cookies, or sell personal data.
+  </p>
+  <div class="cookie-actions">
+    <button type="button" class="cookie-btn-primary" onclick="acceptCookies('all')">Accept All</button>
+    <button type="button" class="cookie-btn-secondary" onclick="acceptCookies('essential')">Essential Only</button>
+    <a href="#governance" class="cookie-link" onclick="closeCookieBanner()">Governance Policy &rarr;</a>
+  </div>
+</div>
 
 <!-- ================= MODALS ================= -->
 <!-- Language Hub Modal -->
@@ -3031,6 +3212,81 @@ window.AboutVisibility={heroActive:true,orbitalActive:true,journeyActive:true,le
     const fbData = fc.toDataURL('image/png');
     footerGiantWord.style.backgroundImage = `url("https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1800&q=85"), url("${fbData}")`;
   }
+
+  
+  
+  /* ---------- 1-Click Copy Support Email Controller ---------- */
+  window.copySupportEmail = function(btnEl){
+    const email = 'support@nexaur.online';
+    const originalText = btnEl ? btnEl.innerHTML : '';
+    const showSuccess = () => {
+      if(btnEl){
+        btnEl.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i> <span class="text-emerald-400">Copied!</span>';
+        setTimeout(() => { btnEl.innerHTML = originalText; }, 2200);
+      }
+      const toast = document.getElementById('toast');
+      if(toast){
+        toast.textContent = 'Copied support@nexaur.online to clipboard ✓';
+        toast.classList.add('on');
+        setTimeout(() => toast.classList.remove('on'), 2000);
+      }
+    };
+
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(email).then(showSuccess).catch(() => {
+        fallbackCopy(email);
+        showSuccess();
+      });
+    } else {
+      fallbackCopy(email);
+      showSuccess();
+    }
+
+    function fallbackCopy(text){
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch(e){}
+      ta.remove();
+    }
+  };
+
+  /* ---------- Cookie & Privacy Governance Controller ---------- */
+  window.openCookieBanner = function(){
+    const el = document.getElementById('nexaurCookieBanner');
+    if(!el) return;
+    el.style.display = 'block';
+    setTimeout(() => el.classList.add('show'), 20);
+  };
+
+  window.closeCookieBanner = function(){
+    const el = document.getElementById('nexaurCookieBanner');
+    if(!el) return;
+    el.classList.remove('show');
+    setTimeout(() => { el.style.display = 'none'; }, 400);
+  };
+
+  window.acceptCookies = function(pref){
+    try {
+      localStorage.setItem('nexaur_cookie_consent', pref || 'all');
+      localStorage.setItem('nexaur_cookie_consent_ts', Date.now());
+    } catch(e) {}
+    window.closeCookieBanner();
+  };
+
+  document.addEventListener('DOMContentLoaded', function(){
+    try {
+      const consent = localStorage.getItem('nexaur_cookie_consent');
+      if(!consent){
+        setTimeout(window.openCookieBanner, 1600);
+      }
+    } catch(e){
+      setTimeout(window.openCookieBanner, 1600);
+    }
+  });
 
   /* ---------- Leadership Member Selector & Downside Directing Engine ---------- */
   window.scrollToDirector = function(id, btnEl){
@@ -5065,7 +5321,7 @@ saurabh:{name:'Saurabh Anil Pardeshi',title:'Founder & CEO',content:`
 <div class="p-4 bg-[#201F1C] rounded-xl border border-[#2D2C28] font-mono text-xs space-y-1 my-3 text-[#D4D2C9]">
 <div><strong>Directorship:</strong> Managing Director & Executive Authority</div>
 <div><strong>Statutory Registry:</strong> Accredited Executive Director</div>
-<div><strong>Executive Correspondence:</strong> <a href="mailto:nexaurpvtltd@gmail.com" class="text-blue-400 font-bold hover:underline">nexaurpvtltd@gmail.com</a></div>
+<div><strong>Executive Correspondence:</strong> <a href="mailto:support@nexaur.online" class="text-blue-400 font-bold hover:underline">support@nexaur.online</a></div>
 </div>
 <p>Saurabh is committed to advancing global deep-tech autonomy, ensuring enterprise and public-sector software systems achieve full cryptographic sovereignty and zero dependency on proprietary monopolies.</p>`},
 vicky:{name:'Vicky Brijkishor Kushwaha',title:'Co-Founder & Director',content:`
@@ -5074,7 +5330,7 @@ vicky:{name:'Vicky Brijkishor Kushwaha',title:'Co-Founder & Director',content:`
 <div class="p-4 bg-[#201F1C] rounded-xl border border-[#2D2C28] font-mono text-xs space-y-1 my-3 text-[#D4D2C9]">
 <div><strong>Directorship:</strong> Executive Director & Co-Founder</div>
 <div><strong>Statutory Registry:</strong> Accredited Executive Director</div>
-<div><strong>Executive Correspondence:</strong> <a href="mailto:nexaurpvtltd@gmail.com" class="text-blue-400 font-bold hover:underline">nexaurpvtltd@gmail.com</a></div>
+<div><strong>Executive Correspondence:</strong> <a href="mailto:support@nexaur.online" class="text-blue-400 font-bold hover:underline">support@nexaur.online</a></div>
 </div>
 <p>He manages enterprise partnerships, regulatory filings, and mission-critical cloud infrastructure, ensuring all NEXAUR systems adhere to institutional zero-trust security standards.</p>`}
 };
@@ -5512,7 +5768,7 @@ document.addEventListener('DOMContentLoaded',()=>{
       ['Who are the founders and directors of NEXAUR Technologies?', 'NEXAUR was founded in 2024 in a single room and officially incorporated on February 18, 2026 by <strong>Saurabh Anil Pardeshi</strong> (Founder &amp; Chief Executive Officer) and <strong>Vicky Brijkishor Kushwaha</strong> (Co-Founder &amp; Executive Director).'],
       ['What makes NEXAUR different from conventional cloud software companies?', 'Every NEXAUR platform is built from first principles around cryptographic autonomy, 0% foreign telemetry exposure, hardware-isolated memory protection, and practical everyday utility for students, property managers, and enterprises.'],
       ['Where can I verify NEXAUR’s statutory corporate registration?', 'NEXAUR Technologies Private Limited is registered with the Ministry of Corporate Affairs (Central Registration Centre / RoC) under Corporate Identification Number <strong>U63111MR2026PTC473561</strong>. You can export our machine-readable JSON/CSV schema directly in the Governance section above.'],
-      ['How can enterprises or institutions partner with NEXAUR?', 'Enterprises, universities, property groups, and government institutions can connect directly with our executive desk via <a href="mailto:nexaurpvtltd@gmail.com">nexaurpvtltd@gmail.com</a> for custom deployments and API access.'],
+      ['How can enterprises or institutions partner with NEXAUR?', 'Enterprises, universities, property groups, and government institutions can connect directly with our executive desk via <a href="mailto:support@nexaur.online">support@nexaur.online</a> for custom deployments and API access.'],
       ['Are NEXAUR platforms available on mobile and desktop?', 'Yes. PG-Nex is live on the web at <a href="https://pgnex.online/home" target="_blank">pgnex.online</a> and on the Google Play Store for Android, while Vajra Browser and Abhimanyu AI support desktop and workstation environments.']
     ],
     pgnex: [
